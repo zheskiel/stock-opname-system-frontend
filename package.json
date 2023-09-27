@@ -1,0 +1,52 @@
+{
+  "name": "react-boilerplate",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "yarn start",
+    "start": "webpack serve --config build-utils/webpack.config.js --env env=dev",
+    "build": "webpack  --config build-utils/webpack.config.js --env env=prod"
+  },
+  "keywords": [],
+  "author": "Zheskiel.labs",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.17.7",
+    "@babel/plugin-transform-runtime": "^7.17.0",
+    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-react": "^7.13.13",
+    "babel-loader": "^8.2.3",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "clean-webpack-plugin": "^4.0.0-alpha.0",
+    "css-loader": "^5.2.4",
+    "dotenv-webpack": "^7.0.2",
+    "html-webpack-plugin": "^5.3.1",
+    "mini-css-extract-plugin": "^1.5.1",
+    "react-hot-loader": "^4.13.0",
+    "style-loader": "^2.0.0",
+    "url-loader": "^4.1.1",
+    "web-vitals": "^2.1.4",
+    "webpack": "^5.70.0",
+    "webpack-cli": "^4.6.0",
+    "webpack-dev-server": "^3.11.2",
+    "webpack-merge": "^5.7.3"
+  },
+  "dependencies": {
+    "axios": "^0.26.1",
+    "bootstrap": "^5.3.2",
+    "dayjs": "^1.11.0",
+    "node-sass": "^5.0.0",
+    "react": "^16.2.0",
+    "react-datepicker": "^4.7.0",
+    "react-dom": "^16.2.0",
+    "react-icons": "^4.3.1",
+    "react-redux": "^7.2.6",
+    "react-router-dom": "5.2.0",
+    "react-spinners": "^0.11.0",
+    "react-toastify": "^8.2.0",
+    "redux-persist": "^6.0.0",
+    "redux-thunk": "^2.4.1",
+    "sass-loader": "^11.0.1"
+  }
+}
