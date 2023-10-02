@@ -1,0 +1,56 @@
+@import url("/node_modules/bootstrap/dist/css/bootstrap.min.css");
+
+@import "/node_modules/bootstrap/scss/functions";
+@import "/node_modules/bootstrap/scss/variables";
+@import "/node_modules/bootstrap/scss/mixins";
+
+@import "./variables";
+@import "./sidebar.scss";
+@import "./navbar.scss";
+
+html,
+body {
+  height: 100vh;
+  height: -webkit-fill-available;
+  max-height: 100vh;
+}
+
+body {
+  background-color: $body-bg;
+}
+
+.bi {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+}
+
+main {
+  padding-top: 56px;
+}
+
+.main-content {
+  background-color: #fff;
+}
+
+.main-container {
+  min-height: calc(100vh - 56px);
+
+  .main-content {
+    min-height: calc(100vh - 56px);
+  }
+}
+
+@media (min-width: 768px) {
+  .main-container {
+    .main-content {
+      width: calc(100% - 250px);
+    }
+  }
+}
+
+a {
+  &:hover {
+    cursor: pointer;
+  }
+}

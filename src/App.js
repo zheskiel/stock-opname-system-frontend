@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Suspense } from "react";
 
 import {
   BrowserRouter as Router,
@@ -10,15 +10,45 @@ import {
 import { connect } from "react-redux";
 import { compose } from "redux";
 
-import { hierarchyApi } from "./apis";
+import { PublicRoutes, PrivateRoutes } from "./routes";
+import { PublicRoute, PrivateRoute } from "./routes/states";
+
+import "./assets/scss/app.scss";
 
 class App extends Component {
-  componentDidMount() {
-    hierarchyApi();
-  }
-
   render() {
-    return <>Welcome!!!</>;
+    return (
+      <Router basename={"/"}>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Switch>
+            {PublicRoutes.map((route, index) => {
+              return (
+                <PublicRoute
+                  key={index}
+                  path={route.path}
+                  component={route.component}
+                  exact={route.exact}
+                  restricted={route.restricted}
+                />
+              );
+            })}
+
+            {PrivateRoutes.map((route, index) => {
+              return (
+                <PrivateRoute
+                  key={index}
+                  path={route.path}
+                  component={route.component}
+                  exact={route.exact}
+                />
+              );
+            })}
+
+            <Redirect to={"/"} />
+          </Switch>
+        </Suspense>
+      </Router>
+    );
   }
 }
 

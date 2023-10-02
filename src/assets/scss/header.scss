@@ -1,0 +1,39 @@
+.dropdown-toggle::after {
+  color: #fff;
+}
+.dropdown-menu[data-bs-popper] {
+  right: 0;
+  left: unset;
+}
+
+.header-flex {
+  width: 100%;
+}
+
+.navbar {
+  .container-fluid {
+    position: relative;
+  }
+
+  .navbar-toggler {
+    &.auth {
+      margin-right: 50px;
+    }
+
+    &.non-auth {
+      margin-right: 75px;
+    }
+  }
+
+  .login-temp {
+    position: absolute;
+    top: 0px;
+    right: 10px;
+  }
+
+  .user-profile {
+    position: absolute;
+    top: 3px;
+    right: 5px;
+  }
+}

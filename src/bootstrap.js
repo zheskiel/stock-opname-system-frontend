@@ -1,3 +1,5 @@
+import "/node_modules/bootstrap/dist/js/bootstrap.min.js";
+
 window.axios = require("axios");
 
 window.axios.interceptors.response.use(

@@ -1,0 +1,7 @@
+export const LOGIN_REQUEST = "LOGIN_REQUEST";
+export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
+export const LOGIN_FAILED = "LOGIN_FAILED";
+export const LOGIN_RESET_MESSAGE = "LOGIN_RESET_MESSAGE";
+export const LOGOUT = "LOGOUT";
+
+export const CLEAR_LOADING_STATE = "CLEAR_LOADING_STATE";

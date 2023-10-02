@@ -1,0 +1,39 @@
+/*
+ * Sidebar
+ */
+
+@media (min-width: 768px) {
+  .sidebar .offcanvas-lg {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 48px;
+  }
+  .navbar-search {
+    display: block;
+  }
+  .sidebar {
+    position: fixed;
+    height: calc(100vh - 56px);
+    min-width: 250px;
+    max-width: 250px;
+
+    background-color: #405189;
+    border-color: #405189;
+    overflow-y: auto;
+  }
+}
+
+.sidebar .nav-link {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #abb9e8;
+}
+
+.sidebar .nav-link.active {
+  color: #ffffff;
+}
+
+.sidebar-heading {
+  font-size: 0.75rem;
+  color: #abb9e8 !important;
+}
