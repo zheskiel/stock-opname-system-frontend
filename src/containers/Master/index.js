@@ -9,8 +9,8 @@ import PaginationSection from "../../sections/Pagination";
 import MainSection from "../../sections/Main";
 
 // Components
-import DesktopVersion from "../../components/Master/DesktopVersion";
-import MobileVersion from "../../components/Master/MobileVersion";
+import DesktopView from "../../components/Master/DesktopView";
+import MobileView from "../../components/Master/MobileView";
 
 // Containers
 import LayoutContainer from "../../containers/Layout";
@@ -18,51 +18,19 @@ import LayoutContainer from "../../containers/Layout";
 // Actions
 import { fetchMasterData } from "../../redux/actions";
 
-const initialState = {
-  mode: "desktop",
-};
-
-function getWindowDimensions() {
-  const { innerWidth: width, innerHeight: height } = window;
-
-  return {
-    width,
-    height,
-  };
-}
+// Styling
+import "../../assets/scss/master.scss";
 
 class MasterContainer extends Component {
   constructor(props) {
     super(props);
 
-    this.state = initialState;
-
-    this.handlePageResize = this.handlePageResize.bind(this);
     this.handleFetchData = this.handleFetchData.bind(this);
   }
 
   componentDidMount() {
-    window.addEventListener("resize", this.handlePageResize);
-
-    new Promise((resolve) => resolve())
-      .then(() => this.handlePageResize())
-      .then(() => this.handleFetchData());
+    new Promise((resolve) => resolve()).then(() => this.handleFetchData());
   }
-
-  componentWillUnmount() {
-    window.removeEventListener("resize", this.handlePageResize);
-  }
-
-  handlePageResize = () => {
-    let windowSize = getWindowDimensions();
-    let minDesktopLimit = 900;
-
-    let terms = windowSize.width < minDesktopLimit ? "phone" : "desktop";
-
-    this.setState({
-      mode: terms,
-    });
-  };
 
   handleFetchData = async (page = 1) => {
     let { master } = this.props;
@@ -81,9 +49,7 @@ class MasterContainer extends Component {
   };
 
   render() {
-    const { mode } = this.state;
-    const { master } = this.props;
-
+    const { master, mode } = this.props;
     const { data: items } = master;
 
     const { total, current_page, per_page } = master;
@@ -96,9 +62,9 @@ class MasterContainer extends Component {
 
     const renderItem =
       mode == "phone" ? (
-        <MobileVersion items={items} />
+        <MobileView items={items} />
       ) : (
-        <DesktopVersion items={items} />
+        <DesktopView items={items} />
       );
 
     return (
@@ -128,6 +94,7 @@ class MasterContainer extends Component {
 }
 
 const mapStateToProps = (state) => ({
+  mode: state.viewMode.mode,
   master: state.master.data,
 });
 

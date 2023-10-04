@@ -4,7 +4,7 @@ import {
   FETCH_MASTER_FAILED,
 } from "./types";
 
-import { getMasterApi } from "../../apis";
+import { fetchMasterApi } from "../../apis";
 
 import errorHandler from "../../utils/errHandler";
 
@@ -12,7 +12,7 @@ export const fetchMasterData = (params) => (dispatch) => {
   dispatch(fetchMasterDataRequest());
 
   return new Promise((resolve, reject) => {
-    getMasterApi(params)
+    fetchMasterApi(params)
       .then((response) => response)
       .then((result) => {
         if (result.success === true) {

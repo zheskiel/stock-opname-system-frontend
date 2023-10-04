@@ -40,6 +40,23 @@ export const multiDimensionalUnique = (arr) => {
   return uniques;
 };
 
+export const formatUrl = (target, parameters) => {
+  var args = Array.prototype.slice.call(parameters, 0);
+
+  return target.replace(/{(\d+)}/g, function (match, number) {
+    return typeof args[number] != "undefined" ? args[number] : match;
+  });
+};
+
+export const calculateWindowSize = () => {
+  const minDesktopLimit = 900;
+  const { innerWidth: width } = window;
+
+  const result = width < minDesktopLimit ? "phone" : "desktop";
+
+  return result;
+};
+
 export const calculatePagination = (totalItems, currentPage, pageSize) => {
   const range = (start, end) => {
     let length = end - start + 1;

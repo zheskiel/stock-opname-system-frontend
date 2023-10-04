@@ -3,7 +3,7 @@ import { MASTER_URL } from "./constants";
 import axiosInstance from "../utils/axiosInstance";
 import { buildUrl } from "../utils/helpers";
 
-export const getMasterApi = ({ page = 1 }) => {
+export const fetchMasterApi = ({ page = 1 }) => {
   let parameters = {
     page,
   };
