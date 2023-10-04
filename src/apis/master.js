@@ -1,12 +1,15 @@
-import axios from "axios";
 import { MASTER_URL } from "./constants";
 
-export const getMasterApi = (page = 1) => {
-  let parameters = {};
+import axiosInstance from "../utils/axiosInstance";
+import { buildUrl } from "../utils/helpers";
 
-  parameters.page = page;
+export const getMasterApi = ({ page = 1 }) => {
+  let parameters = {
+    page,
+  };
 
-  let url = MASTER_URL + "?page=" + page;
+  let url = new URL(MASTER_URL);
+  let target = buildUrl(url, parameters);
 
-  return axios.get(url);
+  return axiosInstance.get(target);
 };

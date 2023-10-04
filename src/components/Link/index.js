@@ -28,8 +28,9 @@ class Link extends Component {
 
   render() {
     const { children, ...props } = this.props;
+
     let newProps = {
-      ...props,
+      className: props.className,
       href: `${this.hasPrefix()}${props.href}`,
     };
 

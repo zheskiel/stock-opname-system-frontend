@@ -41,14 +41,53 @@ class SidebarSection extends Component {
                   Master Data
                 </Link>
               </li>
-              <li className="nav-item">
-                <a
-                  className="nav-link d-flex align-items-center gap-2"
-                  href="#"
-                >
-                  Products
-                </a>
+
+              <li className="nav-item accordion accordion-flush">
+                <div className="accordion-item">
+                  <a
+                    className="nav-link d-flex align-items-center gap-2 accordion-button collapsed"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#product-collapse"
+                    aria-expanded="false"
+                    aria-controls="product-collapse"
+                  >
+                    Products
+                  </a>
+                  <div
+                    id="product-collapse"
+                    className="accordion-collapse collapse"
+                    aria-labelledby="headingOne"
+                  >
+                    <ul>
+                      <li>
+                        <a
+                          className="nav-link d-flex align-items-center gap-2"
+                          href="#"
+                        >
+                          Products 1
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          className="nav-link d-flex align-items-center gap-2"
+                          href="#"
+                        >
+                          Products 2
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          className="nav-link d-flex align-items-center gap-2"
+                          href="#"
+                        >
+                          Products 3
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </li>
+
               <li className="nav-item">
                 <a
                   className="nav-link d-flex align-items-center gap-2"

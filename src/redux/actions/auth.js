@@ -9,6 +9,8 @@ import {
 
 import { loginApi } from "../../apis";
 
+import errorHandler from "../../utils/errHandler";
+
 export const AuthLogin = (email, password, type) => async (dispatch) => {
   dispatch(AuthLoginRequest());
 

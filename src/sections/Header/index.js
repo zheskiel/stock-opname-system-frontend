@@ -83,15 +83,16 @@ class HeaderSection extends Component {
                   aria-expanded="false"
                 >
                   <img
-                    src="https://github.com/mdo.png"
-                    alt="mdo"
+                    src="https://www.gravatar.com/avatar/05b6d7cc7c662bf81e01b39254f88a49?d=identicon"
                     width="32"
                     height="32"
                     className="rounded-circle"
                   />
                 </a>
                 <ul className="dropdown-menu text-small shadow">
-                  <li style={{ padding: "0.25rem 1rem" }}>{user.email}</li>
+                  <li style={{ padding: "0.25rem 1rem", whiteSpace: "nowrap" }}>
+                    {user.email}
+                  </li>
                   <li>
                     <hr className="dropdown-divider" />
                   </li>

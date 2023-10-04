@@ -3,22 +3,33 @@ import React, { Component } from "react";
 import HeaderSection from "../../sections/Header";
 import SidebarSection from "../../sections/Sidebar";
 
+import { Helmet } from "react-helmet";
+
 class LayoutContainer extends Component {
   render() {
     const { children } = this.props;
 
     return (
-      <main>
-        <HeaderSection />
+      <>
+        <Helmet>
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+          />
+        </Helmet>
 
-        <div className="main-container container-fluid">
-          <div className="row">
-            <SidebarSection />
+        <main>
+          <HeaderSection />
 
-            <>{children}</>
+          <div className="main-container container-fluid">
+            <div className="row">
+              <SidebarSection />
+
+              <>{children}</>
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+      </>
     );
   }
 }

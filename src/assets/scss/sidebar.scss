@@ -23,14 +23,39 @@
   }
 }
 
-.sidebar .nav-link {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #abb9e8;
-}
-
-.sidebar .nav-link.active {
-  color: #ffffff;
+.sidebar {
+  .nav-link {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #d8dff7;
+    &.active {
+      color: #ffffff;
+    }
+    &::after {
+      color: #fff;
+    }
+  }
+  .nav-item {
+    .accordion-item {
+      background-color: transparent;
+      a.nav-link {
+        padding: 0.5rem 1rem;
+        background-color: transparent;
+      }
+      .accordion-collapse {
+        background-color: #778aca;
+        border-radius: 0;
+        ul {
+          list-style-type: none;
+        }
+        ul,
+        li {
+          margin: 0;
+          padding: 0;
+        }
+      }
+    }
+  }
 }
 
 .sidebar-heading {

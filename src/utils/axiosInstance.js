@@ -1,30 +1,13 @@
 import axios from "axios";
 
-const defaultOptions = {
-  method: "get",
-  headers: {
-    "Content-Type": "application/json",
-  },
-};
+let axiosInstance = axios;
 
-const axiosInstance = (overrideConfig = {}) => {
-  let axiosConfig = {
-    ...defaultOptions,
-    ...overrideConfig,
-  };
+axiosInstance.interceptors.request.use(function (config) {
+  const token = localStorage.getItem("token");
 
-  let instance = axios.create(axiosConfig);
+  config.headers.Authorization = token ? `Bearer ${token}` : "";
 
-  // Set the AUTH token for any request
-  instance.interceptors.request.use(function (config) {
-    const token = localStorage.getItem("token");
+  return config;
+});
 
-    config.headers.Authorization = token ? `Bearer ${token}` : "";
-
-    return config;
-  });
-
-  return instance;
-};
-
-export default axiosInstance();
+export default axiosInstance;
