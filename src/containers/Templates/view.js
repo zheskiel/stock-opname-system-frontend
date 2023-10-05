@@ -4,23 +4,23 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { compose } from "redux";
 
-// Sections
-import PaginationSection from "../../sections/Pagination";
-import MainSection from "../../sections/Main";
-
 // Components
-import MasterView from "../../components/Master";
+import TemplateView from "../../components/Template/View";
 
 // Containers
-import LayoutContainer from "../../containers/Layout";
+import LayoutContainer from "../Layout";
+
+// Sections
+import MainSection from "../../sections/Main";
+import PaginationSection from "../../sections/Pagination";
 
 // Actions
-import { fetchMasterData } from "../../redux/actions";
+import { fetchTemplateViewData } from "../../redux/actions";
 
 // Styling
-import "../../assets/scss/master.scss";
+import "../../assets/scss/templates.scss";
 
-class MasterContainer extends Component {
+class TemplatesViewContainer extends Component {
   constructor(props) {
     super(props);
 
@@ -31,26 +31,25 @@ class MasterContainer extends Component {
     new Promise((resolve) => resolve()).then(() => this.handleFetchData());
   }
 
-  handleFetchData = async (page = 1) => {
-    let { fetchMasterData, master } = this.props;
-    let { current_page } = master;
+  handleFetchData = (page = 1) => {
+    const { fetchTemplateViewData, match } = this.props;
+    const { params } = match;
+    const { id } = params;
 
-    // Dont do fetch, when user at the same page
-    if (page == current_page) return;
-
-    let params = {
-      page,
+    let parameters = {
+      templateId: id,
+      page: page,
     };
 
-    fetchMasterData(params);
+    fetchTemplateViewData(parameters);
 
     window.scrollTo(0, 0);
   };
 
   render() {
-    const { master } = this.props;
+    const { details } = this.props;
 
-    const { total, current_page, per_page } = master;
+    const { total, current_page, per_page } = details;
     const newProps = {
       totalCount: total,
       pageNumber: current_page,
@@ -62,18 +61,11 @@ class MasterContainer extends Component {
       <LayoutContainer>
         <MainSection>
           <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h2 className="h2">Master Product</h2>
-            <div className="btn-toolbar mb-2 mb-md-0">
-              <div className="btn-group">
-                <button type="button" className="btn btn-sm btn-warning">
-                  Edit
-                </button>
-              </div>
-            </div>
+            <h2 className="h2">Templates Details</h2>
           </div>
 
           <div className="table-responsive small">
-            <MasterView />
+            <TemplateView />
             <br />
 
             <PaginationSection {...newProps} />
@@ -85,13 +77,13 @@ class MasterContainer extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  master: state.master.data,
+  details: state.template.data,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchMasterData: (params) => {
+  fetchTemplateViewData: (params) => {
     return new Promise((resolve) => {
-      dispatch(fetchMasterData(params)).then(() => resolve());
+      dispatch(fetchTemplateViewData(params)).then(() => resolve());
     });
   },
 });
@@ -99,4 +91,4 @@ const mapDispatchToProps = (dispatch) => ({
 export default compose(
   withRouter,
   connect(mapStateToProps, mapDispatchToProps)
-)(MasterContainer);
+)(TemplatesViewContainer);

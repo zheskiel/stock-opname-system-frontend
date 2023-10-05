@@ -1,0 +1,12 @@
+.templates-container {
+  max-width: 800px;
+  margin: 0 auto;
+
+  .templates-text {
+    position: relative;
+
+    .templates-status {
+      transform: translate(50%, 20%);
+    }
+  }
+}
