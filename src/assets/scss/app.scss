@@ -15,10 +15,6 @@ body {
   max-height: 100vh;
 }
 
-body {
-  background-color: $body-bg;
-}
-
 .bi {
   display: inline-block;
   width: 1rem;
@@ -44,7 +40,7 @@ main {
 @media (min-width: 768px) {
   .main-container {
     .main-content {
-      width: calc(100% - 250px);
+      width: calc(100% - 200px);
     }
   }
 }
@@ -59,6 +55,7 @@ table {
   th {
     vertical-align: baseline;
     // text-align: center;
+    white-space: nowrap;
   }
 }
 .desktop-main-data {
@@ -69,12 +66,29 @@ table {
         border-bottom: 1px solid rgba(0, 0, 0, 0.3);
       }
 
+      display: flex;
+
       .unit-detail {
         flex: 1;
         display: flex;
         justify-content: space-between;
+        align-items: center;
         text-align: left;
       }
+    }
+  }
+
+  .unit-actions {
+    text-align: center;
+    padding: 0;
+
+    button {
+      padding: 0px 5px;
+      font-size: 12px;
+      border-radius: 0px;
+      margin: 0px;
+      min-width: 50px;
+      white-space: nowrap;
     }
   }
 }

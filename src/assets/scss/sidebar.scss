@@ -14,12 +14,13 @@
   .sidebar {
     position: fixed;
     height: calc(100vh - 56px);
-    min-width: 250px;
-    max-width: 250px;
+    min-width: 200px;
+    max-width: 200px;
 
     background-color: #405189;
     border-color: #405189;
     overflow-y: auto;
+    z-index: 10;
   }
 }
 

@@ -10,3 +10,24 @@
     }
   }
 }
+
+.template-edit-container {
+  min-width: 800px;
+}
+.template-edit-section {
+  .table-responsive {
+    border: 1px solid #ddd;
+    padding: 10px 15px;
+
+    &.small {
+      font-size: 0.75rem;
+    }
+    tbody {
+      border: 1px solid #ddd;
+
+      td {
+        vertical-align: middle;
+      }
+    }
+  }
+}

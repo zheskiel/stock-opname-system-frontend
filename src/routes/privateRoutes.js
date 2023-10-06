@@ -5,6 +5,9 @@ const TemplatesContainer = lazy(() => import("../containers/Templates"));
 const TemplatesViewContainer = lazy(() =>
   import("../containers/Templates/view")
 );
+const TemplatesEditContainer = lazy(() =>
+  import("../containers/Templates/Edit")
+);
 const DashboardContainer = lazy(() => import("../containers/Dashboard"));
 
 const PrivateRoutes = [
@@ -21,6 +24,11 @@ const PrivateRoutes = [
   {
     path: "/template/:id/view",
     component: TemplatesViewContainer,
+    exact: true,
+  },
+  {
+    path: "/template/:id/edit",
+    component: TemplatesEditContainer,
     exact: true,
   },
   {

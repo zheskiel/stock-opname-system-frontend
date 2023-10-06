@@ -17,12 +17,12 @@ class TemplateView extends Component {
     const { details: items } = data;
 
     const arrs = [
+      { title: "ID", key: "id", width: "3%" },
       { title: "Product ID", key: "product_id", width: "10%" },
       { title: "Product Code", key: "product_code", width: "15%" },
       { title: "Product Name", key: "product_name", width: "30%" },
-      { title: "Unit Value", key: "unit_value", width: "15%" },
-      { title: "Unit Label", key: "unit_label", width: "15%" },
-      { title: "Tolerance", key: "tolerance", width: "15%" },
+      { title: "Tolerance", key: "receipt_tolerance", width: "15%" },
+      { title: "Units", key: "units", width: "15%" },
     ];
 
     let params = {
@@ -46,7 +46,7 @@ const mapStateToProps = (state) => ({
   details: state.template.data,
 });
 
-const mapDispatchToProps = (dispatch) => ({});
+const mapDispatchToProps = () => ({});
 
 export default compose(
   withRouter,

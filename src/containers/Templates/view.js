@@ -19,6 +19,7 @@ import { fetchTemplateViewData } from "../../redux/actions";
 
 // Styling
 import "../../assets/scss/templates.scss";
+import Link from "../../components/Link";
 
 class TemplatesViewContainer extends Component {
   constructor(props) {
@@ -48,8 +49,7 @@ class TemplatesViewContainer extends Component {
 
   render() {
     const { details } = this.props;
-
-    const { total, current_page, per_page } = details;
+    const { total, current_page, per_page, last_page } = details;
     const newProps = {
       totalCount: total,
       pageNumber: current_page,
@@ -57,18 +57,43 @@ class TemplatesViewContainer extends Component {
       handlePagination: this.handleFetchData,
     };
 
+    const { data: detail } = details;
+
+    const hasPagination = (lastPage) => {
+      return lastPage > 1 ? (
+        <>
+          <br />
+
+          <PaginationSection {...newProps} />
+        </>
+      ) : null;
+    };
+
+    if (!detail) return <>Loading...</>;
+
     return (
       <LayoutContainer>
         <MainSection>
           <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h2 className="h2">Templates Details</h2>
+            <h2 className="h2">{detail.title}'s Details</h2>
+
+            <div className="btn-toolbar mb-2 mb-md-0">
+              <div className="btn-group">
+                <Link
+                  type="button"
+                  className="btn btn-sm btn-warning"
+                  href={`/template/${detail.id}/edit`}
+                >
+                  Edit
+                </Link>
+              </div>
+            </div>
           </div>
 
           <div className="table-responsive small">
             <TemplateView />
-            <br />
 
-            <PaginationSection {...newProps} />
+            {hasPagination(last_page)}
           </div>
         </MainSection>
       </LayoutContainer>

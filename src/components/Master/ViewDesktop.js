@@ -10,6 +10,7 @@ class ViewDesktop extends Component {
         const DefaultItem = ({ arr, item }) => {
           return <td key={`inner-${arr.title}-${item.id}`}>{item[arr.key]}</td>;
         };
+
         const CustomItem = ({ arr, item }) => {
           let itemUnits = Object.entries(item.units);
 
@@ -34,13 +35,13 @@ class ViewDesktop extends Component {
 
         return (
           <tr key={item.product_id}>
-            {arrs.map((arr) => {
+            {arrs.map((arr, index) => {
               let params = { arr, item };
 
               return arr.key != "units" ? (
-                <DefaultItem {...params} />
+                <DefaultItem key={index} {...params} />
               ) : (
-                <CustomItem {...params} />
+                <CustomItem key={index} {...params} />
               );
             })}
           </tr>

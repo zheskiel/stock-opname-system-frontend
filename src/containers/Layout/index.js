@@ -34,7 +34,11 @@ class LayoutContainer extends Component {
   }
 
   handlePageResize = () => {
-    this.props.setViewMode(calculateWindowSize());
+    let { mode, setViewMode } = this.props;
+
+    let size = calculateWindowSize();
+
+    if (size != mode) setViewMode(size);
   };
 
   render() {
@@ -65,7 +69,9 @@ class LayoutContainer extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  mode: state.viewMode.mode,
+});
 const mapDispatchToProps = (dispatch) => ({
   setViewMode: (mode) => {
     dispatch(setViewMode(mode));

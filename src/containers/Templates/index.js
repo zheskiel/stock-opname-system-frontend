@@ -4,6 +4,9 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { compose } from "redux";
 
+// Components
+import Link from "../../components/Link";
+
 // Containers
 import LayoutContainer from "../Layout";
 
@@ -14,7 +17,6 @@ import MainSection from "../../sections/Main";
 import { fetchTemplatesData } from "../../redux/actions";
 
 import "../../assets/scss/templates.scss";
-import Link from "../../components/Link";
 
 const initialState = {
   templates: [],

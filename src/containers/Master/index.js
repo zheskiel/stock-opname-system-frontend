@@ -50,13 +50,25 @@ class MasterContainer extends Component {
   render() {
     const { master } = this.props;
 
-    const { total, current_page, per_page } = master;
+    const { total, current_page, per_page, last_page } = master;
     const newProps = {
       totalCount: total,
       pageNumber: current_page,
       pageSize: per_page,
       handlePagination: this.handleFetchData,
     };
+
+    const hasPagination = (lastPage) => {
+      return lastPage > 1 ? (
+        <>
+          <br />
+
+          <PaginationSection {...newProps} />
+        </>
+      ) : null;
+    };
+
+    if (!master) return <>Loading...</>;
 
     return (
       <LayoutContainer>
@@ -74,9 +86,8 @@ class MasterContainer extends Component {
 
           <div className="table-responsive small">
             <MasterView />
-            <br />
 
-            <PaginationSection {...newProps} />
+            {hasPagination(last_page)}
           </div>
         </MainSection>
       </LayoutContainer>

@@ -17,6 +17,7 @@ class MasterView extends Component {
     const { data: items } = master;
 
     const arrs = [
+      { title: "ID", key: "id", width: "3%" },
       { title: "Product ID", key: "product_id", width: "5%" },
       { title: "Category", key: "category", width: "20%" },
       { title: "Category Type", key: "category_type", width: "10%" },
