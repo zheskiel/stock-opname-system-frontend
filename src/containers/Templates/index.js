@@ -5,12 +5,14 @@ import { connect } from "react-redux";
 import { compose } from "redux";
 
 // Components
+import Loader from "../../components/Loader";
 import Link from "../../components/Link";
 
 // Containers
 import LayoutContainer from "../Layout";
 
 // Sections
+import PaginationSection from "../../sections/Pagination";
 import MainSection from "../../sections/Main";
 
 // Actions
@@ -19,6 +21,7 @@ import { fetchTemplatesData } from "../../redux/actions";
 import "../../assets/scss/templates.scss";
 
 const initialState = {
+  isReady: false,
   templates: [],
 };
 
@@ -27,18 +30,111 @@ class TemplatesContainer extends Component {
     super(props);
 
     this.state = initialState;
+
+    this.handleFetchData = this.handleFetchData.bind(this);
   }
 
   componentDidMount() {
-    this.props.fetchTemplatesData();
+    new Promise((resolve) => resolve())
+      .then(() => this.handleFetchData())
+      .then(() => {
+        setTimeout(() => {
+          this.setState({
+            isReady: true,
+          });
+        }, 500);
+      });
   }
 
+  handleFetchData = async (page = 1) => {
+    let { fetchTemplatesData, templates } = this.props;
+    let { current_page } = templates;
+
+    // Dont do fetch, when user at the same page
+    if (page == current_page) return;
+
+    let params = {
+      page,
+    };
+
+    fetchTemplatesData(params);
+
+    window.scrollTo(0, 0);
+  };
+
   render() {
+    const { isReady } = this.state;
     const { templates } = this.props;
-
-    if (!templates) return <>Loading...</>;
-
     const { data: items } = templates;
+
+    const { total, current_page, per_page, last_page } = templates;
+    const newProps = {
+      totalCount: total,
+      pageNumber: current_page,
+      pageSize: per_page,
+      handlePagination: this.handleFetchData,
+    };
+
+    const hasPagination = (lastPage) => {
+      return lastPage > 1 ? <PaginationSection {...newProps} /> : null;
+    };
+
+    const ContentSection = () => {
+      if (!items || !isReady)
+        return (
+          <div className="templates-container card-container">
+            <Loader />
+          </div>
+        );
+
+      return (
+        <div className="templates-container card-container">
+          <div className="row">
+            {items &&
+              items.map((item) => {
+                return (
+                  <div className="col-sm-6 mb-3" key={item.id}>
+                    <div className="card">
+                      <div className="card-body">
+                        <h6 className="card-title">{item.title}</h6>
+                        <p className="templates-text card-text">
+                          Status: Published
+                          <span className="templates-status position-absolute p-2 bg-success border border-light rounded-circle">
+                            <span className="visually-hidden"></span>
+                          </span>
+                          <span className="float-end">
+                            Total items: {item.details_count}
+                          </span>
+                        </p>
+
+                        <Link
+                          className="btn btn-primary me-2"
+                          href={`/template/${item.id}/view`}
+                        >
+                          View
+                        </Link>
+
+                        <Link
+                          className="btn btn-warning me-2"
+                          href={`/template/${item.id}/edit`}
+                        >
+                          Edit
+                        </Link>
+
+                        <a href="#" className="btn btn-danger me">
+                          Delete
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+
+          {hasPagination(last_page)}
+        </div>
+      );
+    };
 
     return (
       <LayoutContainer>
@@ -47,44 +143,7 @@ class TemplatesContainer extends Component {
             <h2 className="h2">Templates</h2>
           </div>
 
-          <div className="templates-container card-container">
-            <div className="row">
-              {items &&
-                items.map((item) => {
-                  return (
-                    <div className="col-sm-6 mb-3" key={item.id}>
-                      <div className="card">
-                        <div className="card-body">
-                          <h5 className="card-title">{item.title}</h5>
-                          <p className="templates-text card-text">
-                            Status: Published
-                            <span className="templates-status position-absolute top-0 p-2 bg-success border border-light rounded-circle">
-                              <span className="visually-hidden">
-                                New alerts
-                              </span>
-                            </span>
-                          </p>
-
-                          <Link
-                            className="btn btn-primary me-2"
-                            href={`/template/${item.id}/view`}
-                          >
-                            View
-                          </Link>
-
-                          <a href="#" className="btn btn-warning me-2">
-                            Edit
-                          </a>
-                          <a href="#" className="btn btn-danger me">
-                            Delete
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-            </div>
-          </div>
+          <ContentSection />
         </MainSection>
       </LayoutContainer>
     );

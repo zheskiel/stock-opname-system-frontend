@@ -8,13 +8,13 @@ import { compose } from "redux";
 import MainSection from "../../../sections/Main";
 
 // Containers
-import TemplateTable from "../Edit/Tables/template";
-import MasterTable from "../Edit/Tables/master";
+import TemplateTable from "./Tables/template";
+import DetailTable from "./Tables/detail";
 import LayoutContainer from "../../Layout";
 
 import "../../../assets/scss/templates.scss";
 
-class TemplateEdit extends Component {
+class FormEdit extends Component {
   render() {
     const { details } = this.props;
     const { data } = details;
@@ -23,13 +23,13 @@ class TemplateEdit extends Component {
       <LayoutContainer>
         <MainSection>
           <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h2 className="h2">Template Edit - ( {data?.title} )</h2>
+            <h4 className="h4">Form Edit - {data?.staff?.name}</h4>
           </div>
 
           <div className="template-edit-container card-container">
             <div className="row">
-              <MasterTable />
               <TemplateTable />
+              <DetailTable />
             </div>
           </div>
         </MainSection>
@@ -39,11 +39,11 @@ class TemplateEdit extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  details: state.template.data,
+  details: state.form.data,
 });
 const mapDispatchToProps = () => ({});
 
 export default compose(
   withRouter,
   connect(mapStateToProps, mapDispatchToProps)
-)(TemplateEdit);
+)(FormEdit);

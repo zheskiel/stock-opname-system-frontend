@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 
-class ViewDesktop extends Component {
+class DesktopView extends Component {
   render() {
     const { items, arrs } = this.props;
-
     const dataItems =
       items &&
       Object.values(items).map((item) => {
@@ -34,7 +33,7 @@ class ViewDesktop extends Component {
         };
 
         return (
-          <tr key={item.product_id}>
+          <tr key={item.id}>
             {arrs.map((arr, index) => {
               let params = { arr, item };
               let entities = {
@@ -65,10 +64,20 @@ class ViewDesktop extends Component {
           </tr>
         </thead>
 
-        <tbody>{dataItems}</tbody>
+        <tbody>
+          {items && items.length > 0 ? (
+            dataItems
+          ) : (
+            <tr>
+              <td className="text-center p-4" colSpan={arrs.length}>
+                No Items
+              </td>
+            </tr>
+          )}
+        </tbody>
       </table>
     );
   }
 }
 
-export default ViewDesktop;
+export default DesktopView;

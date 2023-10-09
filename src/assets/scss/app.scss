@@ -74,14 +74,21 @@ table {
         justify-content: space-between;
         align-items: center;
         text-align: left;
+        padding: 3px 0px;
       }
     }
   }
 
   .unit-actions {
     text-align: center;
-    padding: 0;
 
+    .unit-added {
+      &:hover {
+        cursor: not-allowed;
+      }
+    }
+
+    a,
     button {
       padding: 0px 5px;
       font-size: 12px;
@@ -89,6 +96,10 @@ table {
       margin: 0px;
       min-width: 50px;
       white-space: nowrap;
+
+      -webkit-user-select: none; /* Safari */
+      -ms-user-select: none; /* IE 10 and IE 11 */
+      user-select: none; /* Standard syntax */
     }
   }
 }
@@ -137,5 +148,24 @@ table {
         }
       }
     }
+  }
+}
+
+.loading-container {
+  display: flex;
+  align-items: center;
+  line-height: 45px;
+
+  &.fullsize {
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    height: 450px;
+  }
+  p {
+    margin: 0;
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
   }
 }

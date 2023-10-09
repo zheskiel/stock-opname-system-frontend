@@ -12,16 +12,17 @@ class MasterView extends Component {
   render() {
     const { master, mode } = this.props;
 
-    if (!master) return <>Loading...</>;
+    if (!master) return <></>;
 
     const { data: items } = master;
 
     const arrs = [
-      { title: "ID", key: "id", width: "3%" },
+      // { title: "ID", key: "id", width: "3%" },
       { title: "Product ID", key: "product_id", width: "5%" },
       { title: "Category", key: "category", width: "20%" },
       { title: "Category Type", key: "category_type", width: "10%" },
       { title: "Sub Category", key: "subcategory", width: "15%" },
+      { title: "Tolerance", key: "receipt_tolerance", width: "5%" },
       { title: "Units", key: "units", width: "15%" },
     ];
 
@@ -30,14 +31,14 @@ class MasterView extends Component {
       arrs,
     };
 
-    const renderItem =
-      mode == "phone" ? (
-        <ViewMobile {...params} />
-      ) : (
-        <ViewDesktop {...params} />
-      );
+    let entities = {
+      mobile: ViewMobile,
+      desktop: ViewDesktop,
+    };
 
-    return <>{renderItem}</>;
+    let Entity = mode == "phone" ? entities.mobile : entities.desktop;
+
+    return <Entity {...params} />;
   }
 }
 

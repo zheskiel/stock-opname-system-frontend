@@ -5,28 +5,27 @@ import { connect } from "react-redux";
 import { compose } from "redux";
 
 // Components
-import TemplateView from "../../components/Template/View";
+import FormView from "../../components/Form/View";
 import Loader from "../../components/Loader";
 import Link from "../../components/Link";
 
 // Containers
-import LayoutContainer from "../Layout";
+import LayoutContainer from "../../containers/Layout";
 
 // Sections
-import MainSection from "../../sections/Main";
 import PaginationSection from "../../sections/Pagination";
+import MainSection from "../../sections/Main";
 
 // Actions
-import { fetchTemplateViewData } from "../../redux/actions";
+import { fetchFormDetailsData } from "../../redux/actions";
 
-// Styling
 import "../../assets/scss/templates.scss";
 
 const initialState = {
   isReady: false,
 };
 
-class TemplatesViewContainer extends Component {
+class FormContainer extends Component {
   constructor(props) {
     super(props);
 
@@ -48,23 +47,24 @@ class TemplatesViewContainer extends Component {
   }
 
   handleFetchData = (page = 1) => {
-    const { fetchTemplateViewData, match } = this.props;
-    const { params } = match;
-    const { id } = params;
-
-    let parameters = {
-      templateId: id,
-      page: page,
+    let { fetchFormDetailsData, match } = this.props;
+    let params = {
+      ...match.params,
+      page,
     };
 
-    fetchTemplateViewData(parameters);
+    fetchFormDetailsData(params);
 
     window.scrollTo(0, 0);
   };
 
   render() {
     const { isReady } = this.state;
-    const { details } = this.props;
+    const { details, match } = this.props;
+    const { params } = match;
+
+    const { managerId, staffId } = params;
+
     const { total, current_page, per_page, last_page } = details;
     const newProps = {
       totalCount: total,
@@ -73,23 +73,24 @@ class TemplatesViewContainer extends Component {
       handlePagination: this.handleFetchData,
     };
 
-    const { data: detail } = details;
-
     const hasPagination = (lastPage) => {
       return lastPage > 1 ? <PaginationSection {...newProps} /> : null;
     };
 
+    const { data } = details;
+
     const ContentSection = () => {
-      if (!detail || !isReady)
+      if (!isReady) {
         return (
-          <div className="template-view-container table-responsive small">
+          <div className="table-responsive small">
             <Loader />
           </div>
         );
+      }
 
       return (
         <div className="template-view-container table-responsive small">
-          <TemplateView />
+          <FormView />
 
           {hasPagination(last_page)}
         </div>
@@ -100,16 +101,13 @@ class TemplatesViewContainer extends Component {
       <LayoutContainer>
         <MainSection>
           <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h2 className="h2">
-              {detail?.title ? `${detail.title}'s Details` : <>Loading...</>}
-            </h2>
+            <h4 className="h4">Form Details - {data?.staff?.name}</h4>
 
             <div className="btn-toolbar mb-2 mb-md-0">
               <div className="btn-group">
                 <Link
-                  type="button"
-                  className="btn btn-sm btn-warning"
-                  href={`/template/${detail?.id}/edit`}
+                  className="btn btn-warning me-2"
+                  href={`/form/${managerId}/${staffId}/details/${data?.template_id}/edit`}
                 >
                   Edit
                 </Link>
@@ -125,13 +123,13 @@ class TemplatesViewContainer extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  details: state.template.data,
+  details: state.form.data,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchTemplateViewData: (params) => {
+  fetchFormDetailsData: (params) => {
     return new Promise((resolve) => {
-      dispatch(fetchTemplateViewData(params)).then(() => resolve());
+      dispatch(fetchFormDetailsData(params)).then(() => resolve());
     });
   },
 });
@@ -139,4 +137,4 @@ const mapDispatchToProps = (dispatch) => ({
 export default compose(
   withRouter,
   connect(mapStateToProps, mapDispatchToProps)
-)(TemplatesViewContainer);
+)(FormContainer);

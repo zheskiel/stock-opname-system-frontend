@@ -7,6 +7,7 @@
 
     .templates-status {
       transform: translate(50%, 20%);
+      top: 0px;
     }
   }
 }
@@ -14,20 +15,33 @@
 .template-edit-container {
   min-width: 800px;
 }
+
 .template-edit-section {
+  .template-header-section {
+    min-height: 35px;
+    h6 {
+      margin-bottom: 0px;
+    }
+  }
   .table-responsive {
     border: 1px solid #ddd;
-    padding: 10px 15px;
+    padding: 10px;
 
     &.small {
       font-size: 0.75rem;
     }
+
     tbody {
       border: 1px solid #ddd;
+    }
+  }
+}
 
-      td {
-        vertical-align: middle;
-      }
+.table-responsive {
+  thead,
+  tbody {
+    tr {
+      vertical-align: top;
     }
   }
 }

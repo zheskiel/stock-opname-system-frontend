@@ -12,30 +12,28 @@ import Loader from "../../../../components/Loader";
 
 // Actions
 import {
-  fetchTemplateViewData,
-  fetchTemplateSelectedData,
-  removeTemplateDetail,
+  fetchFormDetailsData,
+  fetchFormDetailsSelectedData,
+  removeFormDetail,
 } from "../../../../redux/actions";
 
 const initialState = {
   isReady: false,
 };
 
-class TemplateTable extends Component {
+class DetailTable extends Component {
   constructor(props) {
     super(props);
 
     this.state = initialState;
 
-    this.handleRemoveData = this.handleRemoveData.bind(this);
     this.handleFetchData = this.handleFetchData.bind(this);
+    this.handleRemoveData = this.handleRemoveData.bind(this);
   }
 
   componentDidMount() {
     new Promise((resolve) => resolve())
-      .then(() => {
-        this.handleFetchData();
-      })
+      .then(() => this.handleFetchData())
       .then(() => {
         setTimeout(() => {
           this.setState({
@@ -45,50 +43,54 @@ class TemplateTable extends Component {
       });
   }
 
+  handleFetchData = (page = 1) => {
+    let { fetchFormDetailsData, match } = this.props;
+    let params = {
+      ...match.params,
+      page,
+    };
+
+    fetchFormDetailsData(params);
+
+    window.scrollTo(0, 0);
+  };
+
   handleRemoveData = async (item) => {
     return new Promise((resolve) => resolve())
       .then(() => {
-        const { removeTemplateDetail } = this.props;
+        const { removeFormDetail, match } = this.props;
+        const { params } = match;
 
-        let { templates_id, product_id } = item;
-        let params = {
+        let { id, templates_id, product_id } = item;
+
+        let parameters = {
+          ...params,
           templateId: templates_id,
           productId: product_id,
+          itemId: id,
         };
 
-        removeTemplateDetail(params);
+        removeFormDetail(parameters);
       })
       .then(() => {
-        const { fetchTemplateSelectedData } = this.props;
+        const { fetchFormDetailsSelectedData, match } = this.props;
+
+        let { params } = match;
 
         setTimeout(() => {
           let parameters = {
-            templateId: item.templates_id,
+            ...params,
           };
 
-          fetchTemplateSelectedData(parameters);
+          fetchFormDetailsSelectedData(parameters);
         }, 250);
       });
-  };
-
-  handleFetchData = (page = 1) => {
-    const { fetchTemplateViewData, match } = this.props;
-    const { params } = match;
-    const { id } = params;
-
-    let parameters = {
-      templateId: id,
-      page: page,
-    };
-
-    fetchTemplateViewData(parameters);
-
-    window.scrollTo(0, 0);
   };
 
   render() {
     const { isReady } = this.state;
     const { details } = this.props;
+
     const { total, current_page, per_page, last_page } = details;
     const newProps = {
       totalCount: total,
@@ -97,86 +99,82 @@ class TemplateTable extends Component {
       handlePagination: this.handleFetchData,
     };
 
-    const { data } = details;
-
     const hasPagination = (lastPage) => {
       return lastPage > 1 ? <PaginationSection {...newProps} /> : null;
     };
 
+    const { data } = details;
+
     if (!data) return <></>;
 
-    const { details: templateItems } = data;
+    const { items } = data;
 
-    const templateArrs = [
+    const arrs = [
       // { title: "ID", key: "id", width: "3%" },
       { title: "Product ID", key: "product_id", width: "10%" },
       { title: "Product Code", key: "product_code", width: "15%" },
       { title: "Product Name", key: "product_name", width: "40%" },
       // { title: "Tolerance", key: "receipt_tolerance", width: "10%" },
-      // { title: "Units", key: "units", width: "30%" },
+      { title: "Unit", key: "unit", width: "30%" },
       { title: "Actions", key: "actions", width: "5%" },
     ];
 
-    const templateDataItems =
-      templateItems &&
-      Object.values(templateItems).map((item) => {
+    const dataItems =
+      items &&
+      Object.values(items).map((item) => {
         const DefaultItem = ({ arr, item }) => {
           return <td key={`inner-${arr.title}-${item.id}`}>{item[arr.key]}</td>;
         };
 
-        const CustomItem = ({ arr, item }) => {
-          let itemUnits = Object.entries(item.units);
-
+        const ActionItem = ({ arr, item }) => {
           return (
             <React.Fragment key={`inner-${arr.title}-${item.id}`}>
-              <td className="unit-section">
-                {itemUnits.length > 0 &&
-                  itemUnits.map((unit, index) => {
-                    return (
-                      <div key={index} className="unit-container">
-                        <div className="unit-detail">
-                          <span>{unit[0]}</span>
-                          <span>
-                            {unit[1].value} {unit[1].sku}
-                          </span>
-                        </div>
-                      </div>
-                    );
-                  })}
+              <td className="unit-actions unit-section">
+                <div className="unit-container">
+                  <div className="unit-detail">
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => this.handleRemoveData(item)}
+                    >
+                      X Remove
+                    </button>
+                  </div>
+                </div>
               </td>
             </React.Fragment>
           );
         };
 
-        const ActionItem = ({ item }) => {
-          return (
-            <td className="unit-actions">
-              <button
-                className="btn btn-danger"
-                onClick={() => this.handleRemoveData(item)}
-              >
-                X Remove
-              </button>
-            </td>
-          );
-        };
-
         return (
           <tr key={item.id}>
-            {templateArrs.map((arr, index) => {
+            {arrs.map((arr, index) => {
               let params = { arr, item };
-              let Items = (arr) => {
-                switch (arr.key) {
-                  case "actions":
-                    return <ActionItem {...params} />;
-                  case "units":
-                    return <CustomItem key={index} {...params} />;
-                  default:
-                    return <DefaultItem key={index} {...params} />;
-                }
+              let entities = {
+                action: ActionItem,
+                default: DefaultItem,
               };
 
-              return <React.Fragment key={index}>{Items(arr)}</React.Fragment>;
+              let Entity = (params) => {
+                let Item;
+
+                switch (arr.key) {
+                  case "actions":
+                    Item = entities.action;
+                    break;
+
+                  default:
+                    Item = entities.default;
+                    break;
+                }
+
+                return <Item {...params} />;
+              };
+
+              return (
+                <React.Fragment key={index}>
+                  <Entity key={index} {...params} />
+                </React.Fragment>
+              );
             })}
           </tr>
         );
@@ -188,7 +186,7 @@ class TemplateTable extends Component {
           <table className="table table-striped table-sm desktop-main-data">
             <thead>
               <tr>
-                {templateArrs.map((arr) => {
+                {arrs.map((arr) => {
                   return (
                     <th scope="col" width={arr.width} key={arr.title}>
                       {arr.title}
@@ -198,7 +196,7 @@ class TemplateTable extends Component {
               </tr>
             </thead>
 
-            <tbody>{templateDataItems}</tbody>
+            <tbody>{dataItems}</tbody>
           </table>
 
           {hasPagination(last_page)}
@@ -206,7 +204,7 @@ class TemplateTable extends Component {
       );
     };
 
-    const TemplateTable = () => {
+    const DetailTable = () => {
       if (!data || !isReady) {
         return (
           <div className="template-edit-section col-6">
@@ -218,7 +216,7 @@ class TemplateTable extends Component {
       return (
         <div className="template-edit-section col-6">
           <div className="template-header-section">
-            <h6 className="h6">{data.title}'s Template</h6>
+            <h6 className="h6">Form Details</h6>
           </div>
 
           <ContentSection />
@@ -226,30 +224,28 @@ class TemplateTable extends Component {
       );
     };
 
-    return <TemplateTable />;
+    return <DetailTable />;
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    details: state.template.data,
-  };
-};
+const mapStateToProps = (state) => ({
+  details: state.form.data,
+});
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchTemplateViewData: (params) => {
+  fetchFormDetailsData: (params) => {
     return new Promise((resolve) => {
-      dispatch(fetchTemplateViewData(params)).then(() => resolve());
+      dispatch(fetchFormDetailsData(params)).then(() => resolve());
     });
   },
-  fetchTemplateSelectedData: (params) => {
+  fetchFormDetailsSelectedData: (params) => {
     return new Promise((resolve) => {
-      dispatch(fetchTemplateSelectedData(params)).then(() => resolve());
+      dispatch(fetchFormDetailsSelectedData(params)).then(() => resolve());
     });
   },
-  removeTemplateDetail: (params) => {
+  removeFormDetail: (params) => {
     return new Promise((resolve) => {
-      dispatch(removeTemplateDetail(params)).then(() => resolve());
+      dispatch(removeFormDetail(params)).then(() => resolve());
     });
   },
 });
@@ -257,4 +253,4 @@ const mapDispatchToProps = (dispatch) => ({
 export default compose(
   withRouter,
   connect(mapStateToProps, mapDispatchToProps)
-)(TemplateTable);
+)(DetailTable);

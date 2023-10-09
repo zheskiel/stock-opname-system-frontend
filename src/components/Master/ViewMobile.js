@@ -45,10 +45,16 @@ class ViewMobile extends Component {
                 {arrs.map((arr) => {
                   let params = { arr, item };
 
-                  return arr.key != "units" ? (
-                    <DefaultItem {...params} />
-                  ) : (
-                    <CustomItem {...params} />
+                  let entities = {
+                    default: DefaultItem,
+                    custom: CustomItem,
+                  };
+
+                  let Entity =
+                    arr.key != "units" ? entities.default : entities.custom;
+
+                  return (
+                    <Entity key={`inner-${arr.title}-${item.id}`} {...params} />
                   );
                 })}
               </div>

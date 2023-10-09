@@ -8,12 +8,32 @@ const TemplatesViewContainer = lazy(() =>
 const TemplatesEditContainer = lazy(() =>
   import("../containers/Templates/Edit")
 );
+
+const FormContainer = lazy(() => import("../containers/Form"));
+const FormEditContainer = lazy(() => import("../containers/Form/Edit"));
+const FormsContainer = lazy(() => import("../containers/Forms"));
+
 const DashboardContainer = lazy(() => import("../containers/Dashboard"));
 
 const PrivateRoutes = [
   {
     path: "/master",
     component: MasterContainer,
+    exact: true,
+  },
+  {
+    path: "/form/:managerId/:staffId/details/:templateId/edit",
+    component: FormEditContainer,
+    exact: true,
+  },
+  {
+    path: "/form/:managerId/:staffId/details",
+    component: FormContainer,
+    exact: true,
+  },
+  {
+    path: "/forms",
+    component: FormsContainer,
     exact: true,
   },
   {

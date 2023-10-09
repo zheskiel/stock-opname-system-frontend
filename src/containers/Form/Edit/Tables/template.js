@@ -13,8 +13,8 @@ import Loader from "../../../../components/Loader";
 // Actions
 import {
   fetchTemplateViewData,
-  fetchTemplateSelectedData,
-  removeTemplateDetail,
+  fetchFormDetailsSelectedData,
+  createFormDetail,
 } from "../../../../redux/actions";
 
 const initialState = {
@@ -27,14 +27,16 @@ class TemplateTable extends Component {
 
     this.state = initialState;
 
-    this.handleRemoveData = this.handleRemoveData.bind(this);
+    this.handleClick = this.handleClick.bind(this);
     this.handleFetchData = this.handleFetchData.bind(this);
+    this.handleFetchSelectedData = this.handleFetchSelectedData.bind(this);
   }
 
   componentDidMount() {
     new Promise((resolve) => resolve())
       .then(() => {
         this.handleFetchData();
+        this.handleFetchSelectedData();
       })
       .then(() => {
         setTimeout(() => {
@@ -45,40 +47,35 @@ class TemplateTable extends Component {
       });
   }
 
-  handleRemoveData = async (item) => {
+  handleClick = async (item, selectedUnit) => {
     return new Promise((resolve) => resolve())
       .then(() => {
-        const { removeTemplateDetail } = this.props;
+        const { createFormDetail, match } = this.props;
+        const { params } = match;
 
-        let { templates_id, product_id } = item;
-        let params = {
-          templateId: templates_id,
-          productId: product_id,
+        let parameters = {
+          ...params,
+          item,
+          selectedUnit,
         };
 
-        removeTemplateDetail(params);
+        createFormDetail(parameters);
       })
-      .then(() => {
-        const { fetchTemplateSelectedData } = this.props;
-
+      .then(() =>
         setTimeout(() => {
-          let parameters = {
-            templateId: item.templates_id,
-          };
-
-          fetchTemplateSelectedData(parameters);
-        }, 250);
-      });
+          this.handleFetchSelectedData();
+        }, 250)
+      );
   };
 
   handleFetchData = (page = 1) => {
     const { fetchTemplateViewData, match } = this.props;
     const { params } = match;
-    const { id } = params;
+    const { templateId } = params;
 
     let parameters = {
-      templateId: id,
-      page: page,
+      templateId,
+      page,
     };
 
     fetchTemplateViewData(parameters);
@@ -86,10 +83,22 @@ class TemplateTable extends Component {
     window.scrollTo(0, 0);
   };
 
+  handleFetchSelectedData = () => {
+    let { fetchFormDetailsSelectedData, match } = this.props;
+    let { params } = match;
+
+    let parameters = {
+      ...params,
+    };
+
+    fetchFormDetailsSelectedData(parameters);
+  };
+
   render() {
     const { isReady } = this.state;
-    const { details } = this.props;
-    const { total, current_page, per_page, last_page } = details;
+    const { templatesDetails, selected } = this.props;
+
+    const { total, current_page, per_page, last_page } = templatesDetails;
     const newProps = {
       totalCount: total,
       pageNumber: current_page,
@@ -97,7 +106,7 @@ class TemplateTable extends Component {
       handlePagination: this.handleFetchData,
     };
 
-    const { data } = details;
+    const { data } = templatesDetails;
 
     const hasPagination = (lastPage) => {
       return lastPage > 1 ? <PaginationSection {...newProps} /> : null;
@@ -113,7 +122,7 @@ class TemplateTable extends Component {
       { title: "Product Code", key: "product_code", width: "15%" },
       { title: "Product Name", key: "product_name", width: "40%" },
       // { title: "Tolerance", key: "receipt_tolerance", width: "10%" },
-      // { title: "Units", key: "units", width: "30%" },
+      { title: "Units", key: "units", width: "30%" },
       { title: "Actions", key: "actions", width: "5%" },
     ];
 
@@ -148,16 +157,73 @@ class TemplateTable extends Component {
           );
         };
 
-        const ActionItem = ({ item }) => {
+        const ActionItem = ({ arr, item }) => {
+          let itemUnits = Object.entries(item.units);
+
           return (
-            <td className="unit-actions">
-              <button
-                className="btn btn-danger"
-                onClick={() => this.handleRemoveData(item)}
-              >
-                X Remove
-              </button>
-            </td>
+            <React.Fragment key={`inner-${arr.title}-${item.id}`}>
+              <td className="unit-actions unit-section">
+                {itemUnits.length > 0 &&
+                  itemUnits.map((unit, index) => {
+                    let isSelected = selected.some((target) => {
+                      let targetUnit = target.unit;
+                      let realUnit = unit[0];
+
+                      return (
+                        target.product_code == item.product_code &&
+                        targetUnit.trim() == realUnit.trim()
+                      );
+                    });
+
+                    let isDisabled = selected.some((target) => {
+                      return target.product_code == item.product_code;
+                    });
+
+                    const SelectedBtn = () => {
+                      return (
+                        <button className="unit-added btn btn-warning">
+                          Added
+                        </button>
+                      );
+                    };
+
+                    const CustomBtn = () => {
+                      return !isDisabled ? <NormalBtn /> : <DisabledBtn />;
+                    };
+
+                    const NormalBtn = () => {
+                      return (
+                        <button
+                          className="btn btn-info"
+                          onClick={() => this.handleClick(item, unit[0])}
+                        >
+                          + Add
+                        </button>
+                      );
+                    };
+
+                    const DisabledBtn = () => {
+                      return (
+                        <button className="unit-added btn btn-secondary">
+                          -
+                        </button>
+                      );
+                    };
+
+                    const ResultBtn = () => {
+                      return isSelected ? <SelectedBtn /> : <CustomBtn />;
+                    };
+
+                    return (
+                      <div key={index} className="unit-container">
+                        <div className="unit-detail">
+                          <ResultBtn />
+                        </div>
+                      </div>
+                    );
+                  })}
+              </td>
+            </React.Fragment>
           );
         };
 
@@ -165,18 +231,37 @@ class TemplateTable extends Component {
           <tr key={item.id}>
             {templateArrs.map((arr, index) => {
               let params = { arr, item };
-              let Items = (arr) => {
-                switch (arr.key) {
-                  case "actions":
-                    return <ActionItem {...params} />;
-                  case "units":
-                    return <CustomItem key={index} {...params} />;
-                  default:
-                    return <DefaultItem key={index} {...params} />;
-                }
+              let entities = {
+                action: ActionItem,
+                custom: CustomItem,
+                default: DefaultItem,
               };
 
-              return <React.Fragment key={index}>{Items(arr)}</React.Fragment>;
+              let Entity = (params) => {
+                let Item;
+
+                switch (arr.key) {
+                  case "actions":
+                    Item = entities.action;
+                    break;
+
+                  case "units":
+                    Item = entities.custom;
+                    break;
+
+                  default:
+                    Item = entities.default;
+                    break;
+                }
+
+                return <Item {...params} />;
+              };
+
+              return (
+                <React.Fragment key={index}>
+                  <Entity key={index} {...params} />
+                </React.Fragment>
+              );
             })}
           </tr>
         );
@@ -232,7 +317,9 @@ class TemplateTable extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    details: state.template.data,
+    formDetails: state.form.data,
+    templatesDetails: state.template.data,
+    selected: state.formDetailsSelected.data,
   };
 };
 
@@ -242,14 +329,14 @@ const mapDispatchToProps = (dispatch) => ({
       dispatch(fetchTemplateViewData(params)).then(() => resolve());
     });
   },
-  fetchTemplateSelectedData: (params) => {
+  fetchFormDetailsSelectedData: (params) => {
     return new Promise((resolve) => {
-      dispatch(fetchTemplateSelectedData(params)).then(() => resolve());
+      dispatch(fetchFormDetailsSelectedData(params)).then(() => resolve());
     });
   },
-  removeTemplateDetail: (params) => {
+  createFormDetail: (params) => {
     return new Promise((resolve) => {
-      dispatch(removeTemplateDetail(params)).then(() => resolve());
+      dispatch(createFormDetail(params)).then(() => resolve());
     });
   },
 });

@@ -18,7 +18,7 @@ const persistConfig = {
   storage,
   debug: false,
   stateReconciler: autoMergeLevel2,
-  whitelist: ["auth", "viewMode"],
+  whitelist: ["auth", "form", "viewMode"],
   blacklist: [],
 };
 const persistedReducer = persistReducer(persistConfig, rootReducer);

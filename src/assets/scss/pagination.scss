@@ -1,0 +1,18 @@
+.pagination-section {
+  a {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+
+    &.page-link {
+      display: block;
+      &.disabled {
+        background-color: #f5f3f3 !important;
+
+        &:hover {
+          cursor: not-allowed !important;
+        }
+      }
+    }
+  }
+}

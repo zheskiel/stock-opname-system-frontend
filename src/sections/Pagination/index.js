@@ -2,6 +2,8 @@ import React, { Component } from "react";
 
 import { calculatePagination } from "../../utils/helpers";
 
+import "../../assets/scss/pagination.scss";
+
 class PaginationSection extends Component {
   render() {
     const { totalCount, pageNumber, pageSize, handlePagination } = this.props;
@@ -22,7 +24,9 @@ class PaginationSection extends Component {
       return (
         <li>
           <a
-            className={`${anchorClass}${activeClass}`}
+            className={`${anchorClass}${activeClass} ${
+              isEligible ? "" : "disabled"
+            }`}
             disabled={isEligible ? "" : "disabled"}
             onClick={() => (isEligible ? handlePagination(page) : null)}
           >

@@ -47,37 +47,30 @@ export const fetchTemplateAllSelectedApi = ({ templateId }) => {
 };
 
 export const createTemplateDetailApi = ({ templateId, item }) => {
-  let parameters = {};
-
   let args = [templateId];
   let targetUrl = formatUrl(TEMPLATE_CREATE_DETAIL_URL, args);
   let url = new URL(targetUrl);
 
-  if (templateId != null) {
-    parameters.template_id = templateId;
-  }
+  let { units } = item;
 
-  const { product_id, product_code, product_name, units, receipt_tolerance } =
-    item;
-
-  parameters.product_id = product_id;
-  parameters.product_code = product_code;
-  parameters.product_name = product_name;
-  parameters.receipt_tolerance = receipt_tolerance;
-  parameters.units = JSON.stringify(units);
+  let parameters = {
+    ...item,
+    template_id: templateId,
+    units: JSON.stringify(units),
+  };
 
   return axiosInstance.post(url, parameters);
 };
 
 export const removeTemplateDetailApi = ({ templateId, productId }) => {
-  let parameters = {};
+  let parameters = {
+    template_id: templateId,
+    product_id: productId,
+  };
 
   let args = [templateId];
   let targetUrl = formatUrl(TEMPLATE_REMOVE_DETAIL_URL, args);
   let url = new URL(targetUrl);
-
-  parameters.template_id = templateId;
-  parameters.product_id = productId;
 
   return axiosInstance.post(url, parameters);
 };

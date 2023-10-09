@@ -51,6 +51,15 @@ class SidebarSection extends Component {
                 </Link>
               </li>
 
+              <li className="nav-item">
+                <Link
+                  className="nav-link d-flex align-items-center gap-2"
+                  href={`/forms`}
+                >
+                  Forms
+                </Link>
+              </li>
+
               <li className="nav-item accordion accordion-flush">
                 <div className="accordion-item">
                   <a

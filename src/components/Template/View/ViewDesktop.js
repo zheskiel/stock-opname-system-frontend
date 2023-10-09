@@ -37,12 +37,15 @@ class DesktopView extends Component {
           <tr key={item.id}>
             {arrs.map((arr, index) => {
               let params = { arr, item };
+              let entities = {
+                default: DefaultItem,
+                custom: CustomItem,
+              };
 
-              return arr.key != "units" ? (
-                <DefaultItem key={index} {...params} />
-              ) : (
-                <CustomItem key={index} {...params} />
-              );
+              let Entity =
+                arr.key != "units" ? entities.default : entities.custom;
+
+              return <Entity key={index} {...params} />;
             })}
           </tr>
         );
@@ -62,7 +65,15 @@ class DesktopView extends Component {
           </tr>
         </thead>
 
-        <tbody>{dataItems}</tbody>
+        <tbody>
+          {items && items.length > 0 ? (
+            dataItems
+          ) : (
+            <td className="text-center p-4" colSpan={arrs.length}>
+              No Items
+            </td>
+          )}
+        </tbody>
       </table>
     );
   }

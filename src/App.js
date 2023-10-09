@@ -10,6 +10,8 @@ import {
 import { connect } from "react-redux";
 import { compose } from "redux";
 
+import Loader from "./components/Loader";
+
 import { PublicRoutes, PrivateRoutes } from "./routes";
 import { PublicRoute, PrivateRoute } from "./routes/states";
 
@@ -19,7 +21,7 @@ class App extends Component {
   render() {
     return (
       <Router basename={"/"}>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<></>}>
           <Switch>
             {PublicRoutes.map((route, index) => {
               return (
