@@ -48,17 +48,20 @@ export const createFormDetail =
         });
     });
   };
+
 export const createFormDetailRequest = () => {
   return {
     type: CREATE_FORM_DETAIL_REQUEST,
   };
 };
+
 export const createFormDetailSuccess = (result) => {
   return {
     type: CREATE_FORM_DETAIL_SUCCESS,
     payload: result,
   };
 };
+
 export const createFormDetailFailed = (result) => {
   return {
     type: CREATE_FORM_DETAIL_FAILED,
@@ -92,17 +95,20 @@ export const removeFormDetail =
         });
     });
   };
+
 export const removeFormDetailRequest = () => {
   return {
     type: REMOVE_FORM_DETAIL_REQUEST,
   };
 };
+
 export const removeFormDetailSuccess = (result) => {
   return {
     type: REMOVE_FORM_DETAIL_SUCCESS,
     payload: result,
   };
 };
+
 export const removeFormDetailFailed = (result) => {
   return {
     type: REMOVE_FORM_DETAIL_FAILED,

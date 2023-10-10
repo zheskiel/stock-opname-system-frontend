@@ -175,18 +175,37 @@ class MasterTable extends Component {
           <tr key={item.product_id}>
             {masterArrs.map((arr, index) => {
               let params = { arr, item };
-              let Items = (arr) => {
-                switch (arr.key) {
-                  case "actions":
-                    return <ActionItem {...params} />;
-                  case "units":
-                    return <CustomItem key={index} {...params} />;
-                  default:
-                    return <DefaultItem key={index} {...params} />;
-                }
+              let entities = {
+                action: ActionItem,
+                custom: CustomItem,
+                default: DefaultItem,
               };
 
-              return <React.Fragment key={index}>{Items(arr)}</React.Fragment>;
+              let Entity = (params) => {
+                let Item;
+
+                switch (arr.key) {
+                  case "actions":
+                    Item = entities.action;
+                    break;
+
+                  case "units":
+                    Item = entities.custom;
+                    break;
+
+                  default:
+                    Item = entities.default;
+                    break;
+                }
+
+                return <Item {...params} />;
+              };
+
+              return (
+                <React.Fragment key={index}>
+                  <Entity key={index} {...params} />
+                </React.Fragment>
+              );
             })}
           </tr>
         );

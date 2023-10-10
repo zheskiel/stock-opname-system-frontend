@@ -7,6 +7,7 @@ import master from "./master";
 import viewMode from "./viewMode";
 import template from "./template";
 import templates from "./templates";
+import hierarchy from "./hierarchy";
 import templateSelected from "./templateSelected";
 import formDetailsSelected from "./formDetailsSelected";
 
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   forms,
   master,
   viewMode,
+  hierarchy,
   template,
   templates,
   templateSelected,

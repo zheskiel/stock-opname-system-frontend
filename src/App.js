@@ -10,8 +10,6 @@ import {
 import { connect } from "react-redux";
 import { compose } from "redux";
 
-import Loader from "./components/Loader";
-
 import { PublicRoutes, PrivateRoutes } from "./routes";
 import { PublicRoute, PrivateRoute } from "./routes/states";
 

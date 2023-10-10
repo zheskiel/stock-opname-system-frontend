@@ -1,0 +1,33 @@
+.node {
+  cursor: pointer;
+}
+
+.node circle {
+  fill: #fff;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+.node text {
+  font: 10px sans-serif;
+  outline: solid 1px rgba(145, 145, 255, 1);
+  outline-offset: 2px;
+
+  &:hover {
+    outline-color: rgba(255, 137, 137, 1);
+  }
+}
+
+.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 1.5px;
+}
+
+#d3Hierarchy {
+  svg {
+    width: calc(100vw - 250px) !important;
+    height: calc(100vh - 56px) !important;
+    margin-left: 200px;
+  }
+}

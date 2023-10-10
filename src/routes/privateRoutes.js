@@ -15,10 +15,17 @@ const FormsContainer = lazy(() => import("../containers/Forms"));
 
 const DashboardContainer = lazy(() => import("../containers/Dashboard"));
 
+const HierarchyContainer = lazy(() => import("../containers/Hierarchy"));
+
 const PrivateRoutes = [
   {
     path: "/master",
     component: MasterContainer,
+    exact: true,
+  },
+  {
+    path: "/hierarchy",
+    component: HierarchyContainer,
     exact: true,
   },
   {

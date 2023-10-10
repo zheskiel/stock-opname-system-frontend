@@ -67,12 +67,14 @@ export const createFormDetailApi = ({
 };
 
 export const removeFormDetailApi = ({
+  currentPage,
   managerId,
   staffId,
   productId,
   itemId,
 }) => {
   let parameters = {
+    current_page: currentPage,
     product_id: productId,
     manager_id: managerId,
     staff_id: staffId,

@@ -48,12 +48,15 @@ class TemplateTable extends Component {
   handleRemoveData = async (item) => {
     return new Promise((resolve) => resolve())
       .then(() => {
-        const { removeTemplateDetail } = this.props;
+        const { removeTemplateDetail, details } = this.props;
 
         let { templates_id, product_id } = item;
+        let { current_page } = details;
+
         let params = {
           templateId: templates_id,
           productId: product_id,
+          currentPage: current_page,
         };
 
         removeTemplateDetail(params);
@@ -165,18 +168,37 @@ class TemplateTable extends Component {
           <tr key={item.id}>
             {templateArrs.map((arr, index) => {
               let params = { arr, item };
-              let Items = (arr) => {
-                switch (arr.key) {
-                  case "actions":
-                    return <ActionItem {...params} />;
-                  case "units":
-                    return <CustomItem key={index} {...params} />;
-                  default:
-                    return <DefaultItem key={index} {...params} />;
-                }
+              let entities = {
+                action: ActionItem,
+                custom: CustomItem,
+                default: DefaultItem,
               };
 
-              return <React.Fragment key={index}>{Items(arr)}</React.Fragment>;
+              let Entity = (params) => {
+                let Item;
+
+                switch (arr.key) {
+                  case "actions":
+                    Item = entities.action;
+                    break;
+
+                  case "units":
+                    Item = entities.custom;
+                    break;
+
+                  default:
+                    Item = entities.default;
+                    break;
+                }
+
+                return <Item {...params} />;
+              };
+
+              return (
+                <React.Fragment key={index}>
+                  <Entity key={index} {...params} />
+                </React.Fragment>
+              );
             })}
           </tr>
         );

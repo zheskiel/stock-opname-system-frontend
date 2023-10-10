@@ -36,6 +36,14 @@ class SidebarSection extends Component {
               <li className="nav-item">
                 <Link
                   className="nav-link d-flex align-items-center gap-2"
+                  href={`/dashboard`}
+                >
+                  Calendar
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link
+                  className="nav-link d-flex align-items-center gap-2"
                   href={`/master`}
                 >
                   Master Data
@@ -57,6 +65,15 @@ class SidebarSection extends Component {
                   href={`/forms`}
                 >
                   Forms
+                </Link>
+              </li>
+
+              <li className="nav-item">
+                <Link
+                  className="nav-link d-flex align-items-center gap-2"
+                  href={`/hierarchy`}
+                >
+                  Hierarchy
                 </Link>
               </li>
 

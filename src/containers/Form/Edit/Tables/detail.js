@@ -58,13 +58,16 @@ class DetailTable extends Component {
   handleRemoveData = async (item) => {
     return new Promise((resolve) => resolve())
       .then(() => {
-        const { removeFormDetail, match } = this.props;
+        const { removeFormDetail, match, details } = this.props;
         const { params } = match;
+
+        const { current_page } = details;
 
         let { id, templates_id, product_id } = item;
 
         let parameters = {
           ...params,
+          currentPage: current_page,
           templateId: templates_id,
           productId: product_id,
           itemId: id,

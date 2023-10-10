@@ -62,8 +62,13 @@ export const createTemplateDetailApi = ({ templateId, item }) => {
   return axiosInstance.post(url, parameters);
 };
 
-export const removeTemplateDetailApi = ({ templateId, productId }) => {
+export const removeTemplateDetailApi = ({
+  templateId,
+  productId,
+  currentPage,
+}) => {
   let parameters = {
+    current_page: currentPage,
     template_id: templateId,
     product_id: productId,
   };

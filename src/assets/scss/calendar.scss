@@ -1,0 +1,20 @@
+.calendar-container {
+  width: 800px;
+  margin: 0 auto;
+  min-height: 600px;
+}
+
+.rbc-calendar {
+  height: 80vh;
+  min-height: 600px;
+}
+.rbc-day-slot .rbc-events-container {
+  //   margin-right: 0px;
+}
+.rbc-month-view {
+  //   display: block;
+}
+
+.rbc-month-row {
+  flex: 1;
+}
