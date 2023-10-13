@@ -3,6 +3,7 @@ import React, { Component } from "react";
 class DesktopView extends Component {
   render() {
     const { items, arrs } = this.props;
+
     const dataItems =
       items &&
       Object.values(items).map((item) => {
@@ -14,16 +15,16 @@ class DesktopView extends Component {
           let itemUnits = Object.entries(item.units);
 
           return (
-            <td key={`inner-${arr.title}-${item.id}`} className="unit-section">
+            <td
+              key={`inner-${arr.title}-${item.id}`}
+              className="unit-section badges-section"
+            >
               {itemUnits.length > 0 &&
                 itemUnits.map((unit, index) => {
                   return (
                     <div key={index} className="unit-container">
                       <div className="unit-detail">
-                        <span>{unit[0]}</span>
-                        <span>
-                          {unit[1].value} {unit[1].sku}
-                        </span>
+                        <span className="badge bg-primary">{unit[1].unit}</span>
                       </div>
                     </div>
                   );

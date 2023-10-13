@@ -7,6 +7,8 @@ import { compose } from "redux";
 import ViewDesktop from "./ViewDesktop";
 import ViewMobile from "./ViewMobile";
 
+import { typeThreeArrs as arrs } from "../../../constants/arrays";
+
 class FormView extends Component {
   render() {
     const { details, mode } = this.props;
@@ -15,15 +17,6 @@ class FormView extends Component {
     if (!data) return <></>;
 
     const { items } = data;
-
-    const arrs = [
-      // { title: "ID", key: "id", width: "3%" },
-      { title: "Product ID", key: "product_id", width: "10%" },
-      { title: "Product Code", key: "product_code", width: "15%" },
-      { title: "Product Name", key: "product_name", width: "30%" },
-      { title: "Unit", key: "unit", width: "15%" },
-      //   { title: "Value", key: "value", width: "15%" },
-    ];
 
     let params = {
       items,

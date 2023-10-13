@@ -29,12 +29,12 @@ class MobileView extends Component {
                   key={`inner-${arr.title}-${item.id}`}
                 >
                   <span className="division-title">{arr.title}</span>
-                  <span className="units-section">
+                  <span className="units-section badges-section">
                     {itemUnits.length > 0 &&
                       itemUnits.map((unit, index) => {
                         return (
-                          <div key={index}>
-                            {unit[0]} -- {unit[1].value} {unit[1].sku}
+                          <div key={index} className="badge bg-primary">
+                            {unit[1].unit}
                           </div>
                         );
                       })}

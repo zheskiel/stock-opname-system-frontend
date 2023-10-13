@@ -13,13 +13,31 @@ import { compose } from "redux";
 import { PublicRoutes, PrivateRoutes } from "./routes";
 import { PublicRoute, PrivateRoute } from "./routes/states";
 
+// Sections
+import MainSection from "./sections/Main";
+
+// Containers
+import LayoutContainer from "./containers/Layout";
+
+// Components
+import Loader from "./components/Loader";
+
 import "./assets/scss/app.scss";
 
 class App extends Component {
   render() {
+    const FallBack = () => {
+      return (
+        <LayoutContainer>
+          <MainSection>
+            <Loader />
+          </MainSection>
+        </LayoutContainer>
+      );
+    };
     return (
       <Router basename={"/"}>
-        <Suspense fallback={<></>}>
+        <Suspense fallback={<FallBack />}>
           <Switch>
             {PublicRoutes.map((route, index) => {
               return (

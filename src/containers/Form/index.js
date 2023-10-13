@@ -90,7 +90,9 @@ class FormContainer extends Component {
 
       return (
         <div className="template-view-container table-responsive small">
-          <FormView />
+          <div className="table-container">
+            <FormView />
+          </div>
 
           {hasPagination(last_page)}
         </div>

@@ -5,9 +5,11 @@ import {
   REMOVE_TEMPLATE_DETAIL_REQUEST,
   REMOVE_TEMPLATE_DETAIL_SUCCESS,
   REMOVE_TEMPLATE_DETAIL_FAILED,
+  REMOVE_ALL_TEMPLATE_DETAIL,
   FETCH_TEMPLATE_VIEW_REQUEST,
   FETCH_TEMPLATE_VIEW_SUCCESS,
   FETCH_TEMPLATE_VIEW_FAILED,
+  RESET_TEMPLATE_SELECTED,
 } from "../actions/types";
 
 const initialState = {
@@ -25,7 +27,7 @@ const TemplateDetails = (state = initialState, action) => {
       let newData = Object.assign({}, data.data);
       let newDetails = Object.assign({}, data.data.details);
 
-      let dataParams = {
+      var dataParams = {
         ...state.data,
         ...data,
         data: {
@@ -41,6 +43,22 @@ const TemplateDetails = (state = initialState, action) => {
       var newState = {
         success,
         message,
+        data: dataParams,
+      };
+
+      return { ...state, ...newState };
+
+    case REMOVE_ALL_TEMPLATE_DETAIL:
+      var dataParams = {
+        ...state.data,
+        data: {
+          ...state.data.data,
+          details: [],
+        },
+      };
+
+      var newState = {
+        ...state,
         data: dataParams,
       };
 
@@ -73,6 +91,9 @@ const TemplateDetails = (state = initialState, action) => {
       };
 
       return { ...state, ...newState };
+
+    case RESET_TEMPLATE_SELECTED:
+      return initialState;
 
     default:
       return state;

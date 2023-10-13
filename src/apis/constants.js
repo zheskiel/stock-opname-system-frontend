@@ -1,4 +1,5 @@
-export const API_URL = "http://stockopname:8888/api/v1";
+// export const API_URL = "http://stockopname:8888/api/v1";
+export const API_URL = "http://127.0.0.1:8000/api/v1";
 
 // export const LOGIN_URL = API_URL + "/login";
 export const LOGOUT_URL = API_URL + "/logout";
@@ -20,3 +21,6 @@ export const TEMPLATE_CREATE_DETAIL_URL =
 
 export const TEMPLATE_REMOVE_DETAIL_URL =
   API_URL + `/template/{0}/remove-detail`;
+
+export const TEMPLATE_REMOVE_ALL_DETAIL_URL =
+  API_URL + `/template/{0}/remove-all-detail`;

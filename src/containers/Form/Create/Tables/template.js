@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { compose } from "redux";
 
 // Array Data
-import { typeTwoArrs as arrs } from "../../../../constants/arrays";
+import { typeOneArrs as arrs } from "../../../../constants/arrays";
 
 // Sections
 import PaginationSection from "../../../../sections/Pagination";
@@ -16,9 +16,8 @@ import Loader from "../../../../components/Loader";
 // Actions
 import {
   fetchTemplateViewData,
-  fetchTemplateSelectedData,
-  removeTemplateDetail,
-  removeAllTemplateDetail,
+  fetchFormDetailsSelectedData,
+  createFormDetail,
 } from "../../../../redux/actions";
 
 const initialState = {
@@ -31,15 +30,16 @@ class TemplateTable extends Component {
 
     this.state = initialState;
 
-    this.handleRemoveAllData = this.handleRemoveAllData.bind(this);
-    this.handleRemoveData = this.handleRemoveData.bind(this);
+    this.handleClick = this.handleClick.bind(this);
     this.handleFetchData = this.handleFetchData.bind(this);
+    this.handleFetchSelectedData = this.handleFetchSelectedData.bind(this);
   }
 
   componentDidMount() {
     new Promise((resolve) => resolve())
       .then(() => {
         this.handleFetchData();
+        // this.handleFetchSelectedData();
       })
       .then(() => {
         setTimeout(() => {
@@ -50,69 +50,35 @@ class TemplateTable extends Component {
       });
   }
 
-  handleRemoveAllData = async () => {
+  handleClick = async (item, selectedUnit) => {
     return new Promise((resolve) => resolve())
       .then(() => {
-        const { currentTemplate, removeAllTemplateDetail } = this.props;
-        const { id } = currentTemplate;
+        const { createFormDetail, match } = this.props;
+        const { params } = match;
 
-        let params = {
-          templateId: id,
+        let parameters = {
+          ...params,
+          item,
+          selectedUnit,
         };
 
-        removeAllTemplateDetail(params);
+        createFormDetail(parameters);
       })
-      .then(() => {
-        const { currentTemplate, fetchTemplateSelectedData } = this.props;
-        const { id } = currentTemplate;
-
+      .then(() =>
         setTimeout(() => {
-          let parameters = {
-            templateId: id,
-          };
-
-          fetchTemplateSelectedData(parameters);
-        }, 250);
-      });
-  };
-
-  handleRemoveData = async (item) => {
-    return new Promise((resolve) => resolve())
-      .then(() => {
-        const { removeTemplateDetail, details } = this.props;
-
-        let { templates_id, product_id } = item;
-        let { current_page } = details;
-
-        let params = {
-          templateId: templates_id,
-          productId: product_id,
-          currentPage: current_page,
-        };
-
-        removeTemplateDetail(params);
-      })
-      .then(() => {
-        const { fetchTemplateSelectedData } = this.props;
-
-        setTimeout(() => {
-          let parameters = {
-            templateId: item.templates_id,
-          };
-
-          fetchTemplateSelectedData(parameters);
-        }, 250);
-      });
+          // this.handleFetchSelectedData();
+        }, 250)
+      );
   };
 
   handleFetchData = (page = 1) => {
     const { fetchTemplateViewData, match } = this.props;
     const { params } = match;
-    const { id } = params;
+    const { templateId } = params;
 
     let parameters = {
-      templateId: id,
-      page: page,
+      templateId: 1,
+      page,
     };
 
     fetchTemplateViewData(parameters);
@@ -120,10 +86,22 @@ class TemplateTable extends Component {
     window.scrollTo(0, 0);
   };
 
+  handleFetchSelectedData = () => {
+    let { fetchFormDetailsSelectedData, match } = this.props;
+    let { params } = match;
+
+    let parameters = {
+      ...params,
+    };
+
+    fetchFormDetailsSelectedData(parameters);
+  };
+
   render() {
     const { isReady } = this.state;
-    const { details } = this.props;
-    const { total, current_page, per_page, last_page } = details;
+    const { templatesDetails, selected } = this.props;
+
+    const { total, current_page, per_page, last_page } = templatesDetails;
     const newProps = {
       totalCount: total,
       pageNumber: current_page,
@@ -131,7 +109,7 @@ class TemplateTable extends Component {
       handlePagination: this.handleFetchData,
     };
 
-    const { data } = details;
+    const { data } = templatesDetails;
 
     const hasPagination = (lastPage) => {
       return lastPage > 1 ? <PaginationSection {...newProps} /> : null;
@@ -172,16 +150,90 @@ class TemplateTable extends Component {
           );
         };
 
-        const ActionItem = ({ item }) => {
+        const ActionItem = ({ arr, item }) => {
+          let itemUnits = Object.entries(item.units);
+          let selectedLimit = 1;
+          let selectedCount = 0;
+
           return (
-            <td className="unit-actions">
-              <button
-                className="btn btn-danger"
-                onClick={() => this.handleRemoveData(item)}
-              >
-                X Remove
-              </button>
-            </td>
+            <React.Fragment key={`inner-${arr.title}-${item.id}`}>
+              <td className="unit-actions unit-section">
+                {itemUnits.length > 0 &&
+                  itemUnits.map((unit, index) => {
+                    let isSelected = selected.some((target) => {
+                      let targetUnit = target.unit,
+                        realUnit = unit[0];
+
+                      return (
+                        target.product_code == item.product_code &&
+                        targetUnit.trim() == realUnit.trim()
+                      );
+                    });
+
+                    if (isSelected == true) {
+                      selectedCount += 1;
+                    }
+
+                    let isDisabled = selected.some((target) => {
+                      return (
+                        selectedCount > selectedLimit &&
+                        target.product_code == item.product_code
+                      );
+                    });
+
+                    const SelectedBtn = () => {
+                      return (
+                        <button className="unit-added btn btn-warning">
+                          Added
+                        </button>
+                      );
+                    };
+
+                    const CustomBtn = () => {
+                      return !isDisabled ? <NormalBtn /> : <DisabledBtn />;
+                    };
+
+                    const NormalBtn = () => {
+                      return (
+                        <button
+                          className="btn btn-info"
+                          onClick={() => this.handleClick(item, unit[0])}
+                        >
+                          + Add
+                        </button>
+                      );
+                    };
+
+                    const DisabledBtn = () => {
+                      return (
+                        <button className="unit-added btn btn-secondary">
+                          -
+                        </button>
+                      );
+                    };
+
+                    const FinalBtn = () => {
+                      return selectedCount <= selectedLimit ? (
+                        <CustomBtn />
+                      ) : (
+                        <DisabledBtn />
+                      );
+                    };
+
+                    const ResultBtn = () => {
+                      return isSelected ? <SelectedBtn /> : <FinalBtn />;
+                    };
+
+                    return (
+                      <div key={index} className="unit-container">
+                        <div className="unit-detail">
+                          <ResultBtn />
+                        </div>
+                      </div>
+                    );
+                  })}
+              </td>
+            </React.Fragment>
           );
         };
 
@@ -246,20 +298,7 @@ class TemplateTable extends Component {
             </table>
           </div>
 
-          <div className="template-create-utilities d-flex justify-content-between">
-            {hasPagination(last_page)}
-
-            {Object.keys(templateItems).length > 0 && (
-              <div className="btn-group unit-actions">
-                <button
-                  className="btn btn-danger"
-                  onClick={() => this.handleRemoveAllData()}
-                >
-                  X Remove All
-                </button>
-              </div>
-            )}
-          </div>
+          {hasPagination(last_page)}
         </div>
       );
     };
@@ -289,16 +328,10 @@ class TemplateTable extends Component {
 }
 
 const mapStateToProps = (state) => {
-  let templateData = state.template.data.data;
-  let currentTemplate = {
-    id: templateData?.id,
-    title: templateData?.title,
-    slug: templateData?.slug,
-  };
-
   return {
-    details: state.template.data,
-    currentTemplate,
+    formDetails: state.form.data,
+    templatesDetails: state.template.data,
+    selected: state.formDetailsSelected.data,
   };
 };
 
@@ -308,19 +341,14 @@ const mapDispatchToProps = (dispatch) => ({
       dispatch(fetchTemplateViewData(params)).then(() => resolve());
     });
   },
-  fetchTemplateSelectedData: (params) => {
+  fetchFormDetailsSelectedData: (params) => {
     return new Promise((resolve) => {
-      dispatch(fetchTemplateSelectedData(params)).then(() => resolve());
+      dispatch(fetchFormDetailsSelectedData(params)).then(() => resolve());
     });
   },
-  removeTemplateDetail: (params) => {
+  createFormDetail: (params) => {
     return new Promise((resolve) => {
-      dispatch(removeTemplateDetail(params)).then(() => resolve());
-    });
-  },
-  removeAllTemplateDetail: (params) => {
-    return new Promise((resolve) => {
-      dispatch(removeAllTemplateDetail(params)).then(() => resolve());
+      dispatch(createFormDetail(params)).then(() => resolve());
     });
   },
 });

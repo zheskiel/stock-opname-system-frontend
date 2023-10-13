@@ -89,7 +89,9 @@ class TemplatesViewContainer extends Component {
 
       return (
         <div className="template-view-container table-responsive small">
-          <TemplateView />
+          <div className="table-container">
+            <TemplateView />
+          </div>
 
           {hasPagination(last_page)}
         </div>

@@ -3,7 +3,7 @@ import React, { Component } from "react";
 class Footer extends Component {
   render() {
     return (
-      <footer className="pt-3 mt-4 text-body-secondary border-top">
+      <footer className="pt-3 pb-3 mt-4 text-body-secondary border-top">
         <span>© lpmlGroup</span>
 
         <span className="float-end">

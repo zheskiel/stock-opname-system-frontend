@@ -4,6 +4,8 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { compose } from "redux";
 
+import { typeTwoArrs as arrs } from "../../../../constants/arrays";
+
 // Sections
 import PaginationSection from "../../../../sections/Pagination";
 
@@ -112,15 +114,6 @@ class MasterTable extends Component {
       return lastPage > 1 ? <PaginationSection {...newProps} /> : null;
     };
 
-    const masterArrs = [
-      // { title: "ID", key: "id", width: "3%" },
-      { title: "Product ID", key: "product_id", width: "10%" },
-      { title: "Product Code", key: "product_code", width: "15%" },
-      { title: "Product Name", key: "product_name", width: "40%" },
-      // { title: "Units", key: "units", width: "30%" },
-      { title: "Actions", key: "actions", width: "5%" },
-    ];
-
     const masterDataItems =
       masterItems &&
       Object.values(masterItems).map((item) => {
@@ -173,7 +166,7 @@ class MasterTable extends Component {
 
         return (
           <tr key={item.product_id}>
-            {masterArrs.map((arr, index) => {
+            {arrs.map((arr, index) => {
               let params = { arr, item };
               let entities = {
                 action: ActionItem,
@@ -214,21 +207,23 @@ class MasterTable extends Component {
     const ContentSection = () => {
       return (
         <div className="table-responsive small">
-          <table className="table table-striped table-sm desktop-main-data">
-            <thead>
-              <tr>
-                {masterArrs.map((arr) => {
-                  return (
-                    <th scope="col" width={arr.width} key={arr.title}>
-                      {arr.title}
-                    </th>
-                  );
-                })}
-              </tr>
-            </thead>
+          <div className="table-container">
+            <table className="table table-striped table-sm desktop-main-data">
+              <thead>
+                <tr>
+                  {arrs.map((arr) => {
+                    return (
+                      <th scope="col" width={arr.width} key={arr.title}>
+                        {arr.title}
+                      </th>
+                    );
+                  })}
+                </tr>
+              </thead>
 
-            <tbody>{masterDataItems}</tbody>
-          </table>
+              <tbody>{masterDataItems}</tbody>
+            </table>
+          </div>
 
           {hasPagination(last_page)}
         </div>

@@ -4,7 +4,6 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { compose } from "redux";
 
-// Array Data
 import { typeTwoArrs as arrs } from "../../../../constants/arrays";
 
 // Sections
@@ -13,16 +12,9 @@ import PaginationSection from "../../../../sections/Pagination";
 // Components
 import Loader from "../../../../components/Loader";
 
-// Actions
-import {
-  fetchTemplateViewData,
-  fetchTemplateSelectedData,
-  removeTemplateDetail,
-  removeAllTemplateDetail,
-} from "../../../../redux/actions";
-
 const initialState = {
   isReady: false,
+  //   templateItems: [],
 };
 
 class TemplateTable extends Component {
@@ -30,120 +22,46 @@ class TemplateTable extends Component {
     super(props);
 
     this.state = initialState;
-
-    this.handleRemoveAllData = this.handleRemoveAllData.bind(this);
-    this.handleRemoveData = this.handleRemoveData.bind(this);
-    this.handleFetchData = this.handleFetchData.bind(this);
   }
 
   componentDidMount() {
-    new Promise((resolve) => resolve())
-      .then(() => {
-        this.handleFetchData();
-      })
-      .then(() => {
-        setTimeout(() => {
-          this.setState({
-            isReady: true,
-          });
-        }, 500);
-      });
+    new Promise((resolve) => resolve()).then(() => {
+      setTimeout(() => {
+        this.setState({
+          isReady: true,
+        });
+      }, 500);
+    });
   }
 
-  handleRemoveAllData = async () => {
-    return new Promise((resolve) => resolve())
-      .then(() => {
-        const { currentTemplate, removeAllTemplateDetail } = this.props;
-        const { id } = currentTemplate;
-
-        let params = {
-          templateId: id,
-        };
-
-        removeAllTemplateDetail(params);
-      })
-      .then(() => {
-        const { currentTemplate, fetchTemplateSelectedData } = this.props;
-        const { id } = currentTemplate;
-
-        setTimeout(() => {
-          let parameters = {
-            templateId: id,
-          };
-
-          fetchTemplateSelectedData(parameters);
-        }, 250);
-      });
-  };
-
-  handleRemoveData = async (item) => {
-    return new Promise((resolve) => resolve())
-      .then(() => {
-        const { removeTemplateDetail, details } = this.props;
-
-        let { templates_id, product_id } = item;
-        let { current_page } = details;
-
-        let params = {
-          templateId: templates_id,
-          productId: product_id,
-          currentPage: current_page,
-        };
-
-        removeTemplateDetail(params);
-      })
-      .then(() => {
-        const { fetchTemplateSelectedData } = this.props;
-
-        setTimeout(() => {
-          let parameters = {
-            templateId: item.templates_id,
-          };
-
-          fetchTemplateSelectedData(parameters);
-        }, 250);
-      });
-  };
-
-  handleFetchData = (page = 1) => {
-    const { fetchTemplateViewData, match } = this.props;
-    const { params } = match;
-    const { id } = params;
-
-    let parameters = {
-      templateId: id,
-      page: page,
-    };
-
-    fetchTemplateViewData(parameters);
-
-    window.scrollTo(0, 0);
-  };
+  calculateLastpage = () => {};
 
   render() {
     const { isReady } = this.state;
-    const { details } = this.props;
-    const { total, current_page, per_page, last_page } = details;
-    const newProps = {
-      totalCount: total,
-      pageNumber: current_page,
-      pageSize: per_page,
-      handlePagination: this.handleFetchData,
-    };
+    const {
+      handlePagination,
+      templateItems,
+      templateArrs,
+      pageNumber,
+      pageSize,
+    } = this.props;
 
-    const { data } = details;
+    const last_page = Math.ceil(templateItems.length / pageSize);
+
+    const newProps = {
+      handlePagination: handlePagination,
+      totalCount: templateItems.length,
+      pageNumber,
+      pageSize,
+    };
 
     const hasPagination = (lastPage) => {
       return lastPage > 1 ? <PaginationSection {...newProps} /> : null;
     };
 
-    if (!data) return <></>;
-
-    const { details: templateItems } = data;
-
     const templateDataItems =
-      templateItems &&
-      Object.values(templateItems).map((item) => {
+      templateArrs &&
+      Object.values(templateArrs).map((item) => {
         const DefaultItem = ({ arr, item }) => {
           return <td key={`inner-${arr.title}-${item.id}`}>{item[arr.key]}</td>;
         };
@@ -177,7 +95,7 @@ class TemplateTable extends Component {
             <td className="unit-actions">
               <button
                 className="btn btn-danger"
-                onClick={() => this.handleRemoveData(item)}
+                onClick={() => this.props.handleRemoveData(item, pageNumber)}
               >
                 X Remove
               </button>
@@ -249,11 +167,11 @@ class TemplateTable extends Component {
           <div className="template-create-utilities d-flex justify-content-between">
             {hasPagination(last_page)}
 
-            {Object.keys(templateItems).length > 0 && (
+            {templateArrs.length > 0 && (
               <div className="btn-group unit-actions">
                 <button
                   className="btn btn-danger"
-                  onClick={() => this.handleRemoveAllData()}
+                  onClick={() => this.props.handleRemoveAllData()}
                 >
                   X Remove All
                 </button>
@@ -265,7 +183,7 @@ class TemplateTable extends Component {
     };
 
     const TemplateTable = () => {
-      if (!data || !isReady) {
+      if (!isReady) {
         return (
           <div className="template-edit-section col-6">
             <Loader />
@@ -276,7 +194,34 @@ class TemplateTable extends Component {
       return (
         <div className="template-edit-section col-6">
           <div className="template-header-section">
-            <h6 className="h6">{data.title}'s Template</h6>
+            <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2">
+              <div className="d-flex align-items-center flex-grow-1">
+                <div className="d-flex col-7 template-detail">
+                  <span className="template-title">Title : </span>
+                  <span className="template-title-input">
+                    <input
+                      className="h6 mb-0"
+                      placeholder="Please type template title"
+                    />
+                  </span>
+                </div>
+                <div className="ms-3">
+                  <span>Outlet : </span>
+                  <select>
+                    <option>Outlet 1</option>
+                    <option>Outlet 2</option>
+                    <option>Outlet 3</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="btn-toolbar mb-2 mb-md-0">
+                <div className="btn-group unit-actions">
+                  <button className="btn btn-success me-2">Save</button>
+                  <button className="btn btn-warning">Cancel</button>
+                </div>
+              </div>
+            </div>
           </div>
 
           <ContentSection />
@@ -288,42 +233,8 @@ class TemplateTable extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  let templateData = state.template.data.data;
-  let currentTemplate = {
-    id: templateData?.id,
-    title: templateData?.title,
-    slug: templateData?.slug,
-  };
-
-  return {
-    details: state.template.data,
-    currentTemplate,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => ({
-  fetchTemplateViewData: (params) => {
-    return new Promise((resolve) => {
-      dispatch(fetchTemplateViewData(params)).then(() => resolve());
-    });
-  },
-  fetchTemplateSelectedData: (params) => {
-    return new Promise((resolve) => {
-      dispatch(fetchTemplateSelectedData(params)).then(() => resolve());
-    });
-  },
-  removeTemplateDetail: (params) => {
-    return new Promise((resolve) => {
-      dispatch(removeTemplateDetail(params)).then(() => resolve());
-    });
-  },
-  removeAllTemplateDetail: (params) => {
-    return new Promise((resolve) => {
-      dispatch(removeAllTemplateDetail(params)).then(() => resolve());
-    });
-  },
-});
+const mapStateToProps = (state) => ({});
+const mapDispatchToProps = (dispatch) => ({});
 
 export default compose(
   withRouter,

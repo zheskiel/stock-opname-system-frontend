@@ -25,21 +25,25 @@ main {
   padding-top: 56px;
 }
 
-.main-content {
+.main-wrapper {
   background-color: #fff;
 }
 
 .main-container {
   min-height: calc(100vh - 56px);
 
+  .main-wrapper {
+    min-height: calc(100vh - 56px - 57px);
+  }
+
   .main-content {
-    min-height: calc(100vh - 56px);
+    min-height: calc(100vh - 56px - 57px - 1.5rem);
   }
 }
 
 @media (min-width: 768px) {
   .main-container {
-    .main-content {
+    .main-wrapper {
       width: calc(100% - 200px);
     }
   }
@@ -61,10 +65,23 @@ table {
 .desktop-main-data {
   .unit-section {
     padding: 0px 0.25rem;
-    .unit-container {
-      &:not(:last-child) {
-        border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    &.badges-section {
+      .unit-container {
+        height: 25px;
+        display: table-cell;
+        vertical-align: middle;
       }
+
+      .badge {
+        &:first-child {
+          margin-right: 5px;
+        }
+      }
+    }
+    .unit-container {
+      // &:not(:last-child) {
+      //   border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+      // }
 
       display: flex;
 
@@ -78,34 +95,35 @@ table {
       }
     }
   }
+}
+.unit-actions {
+  text-align: center;
 
-  .unit-actions {
-    text-align: center;
-
-    .unit-added {
-      &:hover {
-        cursor: not-allowed;
-      }
-    }
-
-    a,
-    button {
-      padding: 0px 5px;
-      font-size: 12px;
-      border-radius: 0px;
-      margin: 0px;
-      min-width: 50px;
-      white-space: nowrap;
-
-      -webkit-user-select: none; /* Safari */
-      -ms-user-select: none; /* IE 10 and IE 11 */
-      user-select: none; /* Standard syntax */
+  .unit-added {
+    &:hover {
+      cursor: not-allowed;
     }
   }
+
+  a,
+  button {
+    padding: 0px 5px;
+    font-size: 12px;
+    border-radius: 0px;
+    margin: 0px;
+    min-width: 50px;
+    white-space: nowrap;
+
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+  }
 }
+
 .division-table {
   display: table;
   width: 100%;
+  margin-bottom: 20px;
 
   .division-container {
     width: 100%;

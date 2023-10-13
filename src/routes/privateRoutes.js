@@ -8,9 +8,13 @@ const TemplatesViewContainer = lazy(() =>
 const TemplatesEditContainer = lazy(() =>
   import("../containers/Templates/Edit")
 );
+const TemplatesCreateContainer = lazy(() =>
+  import("../containers/Templates/Create")
+);
 
 const FormContainer = lazy(() => import("../containers/Form"));
 const FormEditContainer = lazy(() => import("../containers/Form/Edit"));
+const FormCreateContainer = lazy(() => import("../containers/Form/Create"));
 const FormsContainer = lazy(() => import("../containers/Forms"));
 
 const DashboardContainer = lazy(() => import("../containers/Dashboard"));
@@ -26,6 +30,11 @@ const PrivateRoutes = [
   {
     path: "/hierarchy",
     component: HierarchyContainer,
+    exact: true,
+  },
+  {
+    path: "/form/create",
+    component: FormCreateContainer,
     exact: true,
   },
   {
@@ -46,6 +55,11 @@ const PrivateRoutes = [
   {
     path: "/templates",
     component: TemplatesContainer,
+    exact: true,
+  },
+  {
+    path: "/template/create",
+    component: TemplatesCreateContainer,
     exact: true,
   },
   {

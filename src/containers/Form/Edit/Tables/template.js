@@ -4,6 +4,9 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { compose } from "redux";
 
+// Array Data
+import { typeOneArrs as arrs } from "../../../../constants/arrays";
+
 // Sections
 import PaginationSection from "../../../../sections/Pagination";
 
@@ -12,9 +15,9 @@ import Loader from "../../../../components/Loader";
 
 // Actions
 import {
+  createFormDetail,
   fetchTemplateViewData,
   fetchFormDetailsSelectedData,
-  createFormDetail,
 } from "../../../../redux/actions";
 
 const initialState = {
@@ -116,16 +119,6 @@ class TemplateTable extends Component {
 
     const { details: templateItems } = data;
 
-    const templateArrs = [
-      // { title: "ID", key: "id", width: "3%" },
-      { title: "Product ID", key: "product_id", width: "10%" },
-      { title: "Product Code", key: "product_code", width: "15%" },
-      { title: "Product Name", key: "product_name", width: "40%" },
-      // { title: "Tolerance", key: "receipt_tolerance", width: "10%" },
-      { title: "Units", key: "units", width: "30%" },
-      { title: "Actions", key: "actions", width: "5%" },
-    ];
-
     const templateDataItems =
       templateItems &&
       Object.values(templateItems).map((item) => {
@@ -159,6 +152,8 @@ class TemplateTable extends Component {
 
         const ActionItem = ({ arr, item }) => {
           let itemUnits = Object.entries(item.units);
+          let selectedLimit = 1;
+          let selectedCount = 0;
 
           return (
             <React.Fragment key={`inner-${arr.title}-${item.id}`}>
@@ -166,8 +161,8 @@ class TemplateTable extends Component {
                 {itemUnits.length > 0 &&
                   itemUnits.map((unit, index) => {
                     let isSelected = selected.some((target) => {
-                      let targetUnit = target.unit;
-                      let realUnit = unit[0];
+                      let targetUnit = target.unit,
+                        realUnit = unit[0];
 
                       return (
                         target.product_code == item.product_code &&
@@ -175,8 +170,15 @@ class TemplateTable extends Component {
                       );
                     });
 
+                    if (isSelected == true) {
+                      selectedCount += 1;
+                    }
+
                     let isDisabled = selected.some((target) => {
-                      return target.product_code == item.product_code;
+                      return (
+                        selectedCount > selectedLimit &&
+                        target.product_code == item.product_code
+                      );
                     });
 
                     const SelectedBtn = () => {
@@ -210,8 +212,16 @@ class TemplateTable extends Component {
                       );
                     };
 
+                    const FinalBtn = () => {
+                      return selectedCount <= selectedLimit ? (
+                        <CustomBtn />
+                      ) : (
+                        <DisabledBtn />
+                      );
+                    };
+
                     const ResultBtn = () => {
-                      return isSelected ? <SelectedBtn /> : <CustomBtn />;
+                      return isSelected ? <SelectedBtn /> : <FinalBtn />;
                     };
 
                     return (
@@ -229,7 +239,7 @@ class TemplateTable extends Component {
 
         return (
           <tr key={item.id}>
-            {templateArrs.map((arr, index) => {
+            {arrs.map((arr, index) => {
               let params = { arr, item };
               let entities = {
                 action: ActionItem,
@@ -270,21 +280,23 @@ class TemplateTable extends Component {
     const ContentSection = () => {
       return (
         <div className="table-responsive small">
-          <table className="table table-striped table-sm desktop-main-data">
-            <thead>
-              <tr>
-                {templateArrs.map((arr) => {
-                  return (
-                    <th scope="col" width={arr.width} key={arr.title}>
-                      {arr.title}
-                    </th>
-                  );
-                })}
-              </tr>
-            </thead>
+          <div className="table-container">
+            <table className="table table-striped table-sm desktop-main-data">
+              <thead>
+                <tr>
+                  {arrs.map((arr) => {
+                    return (
+                      <th scope="col" width={arr.width} key={arr.title}>
+                        {arr.title}
+                      </th>
+                    );
+                  })}
+                </tr>
+              </thead>
 
-            <tbody>{templateDataItems}</tbody>
-          </table>
+              <tbody>{templateDataItems}</tbody>
+            </table>
+          </div>
 
           {hasPagination(last_page)}
         </div>

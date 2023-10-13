@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+
+// Components
 import Link from "../../components/Link";
 
 class IndexContainer extends Component {

@@ -8,35 +8,31 @@ import { compose } from "redux";
 import MainSection from "../../../sections/Main";
 
 // Containers
-import TemplateTable from "../Edit/Tables/template";
-import MasterTable from "./Tables/master";
+import TemplateTable from "../Create/Tables/template";
 import LayoutContainer from "../../Layout";
-
-// Actions
-import { resetTemplateSelectedData } from "../../../redux/actions";
 
 // Styling
 import "../../../assets/scss/templates.scss";
 
-class TemplateEdit extends Component {
-  componentWillUnmount() {
-    this.props.resetTemplateSelectedData();
+const initialState = {};
+
+class FormCreate extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = initialState;
   }
 
   render() {
-    const { details } = this.props;
-    const { data } = details;
-
     return (
       <LayoutContainer>
         <MainSection>
           <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h2 className="h2">Template Edit - ( {data?.title} )</h2>
+            <h2 className="h2">Create Form</h2>
           </div>
 
-          <div className="template-edit-container card-container">
+          <div className="template-edit-container card-container pt-3">
             <div className="row">
-              <MasterTable />
               <TemplateTable />
             </div>
           </div>
@@ -46,16 +42,10 @@ class TemplateEdit extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  details: state.template.data,
-});
-const mapDispatchToProps = (dispatch) => ({
-  resetTemplateSelectedData: (params) => {
-    dispatch(resetTemplateSelectedData(params));
-  },
-});
+const mapStateToProps = () => ({});
+const mapDispatchToProps = () => ({});
 
 export default compose(
   withRouter,
   connect(mapStateToProps, mapDispatchToProps)
-)(TemplateEdit);
+)(FormCreate);

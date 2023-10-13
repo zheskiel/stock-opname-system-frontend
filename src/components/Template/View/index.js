@@ -7,6 +7,9 @@ import { compose } from "redux";
 import ViewDesktop from "./ViewDesktop";
 import ViewMobile from "./ViewMobile";
 
+// Data
+import { typeFourArrs as arrs } from "../../../constants/arrays";
+
 class TemplateView extends Component {
   render() {
     const { details, mode } = this.props;
@@ -15,15 +18,6 @@ class TemplateView extends Component {
     if (!data) return <></>;
 
     const { details: items } = data;
-
-    const arrs = [
-      // { title: "ID", key: "id", width: "3%" },
-      { title: "Product ID", key: "product_id", width: "10%" },
-      { title: "Product Code", key: "product_code", width: "15%" },
-      { title: "Product Name", key: "product_name", width: "30%" },
-      { title: "Tolerance", key: "receipt_tolerance", width: "15%" },
-      { title: "Units", key: "units", width: "15%" },
-    ];
 
     let params = {
       items,
