@@ -46,6 +46,7 @@ class TemplateCreate extends Component {
 
     let currentItems = templateItems.slice(start, end);
 
+    // Check current page
     if (!currentItems.length > 0 && page > 1) {
       return this.handlePagination(page - 1);
     }
@@ -81,17 +82,17 @@ class TemplateCreate extends Component {
       });
   };
 
-  handleRemoveAllData = () => {
+  handleRemoveAllData = async () => {
     return new Promise((resolve) => resolve()).then(() => {
       this.setState(initialState);
     });
   };
 
   handleRemoveData = async (item, pageNumber) => {
+    const { templateItems, selectedItems } = this.state;
+
     return new Promise((resolve) => resolve())
       .then(() => {
-        const { templateItems } = this.state;
-
         let filteredItems = templateItems.filter((target) => {
           return target.product_id != item.product_id;
         });
@@ -103,11 +104,9 @@ class TemplateCreate extends Component {
       })
       .then(() => this.handlePagination(pageNumber))
       .then(() => {
-        const { selectedItems } = this.state;
-
-        let filteredItems = selectedItems.filter((target) => {
-          return target != item.product_code;
-        });
+        let filteredItems = selectedItems.filter(
+          (target) => target != item.product_code
+        );
 
         this.setState({ selectedItems: filteredItems });
       });

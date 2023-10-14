@@ -4,7 +4,7 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { compose } from "redux";
 
-import { typeTwoArrs as arrs } from "../../../../constants/arrays";
+import { typeOneArrs as arrs } from "../../../../constants/arrays";
 
 // Sections
 import PaginationSection from "../../../../sections/Pagination";
@@ -16,7 +16,7 @@ const initialState = {
   isReady: false,
 };
 
-class TemplateTable extends Component {
+class DetailTable extends Component {
   constructor(props) {
     super(props);
 
@@ -35,19 +35,22 @@ class TemplateTable extends Component {
 
   render() {
     const { isReady } = this.state;
+
+    // return <>Test</>;
+
     const {
       handlePagination,
-      templateItems,
-      templateArrs,
+      detailFitered,
+      detailArrs,
       pageNumber,
       pageSize,
     } = this.props;
 
-    const last_page = Math.ceil(templateItems.length / pageSize);
+    const last_page = Math.ceil(detailFitered.length / pageSize);
 
     const newProps = {
       handlePagination: handlePagination,
-      totalCount: templateItems.length,
+      totalCount: detailFitered.length,
       pageNumber,
       pageSize,
     };
@@ -56,9 +59,9 @@ class TemplateTable extends Component {
       return lastPage > 1 ? <PaginationSection {...newProps} /> : null;
     };
 
-    const templateDataItems =
-      templateArrs &&
-      Object.values(templateArrs).map((item) => {
+    const dataItems =
+      detailArrs &&
+      Object.values(detailArrs).map((item) => {
         const DefaultItem = ({ arr, item }) => {
           return <td key={`inner-${arr.title}-${item.id}`}>{item[arr.key]}</td>;
         };
@@ -68,35 +71,42 @@ class TemplateTable extends Component {
 
           return (
             <React.Fragment key={`inner-${arr.title}-${item.id}`}>
-              <td className="unit-section">
-                {itemUnits.length > 0 &&
-                  itemUnits.map((unit, index) => {
-                    return (
-                      <div key={index} className="unit-container">
-                        <div className="unit-detail">
-                          <span>{unit[0]}</span>
-                          <span>
-                            {unit[1].value} {unit[1].sku}
+              <td className="unit-section badges-section">
+                <div className="unit-container">
+                  {itemUnits.length > 0 &&
+                    itemUnits.map((unit, index) => {
+                      return (
+                        <React.Fragment key={index}>
+                          <span className="badge bg-primary">
+                            {unit[1].unit}
                           </span>
-                        </div>
-                      </div>
-                    );
-                  })}
+                        </React.Fragment>
+                      );
+                    })}
+                </div>
               </td>
             </React.Fragment>
           );
         };
 
-        const ActionItem = ({ item }) => {
+        const ActionItem = ({ arr, item }) => {
           return (
-            <td className="unit-actions">
-              <button
-                className="btn btn-danger"
-                onClick={() => this.props.handleRemoveData(item, pageNumber)}
-              >
-                X Remove
-              </button>
-            </td>
+            <React.Fragment key={`inner-${arr.title}-${item.id}`}>
+              <td className="unit-actions unit-section">
+                <div className="unit-container">
+                  <div className="unit-detail">
+                    <button
+                      className="btn btn-danger"
+                      onClick={() =>
+                        this.props.handleRemoveData(item, pageNumber)
+                      }
+                    >
+                      X Remove
+                    </button>
+                  </div>
+                </div>
+              </td>
+            </React.Fragment>
           );
         };
 
@@ -157,14 +167,14 @@ class TemplateTable extends Component {
                 </tr>
               </thead>
 
-              <tbody>{templateDataItems}</tbody>
+              <tbody>{dataItems}</tbody>
             </table>
           </div>
 
           <div className="template-create-utilities d-flex justify-content-between">
             {hasPagination(last_page)}
 
-            {templateArrs.length > 0 && (
+            {detailArrs.length > 0 && (
               <div className="btn-group unit-actions">
                 <button
                   className="btn btn-danger"
@@ -179,7 +189,7 @@ class TemplateTable extends Component {
       );
     };
 
-    const TemplateTable = () => {
+    const DetailTable = () => {
       if (!isReady) {
         return (
           <div className="template-edit-section col-6">
@@ -191,34 +201,7 @@ class TemplateTable extends Component {
       return (
         <div className="template-edit-section col-6">
           <div className="template-header-section">
-            <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2">
-              <div className="d-flex align-items-center flex-grow-1">
-                <div className="d-flex col-7 template-detail">
-                  <span className="template-title">Title : </span>
-                  <span className="template-title-input">
-                    <input
-                      className="h6 mb-0"
-                      placeholder="Please type template title"
-                    />
-                  </span>
-                </div>
-                <div className="ms-3">
-                  <span>Outlet : </span>
-                  <select>
-                    <option>Outlet 1</option>
-                    <option>Outlet 2</option>
-                    <option>Outlet 3</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="btn-toolbar mb-2 mb-md-0">
-                <div className="btn-group unit-actions">
-                  <button className="btn btn-success me-2">Save</button>
-                  <button className="btn btn-warning">Cancel</button>
-                </div>
-              </div>
-            </div>
+            <h6 className="h6">Create Form</h6>
           </div>
 
           <ContentSection />
@@ -226,7 +209,7 @@ class TemplateTable extends Component {
       );
     };
 
-    return <TemplateTable />;
+    return <DetailTable />;
   }
 }
 
@@ -236,4 +219,4 @@ const mapDispatchToProps = (dispatch) => ({});
 export default compose(
   withRouter,
   connect(mapStateToProps, mapDispatchToProps)
-)(TemplateTable);
+)(DetailTable);

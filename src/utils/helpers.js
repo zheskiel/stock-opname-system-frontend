@@ -10,6 +10,12 @@ export const formatDate = (time, dateFormat = "YYYY-MM-DD") => {
   return dayjs(time).format(dateFormat);
 };
 
+export const sortData = (items, param) => {
+  return items.sort((a, b) =>
+    a[param] > b[param] ? -1 : b[param] > a[param] ? 1 : 0
+  );
+};
+
 export const multiDimensionDedupe = (paramArray) => {
   return paramArray
     .map(JSON.stringify)

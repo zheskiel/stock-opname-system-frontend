@@ -99,7 +99,7 @@ class TemplateTable extends Component {
 
   render() {
     const { isReady } = this.state;
-    const { templatesDetails, selected } = this.props;
+    const { templatesDetails, selectedItems: selected } = this.props;
 
     const { total, current_page, per_page, last_page } = templatesDetails;
     const newProps = {
@@ -197,7 +197,7 @@ class TemplateTable extends Component {
                       return (
                         <button
                           className="btn btn-info"
-                          onClick={() => this.handleClick(item, unit[0])}
+                          onClick={() => this.props.handleClick(item, unit[0])}
                         >
                           + Add
                         </button>
