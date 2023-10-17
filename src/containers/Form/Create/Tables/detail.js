@@ -35,9 +35,6 @@ class DetailTable extends Component {
 
   render() {
     const { isReady } = this.state;
-
-    // return <>Test</>;
-
     const {
       handlePagination,
       detailFitered,

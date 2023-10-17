@@ -21,8 +21,15 @@ export const fetchTemplatesApi = ({ page = 1 }) => {
   return axiosInstance.get(target);
 };
 
-export const fetchTemplateViewApi = ({ templateId, page = 1 }) => {
+export const fetchTemplateViewApi = ({
+  templateId,
+  page = 1,
+  sort = "id",
+  order = "desc",
+}) => {
   let parameters = {
+    sort,
+    order,
     page,
   };
 

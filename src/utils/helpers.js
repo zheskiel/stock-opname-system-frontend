@@ -1,5 +1,21 @@
 import dayjs from "dayjs";
 
+export const buildItemsObj = (arrs) => {
+  let items = {};
+
+  Object.values(arrs).forEach((item) => {
+    let obj = {
+      sort: item.key,
+      order: "asc",
+      isDesc: false,
+    };
+
+    Object.assign(items, { [item.key]: obj });
+  });
+
+  return items;
+};
+
 export const isNumberKey = (evt) => {
   var charCode = evt.which ? evt.which : evt.keyCode;
 

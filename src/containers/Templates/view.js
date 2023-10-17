@@ -24,6 +24,10 @@ import "../../assets/scss/templates.scss";
 
 const initialState = {
   isReady: false,
+  items: {},
+  sort: "id",
+  order: "asc",
+  orderList: ["asc", "desc"],
 };
 
 class TemplatesViewContainer extends Component {
@@ -39,11 +43,7 @@ class TemplatesViewContainer extends Component {
     new Promise((resolve) => resolve())
       .then(() => this.handleFetchData())
       .then(() => {
-        setTimeout(() => {
-          this.setState({
-            isReady: true,
-          });
-        }, 500);
+        setTimeout(() => this.setState({ isReady: true }), 500);
       });
   }
 

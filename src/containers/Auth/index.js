@@ -17,7 +17,7 @@ import "../../assets/scss/auth.scss";
 
 const userTypes = ["staff", "manager", "admin"];
 const initialState = {
-  email: "admin1@gmail.com",
+  email: "superadmin@gmail.com",
   password: "test123",
   type: "admin",
   error: "",
