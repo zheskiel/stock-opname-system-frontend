@@ -4,9 +4,6 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { compose } from "redux";
 
-// Array Data
-import { typeFiveArrs as arrs } from "../../constants/arrays";
-
 // Components
 import ViewDesktop from "./ViewDesktop";
 import ViewMobile from "./ViewMobile";
@@ -20,8 +17,8 @@ class MasterView extends Component {
     const { data: items } = master;
 
     let params = {
+      ...this.props,
       items,
-      arrs,
     };
 
     let entities = {

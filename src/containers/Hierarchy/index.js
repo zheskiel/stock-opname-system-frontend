@@ -135,8 +135,6 @@ class HierarchyContainer extends Component {
       nodes.forEach(function (d) {
         let calculation = ((d.depth + 1) * size) / (nodeCount.length + 2) / 2;
 
-        console.log("calculation : ", calculation);
-
         d.y = calculation;
       });
 

@@ -12,6 +12,9 @@ import PaginationSection from "../../../../sections/Pagination";
 // Components
 import Loader from "../../../../components/Loader";
 
+// Helpers
+import { getEntity } from "../../../../utils/helpers";
+
 const initialState = {
   isReady: false,
 };
@@ -25,11 +28,7 @@ class DetailTable extends Component {
 
   componentDidMount() {
     new Promise((resolve) => resolve()).then(() => {
-      setTimeout(() => {
-        this.setState({
-          isReady: true,
-        });
-      }, 500);
+      setTimeout(() => this.setState({ isReady: true }), 500);
     });
   }
 
@@ -117,25 +116,7 @@ class DetailTable extends Component {
                 default: DefaultItem,
               };
 
-              let Entity = (params) => {
-                let Item;
-
-                switch (arr.key) {
-                  case "actions":
-                    Item = entities.action;
-                    break;
-
-                  case "units":
-                    Item = entities.custom;
-                    break;
-
-                  default:
-                    Item = entities.default;
-                    break;
-                }
-
-                return <Item {...params} />;
-              };
+              let Entity = getEntity(entities, params);
 
               return (
                 <React.Fragment key={index}>

@@ -140,7 +140,7 @@ class TemplatesViewContainer extends Component {
       };
 
       return (
-        <div className="template-view-container table-responsive small">
+        <div className="template-view-section table-responsive small">
           <div className="table-container">
             <TemplateView {...templateProps} />
           </div>

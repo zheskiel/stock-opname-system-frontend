@@ -37,11 +37,7 @@ class FormsContainer extends Component {
     new Promise((resolve) => resolve())
       .then(() => this.handleFetchData())
       .then(() => {
-        setTimeout(() => {
-          this.setState({
-            isReady: true,
-          });
-        }, 500);
+        setTimeout(() => this.setState({ isReady: true }), 500);
       });
   }
 
@@ -71,7 +67,7 @@ class FormsContainer extends Component {
       }
 
       return (
-        <div className="table-responsive small">
+        <div className="template-view-section table-responsive small">
           <div className="table-container">
             <table className="table table-striped table-sm desktop-main-data">
               <thead>

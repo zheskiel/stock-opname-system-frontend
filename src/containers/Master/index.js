@@ -4,6 +4,9 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { compose } from "redux";
 
+// Array Data
+import { typeFiveArrs as arrs } from "../../constants/arrays";
+
 // Sections
 import PaginationSection from "../../sections/Pagination";
 import MainSection from "../../sections/Main";
@@ -18,11 +21,19 @@ import LayoutContainer from "../../containers/Layout";
 // Actions
 import { fetchMasterData } from "../../redux/actions";
 
+// Helpers
+import { buildItemsObj } from "../../utils/helpers";
+
 // Styling
 import "../../assets/scss/master.scss";
+import "../../assets/scss/templates.scss";
 
 const initialState = {
   isReady: false,
+  items: {},
+  sort: "id",
+  order: "asc",
+  orderList: ["asc", "desc"],
 };
 
 class MasterContainer extends Component {
@@ -36,30 +47,59 @@ class MasterContainer extends Component {
 
   componentDidMount() {
     new Promise((resolve) => resolve())
+      .then(() => this.setState({ items: buildItemsObj(arrs) }))
       .then(() => this.handleFetchData())
       .then(() => {
-        setTimeout(() => {
-          this.setState({
-            isReady: true,
-          });
-        }, 500);
+        setTimeout(() => this.setState({ isReady: true }), 500);
       });
   }
 
-  handleFetchData = async (page = 1) => {
-    let { fetchMasterData, master } = this.props;
-    let { current_page } = master;
+  handleFetchData = async (
+    page = 1,
+    sort = "product_name",
+    order = "asc",
+    isDesc = false
+  ) => {
+    return new Promise((resolve) => resolve())
+      .then(() => {
+        let { items } = this.state;
 
-    // Dont do fetch, when user at the same page
-    if (page == current_page) return;
+        this.setState({ sort, order, isDesc });
+        this.setState({
+          items: {
+            ...items,
+            [sort]: {
+              sort,
+              order,
+              isDesc,
+            },
+          },
+        });
+      })
+      .then(() => {
+        let { items } = this.state;
+        let { sort: sortState, order: orderState } = items[sort];
 
-    let params = {
-      page,
-    };
+        let { fetchMasterData, match } = this.props;
+        let params = {
+          ...match.params,
+          sort: sortState,
+          order: orderState,
+          page,
+        };
 
-    fetchMasterData(params);
+        fetchMasterData(params);
 
-    window.scrollTo(0, 0);
+        window.scrollTo(0, 0);
+      });
+  };
+
+  handlePagination = async (page) => {
+    return new Promise((resolve) => resolve()).then(() => {
+      let { sort, order, isDesc } = this.state;
+
+      this.handleFetchData(page, sort, order, isDesc);
+    });
   };
 
   render() {
@@ -71,7 +111,7 @@ class MasterContainer extends Component {
       totalCount: total,
       pageNumber: current_page,
       pageSize: per_page,
-      handlePagination: this.handleFetchData,
+      handlePagination: this.handlePagination,
     };
 
     const hasPagination = (lastPage) => {
@@ -87,10 +127,19 @@ class MasterContainer extends Component {
         );
       }
 
+      const masterProps = {
+        handleFetchData: this.handleFetchData,
+        orderList: this.state.orderList,
+        keyItems: this.state.items,
+        currentPage: current_page,
+        arrs,
+      };
+
       return (
-        <div className="table-responsive small">
-          <MasterView />
-          <br />
+        <div className="template-view-section table-responsive small">
+          <div className="table-container">
+            <MasterView {...masterProps} />
+          </div>
 
           {hasPagination(last_page)}
         </div>

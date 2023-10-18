@@ -56,7 +56,7 @@ class FormContainer extends Component {
 
   handleFetchData = async (
     page = 1,
-    sort = "product_name",
+    sort = "id",
     order = "asc",
     isDesc = false
   ) => {
@@ -141,7 +141,7 @@ class FormContainer extends Component {
       };
 
       return (
-        <div className="template-view-container table-responsive small">
+        <div className="template-view-section table-responsive small">
           <div className="table-container">
             <FormView {...formProps} />
           </div>

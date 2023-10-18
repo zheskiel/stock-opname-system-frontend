@@ -21,7 +21,7 @@ import {
   createTemplateDetail,
 } from "../../../../redux/actions";
 
-import { buildItemsObj } from "../../../../utils/helpers";
+import { buildItemsObj, getEntity } from "../../../../utils/helpers";
 
 const initialState = {
   isReady: false,
@@ -220,25 +220,7 @@ class MasterTableCommon extends Component {
                 default: DefaultItem,
               };
 
-              let Entity = (params) => {
-                let Item;
-
-                switch (arr.key) {
-                  case "actions":
-                    Item = entities.action;
-                    break;
-
-                  case "units":
-                    Item = entities.custom;
-                    break;
-
-                  default:
-                    Item = entities.default;
-                    break;
-                }
-
-                return <Item {...params} />;
-              };
+              let Entity = getEntity(entities, params);
 
               return (
                 <React.Fragment key={index}>

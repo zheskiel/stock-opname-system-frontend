@@ -22,7 +22,8 @@ import {
   fetchFormDetailsSelectedData,
 } from "../../../../redux/actions";
 
-import { buildItemsObj } from "../../../../utils/helpers";
+// Helpers
+import { buildItemsObj, getEntity } from "../../../../utils/helpers";
 
 const initialState = {
   isReady: false,
@@ -286,25 +287,7 @@ class TemplateTable extends Component {
                 default: DefaultItem,
               };
 
-              let Entity = (params) => {
-                let Item;
-
-                switch (arr.key) {
-                  case "actions":
-                    Item = entities.action;
-                    break;
-
-                  case "units":
-                    Item = entities.custom;
-                    break;
-
-                  default:
-                    Item = entities.default;
-                    break;
-                }
-
-                return <Item {...params} />;
-              };
+              let Entity = getEntity(entities, params);
 
               return (
                 <React.Fragment key={index}>

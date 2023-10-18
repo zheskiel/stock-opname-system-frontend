@@ -1,11 +1,11 @@
 require("./bootstrap.js");
 
-import React, {Suspense} from "react";
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import store, { persistor } from "./store";
-import { BrowserRouter as Router } from "react-router-dom";
+import { Router } from "react-router-dom";
 // import reportWebVitals from "./utils/reportWebVital";
 import * as serviceWorker from "./serviceWorker";
 import history from "./utils/history";

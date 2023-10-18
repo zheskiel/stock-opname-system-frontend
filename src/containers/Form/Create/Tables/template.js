@@ -20,6 +20,9 @@ import {
   createFormDetail,
 } from "../../../../redux/actions";
 
+// Helpers
+import { getEntity } from "../../../../utils/helpers";
+
 const initialState = {
   isReady: false,
 };
@@ -37,44 +40,31 @@ class TemplateTable extends Component {
 
   componentDidMount() {
     new Promise((resolve) => resolve())
+      .then(() => this.handleFetchData())
       .then(() => {
-        this.handleFetchData();
-        // this.handleFetchSelectedData();
-      })
-      .then(() => {
-        setTimeout(() => {
-          this.setState({
-            isReady: true,
-          });
-        }, 500);
+        setTimeout(() => this.setState({ isReady: true }), 500);
       });
   }
 
   handleClick = async (item, selectedUnit) => {
-    return new Promise((resolve) => resolve())
-      .then(() => {
-        const { createFormDetail, match } = this.props;
-        const { params } = match;
+    return new Promise((resolve) => resolve()).then(() => {
+      const { createFormDetail, match } = this.props;
+      const { params } = match;
 
-        let parameters = {
-          ...params,
-          item,
-          selectedUnit,
-        };
+      let parameters = {
+        ...params,
+        item,
+        selectedUnit,
+      };
 
-        createFormDetail(parameters);
-      })
-      .then(() =>
-        setTimeout(() => {
-          // this.handleFetchSelectedData();
-        }, 250)
-      );
+      createFormDetail(parameters);
+    });
   };
 
   handleFetchData = (page = 1) => {
     const { fetchTemplateViewData, match } = this.props;
-    const { params } = match;
-    const { templateId } = params;
+    // const { params } = match;
+    // const { templateId } = params;
 
     let parameters = {
       templateId: 1,
@@ -247,25 +237,7 @@ class TemplateTable extends Component {
                 default: DefaultItem,
               };
 
-              let Entity = (params) => {
-                let Item;
-
-                switch (arr.key) {
-                  case "actions":
-                    Item = entities.action;
-                    break;
-
-                  case "units":
-                    Item = entities.custom;
-                    break;
-
-                  default:
-                    Item = entities.default;
-                    break;
-                }
-
-                return <Item {...params} />;
-              };
+              let Entity = getEntity(entities, params);
 
               return (
                 <React.Fragment key={index}>

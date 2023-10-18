@@ -15,7 +15,7 @@ import LayoutContainer from "../../Layout";
 // Styling
 import "../../../assets/scss/templates.scss";
 
-import { sortData } from "../../../utils/helpers";
+import { sortData, buildFormCreateFormatted } from "../../../utils/helpers";
 
 const initialState = {
   detailArrs: [],
@@ -69,43 +69,15 @@ class FormCreate extends Component {
       .then(() => {
         let { detailItems, units } = this.state;
 
-        let selected = item.units[selectedUnit];
-        let unitArrs = {
-          unit: selectedUnit,
-          unit_value: selected.value,
-          unit_sku: selected.sku,
+        let params = {
+          order,
+          item,
+          units,
+          selectedUnit,
+          detailItems,
         };
 
-        let unitResult =
-          typeof units[item.id] !== "undefined"
-            ? [...units[item.id], unitArrs]
-            : [unitArrs];
-
-        let unitSet = {
-          ...units,
-          [`${item.id}`]: sortData(unitResult, "unit_value"),
-        };
-
-        let newArrs = {
-          order: order++,
-          id: item.id,
-          forms_id: 0,
-          product_id: item.product_id,
-          product_name: item.product_name,
-          product_code: item.product_code,
-          unit: selectedUnit,
-          value: 0,
-          units: unitResult,
-        };
-
-        let items = {
-          [item.id]: { ...newArrs },
-        };
-
-        let result = {
-          ...detailItems,
-          ...items,
-        };
+        let { unitSet, result } = buildFormCreateFormatted(params);
 
         this.setState({
           units: unitSet,
