@@ -7,8 +7,6 @@ import { compose } from "redux";
 import ViewDesktop from "./ViewDesktop";
 import ViewMobile from "./ViewMobile";
 
-import { typeThreeArrs as arrs } from "../../../constants/arrays";
-
 class FormView extends Component {
   render() {
     const { details, mode } = this.props;
@@ -19,8 +17,8 @@ class FormView extends Component {
     const { items } = data;
 
     let params = {
+      ...this.props,
       items,
-      arrs,
     };
 
     let entities = {

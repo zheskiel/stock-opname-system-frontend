@@ -5,6 +5,7 @@ import {
   REMOVE_FORM_DETAIL_REQUEST,
   REMOVE_FORM_DETAIL_SUCCESS,
   REMOVE_FORM_DETAIL_FAILED,
+  REMOVE_ALL_FORM_DETAIL,
   FETCH_FORM_DETAILS_REQUEST,
   FETCH_FORM_DETAILS_SUCCESS,
   FETCH_FORM_DETAILS_FAILED,
@@ -36,7 +37,7 @@ const FormDetails = (state = initialState, action) => {
         ...newDetails,
       };
 
-      let dataParams = {
+      var dataParams = {
         ...state.data,
         ...data,
         data: {
@@ -50,6 +51,22 @@ const FormDetails = (state = initialState, action) => {
       var newState = {
         success,
         message,
+        data: dataParams,
+      };
+
+      return { ...state, ...newState };
+
+    case REMOVE_ALL_FORM_DETAIL:
+      var dataParams = {
+        ...state.data,
+        data: {
+          ...state.data.data,
+          items: [],
+        },
+      };
+
+      var newState = {
+        ...state,
         data: dataParams,
       };
 

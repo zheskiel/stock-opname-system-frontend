@@ -7,21 +7,16 @@ import { compose } from "redux";
 import ViewDesktop from "./ViewDesktop";
 import ViewMobile from "./ViewMobile";
 
-// Data
-import { typeFourArrs as arrs } from "../../../constants/arrays";
-
 class TemplateView extends Component {
   render() {
     const { details, mode } = this.props;
     const { data } = details;
 
-    if (!data) return <></>;
-
     const { details: items } = data;
 
-    let params = {
+    const params = {
+      ...this.props,
       items,
-      arrs,
     };
 
     let entities = {

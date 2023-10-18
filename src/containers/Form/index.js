@@ -4,6 +4,9 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { compose } from "redux";
 
+// Data Array
+import { typeThreeArrs as arrs } from "../../constants/arrays";
+
 // Components
 import FormView from "../../components/Form/View";
 import Loader from "../../components/Loader";
@@ -19,10 +22,18 @@ import MainSection from "../../sections/Main";
 // Actions
 import { fetchFormDetailsData } from "../../redux/actions";
 
+// Helpers
+import { buildItemsObj } from "../../utils/helpers";
+
+// Styling
 import "../../assets/scss/templates.scss";
 
 const initialState = {
   isReady: false,
+  items: {},
+  sort: "id",
+  order: "asc",
+  orderList: ["asc", "desc"],
 };
 
 class FormContainer extends Component {
@@ -36,26 +47,59 @@ class FormContainer extends Component {
 
   componentDidMount() {
     new Promise((resolve) => resolve())
+      .then(() => this.setState({ items: buildItemsObj(arrs) }))
       .then(() => this.handleFetchData())
       .then(() => {
-        setTimeout(() => {
-          this.setState({
-            isReady: true,
-          });
-        }, 500);
+        setTimeout(() => this.setState({ isReady: true }), 500);
       });
   }
 
-  handleFetchData = (page = 1) => {
-    let { fetchFormDetailsData, match } = this.props;
-    let params = {
-      ...match.params,
-      page,
-    };
+  handleFetchData = async (
+    page = 1,
+    sort = "product_name",
+    order = "asc",
+    isDesc = false
+  ) => {
+    return new Promise((resolve) => resolve())
+      .then(() => {
+        let { items } = this.state;
 
-    fetchFormDetailsData(params);
+        this.setState({ sort, order, isDesc });
+        this.setState({
+          items: {
+            ...items,
+            [sort]: {
+              sort,
+              order,
+              isDesc,
+            },
+          },
+        });
+      })
+      .then(() => {
+        let { items } = this.state;
+        let { sort: sortState, order: orderState } = items[sort];
 
-    window.scrollTo(0, 0);
+        let { fetchFormDetailsData, match } = this.props;
+        let params = {
+          ...match.params,
+          sort: sortState,
+          order: orderState,
+          page,
+        };
+
+        fetchFormDetailsData(params);
+
+        window.scrollTo(0, 0);
+      });
+  };
+
+  handlePagination = async (page) => {
+    return new Promise((resolve) => resolve()).then(() => {
+      let { sort, order, isDesc } = this.state;
+
+      this.handleFetchData(page, sort, order, isDesc);
+    });
   };
 
   render() {
@@ -88,10 +132,18 @@ class FormContainer extends Component {
         );
       }
 
+      const formProps = {
+        handleFetchData: this.handleFetchData,
+        orderList: this.state.orderList,
+        keyItems: this.state.items,
+        currentPage: current_page,
+        arrs,
+      };
+
       return (
         <div className="template-view-container table-responsive small">
           <div className="table-container">
-            <FormView />
+            <FormView {...formProps} />
           </div>
 
           {hasPagination(last_page)}

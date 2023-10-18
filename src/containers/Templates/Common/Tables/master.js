@@ -48,12 +48,10 @@ class MasterTableCommon extends Component {
     new Promise((resolve) => resolve())
       .then(() => this.setState({ items: buildItemsObj(arrs) }))
       .then(() => {
-        const { mode } = this.props;
-
         this.handleFetchData();
 
         // Only Execute if edit mode
-        if (mode == "edit") {
+        if (this.props.mode == "edit") {
           this.handleFetchSelectedData();
         }
       })

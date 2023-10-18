@@ -4,6 +4,7 @@ import {
   FORM_DETAILS_SELECTED_ALL_URL,
   FORM_CREATE_DETAIL_URL,
   FORM_REMOVE_DETAIL_URL,
+  FORM_REMOVE_ALL_DETAIL_URL,
 } from "./constants";
 
 import axiosInstance from "../utils/axiosInstance";
@@ -20,8 +21,16 @@ export const fetchFormsApi = ({ page = 1 }) => {
   return axiosInstance.get(target);
 };
 
-export const fetchFormDetailsApi = ({ managerId, staffId, page = 1 }) => {
+export const fetchFormDetailsApi = ({
+  managerId,
+  staffId,
+  page = 1,
+  sort = "id",
+  order = "desc",
+}) => {
   let parameters = {
+    sort,
+    order,
     page,
   };
 
@@ -83,6 +92,19 @@ export const removeFormDetailApi = ({
 
   let args = [managerId, staffId, productId, itemId];
   let targetUrl = formatUrl(FORM_REMOVE_DETAIL_URL, args);
+  let url = new URL(targetUrl);
+
+  return axiosInstance.post(url, parameters);
+};
+
+export const removeAllFormDetailApi = ({ managerId, staffId }) => {
+  let parameters = {
+    manager_id: managerId,
+    staff_id: staffId,
+  };
+
+  let args = [managerId, staffId];
+  let targetUrl = formatUrl(FORM_REMOVE_ALL_DETAIL_URL, args);
   let url = new URL(targetUrl);
 
   return axiosInstance.post(url, parameters);

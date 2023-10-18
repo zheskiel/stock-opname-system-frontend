@@ -31,9 +31,9 @@ class TemplateTable extends Component {
 
     this.state = initialState;
 
-    this.handleRemoveAllData = this.handleRemoveAllData.bind(this);
-    this.handleRemoveData = this.handleRemoveData.bind(this);
     this.handleFetchData = this.handleFetchData.bind(this);
+    this.handleRemoveData = this.handleRemoveData.bind(this);
+    this.handleRemoveAllData = this.handleRemoveAllData.bind(this);
   }
 
   componentDidMount() {

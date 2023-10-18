@@ -17,6 +17,7 @@ import {
   fetchFormDetailsData,
   fetchFormDetailsSelectedData,
   removeFormDetail,
+  removeAllFormDetail,
 } from "../../../../redux/actions";
 
 const initialState = {
@@ -31,17 +32,14 @@ class DetailTable extends Component {
 
     this.handleFetchData = this.handleFetchData.bind(this);
     this.handleRemoveData = this.handleRemoveData.bind(this);
+    this.handleRemoveAllData = this.handleRemoveAllData.bind(this);
   }
 
   componentDidMount() {
     new Promise((resolve) => resolve())
       .then(() => this.handleFetchData())
       .then(() => {
-        setTimeout(() => {
-          this.setState({
-            isReady: true,
-          });
-        }, 500);
+        setTimeout(() => this.setState({ isReady: true }), 500);
       });
   }
 
@@ -57,18 +55,40 @@ class DetailTable extends Component {
     window.scrollTo(0, 0);
   };
 
+  handleRemoveAllData = async () => {
+    return new Promise((resolve) => resolve())
+      .then(() => {
+        const { removeAllFormDetail, match } = this.props;
+
+        let parameters = {
+          ...match.params,
+        };
+
+        removeAllFormDetail(parameters);
+      })
+      .then(() => {
+        const { fetchFormDetailsSelectedData, match } = this.props;
+
+        setTimeout(() => {
+          let parameters = {
+            ...match.params,
+          };
+
+          fetchFormDetailsSelectedData(parameters);
+        }, 250);
+      });
+  };
+
   handleRemoveData = async (item) => {
     return new Promise((resolve) => resolve())
       .then(() => {
         const { removeFormDetail, match, details } = this.props;
-        const { params } = match;
-
         const { current_page } = details;
 
-        let { id, templates_id, product_id } = item;
+        const { id, templates_id, product_id } = item;
 
         let parameters = {
-          ...params,
+          ...match.params,
           currentPage: current_page,
           templateId: templates_id,
           productId: product_id,
@@ -80,11 +100,9 @@ class DetailTable extends Component {
       .then(() => {
         const { fetchFormDetailsSelectedData, match } = this.props;
 
-        let { params } = match;
-
         setTimeout(() => {
           let parameters = {
-            ...params,
+            ...match.params,
           };
 
           fetchFormDetailsSelectedData(parameters);
@@ -224,7 +242,20 @@ class DetailTable extends Component {
             </table>
           </div>
 
-          {hasPagination(last_page)}
+          <div className="template-create-utilities d-flex justify-content-between">
+            {hasPagination(last_page)}
+
+            {Object.keys(items).length > 0 && (
+              <div className="btn-group unit-actions">
+                <button
+                  className="btn btn-danger"
+                  onClick={() => this.handleRemoveAllData()}
+                >
+                  X Remove All
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       );
     };
@@ -271,6 +302,11 @@ const mapDispatchToProps = (dispatch) => ({
   removeFormDetail: (params) => {
     return new Promise((resolve) => {
       dispatch(removeFormDetail(params)).then(() => resolve());
+    });
+  },
+  removeAllFormDetail: (params) => {
+    return new Promise((resolve) => {
+      dispatch(removeAllFormDetail(params)).then(() => resolve());
     });
   },
 });

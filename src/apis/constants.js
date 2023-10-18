@@ -12,6 +12,8 @@ export const FORM_DETAILS_URL = API_URL + "/form/{0}/{1}/details";
 export const FORM_DETAILS_SELECTED_ALL_URL = API_URL + "/form/{0}/{1}/all";
 export const FORM_CREATE_DETAIL_URL = API_URL + `/form/{0}/{1}/create-detail`;
 export const FORM_REMOVE_DETAIL_URL = API_URL + `/form/{0}/{1}/remove-detail`;
+export const FORM_REMOVE_ALL_DETAIL_URL =
+  API_URL + `/form/{0}/{1}/remove-all-detail`;
 
 export const TEMPLATES_URL = API_URL + "/templates";
 export const TEMPLATE_VIEW_URL = API_URL + `/template/{0}/view`;

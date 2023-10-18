@@ -4,6 +4,9 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { compose } from "redux";
 
+// Data
+import { typeFourArrs as arrs } from "../../constants/arrays";
+
 // Components
 import TemplateView from "../../components/Template/View";
 import Loader from "../../components/Loader";
@@ -18,6 +21,9 @@ import PaginationSection from "../../sections/Pagination";
 
 // Actions
 import { fetchTemplateViewData } from "../../redux/actions";
+
+// Helpers
+import { buildItemsObj } from "../../utils/helpers";
 
 // Styling
 import "../../assets/scss/templates.scss";
@@ -37,29 +43,67 @@ class TemplatesViewContainer extends Component {
     this.state = initialState;
 
     this.handleFetchData = this.handleFetchData.bind(this);
+    this.handlePagination = this.handlePagination.bind(this);
   }
 
   componentDidMount() {
     new Promise((resolve) => resolve())
+      .then(() => this.setState({ items: buildItemsObj(arrs) }))
       .then(() => this.handleFetchData())
       .then(() => {
         setTimeout(() => this.setState({ isReady: true }), 500);
       });
   }
 
-  handleFetchData = (page = 1) => {
-    const { fetchTemplateViewData, match } = this.props;
-    const { params } = match;
-    const { id } = params;
+  handleFetchData = async (
+    page = 1,
+    sort = "product_name",
+    order = "asc",
+    isDesc = false
+  ) => {
+    return new Promise((resolve) => resolve())
+      .then(() => {
+        let { items } = this.state;
 
-    let parameters = {
-      templateId: id,
-      page: page,
-    };
+        this.setState({ sort, order, isDesc });
+        this.setState({
+          items: {
+            ...items,
+            [sort]: {
+              sort,
+              order,
+              isDesc,
+            },
+          },
+        });
+      })
+      .then(() => {
+        let { items } = this.state;
+        let { sort: sortState, order: orderState } = items[sort];
 
-    fetchTemplateViewData(parameters);
+        let { fetchTemplateViewData, match } = this.props;
+        let { params } = match;
+        let { id } = params;
 
-    window.scrollTo(0, 0);
+        let parameters = {
+          sort: sortState,
+          order: orderState,
+          templateId: id,
+          page: page,
+        };
+
+        fetchTemplateViewData(parameters);
+
+        window.scrollTo(0, 0);
+      });
+  };
+
+  handlePagination = async (page) => {
+    return new Promise((resolve) => resolve()).then(() => {
+      let { sort, order, isDesc } = this.state;
+
+      this.handleFetchData(page, sort, order, isDesc);
+    });
   };
 
   render() {
@@ -70,7 +114,7 @@ class TemplatesViewContainer extends Component {
       totalCount: total,
       pageNumber: current_page,
       pageSize: per_page,
-      handlePagination: this.handleFetchData,
+      handlePagination: this.handlePagination,
     };
 
     const { data: detail } = details;
@@ -87,10 +131,18 @@ class TemplatesViewContainer extends Component {
           </div>
         );
 
+      const templateProps = {
+        handleFetchData: this.handleFetchData,
+        orderList: this.state.orderList,
+        keyItems: this.state.items,
+        currentPage: current_page,
+        arrs,
+      };
+
       return (
         <div className="template-view-container table-responsive small">
           <div className="table-container">
-            <TemplateView />
+            <TemplateView {...templateProps} />
           </div>
 
           {hasPagination(last_page)}

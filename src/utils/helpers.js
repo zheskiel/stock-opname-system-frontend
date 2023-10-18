@@ -16,6 +16,10 @@ export const buildItemsObj = (arrs) => {
   return items;
 };
 
+export const sleep = (ms) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
+
 export const isNumberKey = (evt) => {
   var charCode = evt.which ? evt.which : evt.keyCode;
 
