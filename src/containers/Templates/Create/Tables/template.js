@@ -25,11 +25,7 @@ class TemplateTable extends Component {
 
   componentDidMount() {
     new Promise((resolve) => resolve()).then(() => {
-      setTimeout(() => {
-        this.setState({
-          isReady: true,
-        });
-      }, 500);
+      setTimeout(() => this.setState({ isReady: true }), 500);
     });
   }
 

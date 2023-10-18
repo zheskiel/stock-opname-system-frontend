@@ -6,8 +6,7 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { compose } from "redux";
 
-// Array Data
-import { typeOneArrs as arrs } from "../../../../constants/arrays";
+import { typeTwoArrs as arrs } from "../../../../constants/arrays";
 
 // Sections
 import PaginationSection from "../../../../sections/Pagination";
@@ -16,68 +15,42 @@ import PaginationSection from "../../../../sections/Pagination";
 import Loader from "../../../../components/Loader";
 
 // Actions
-import {
-  createFormDetail,
-  fetchTemplateViewData,
-  fetchFormDetailsSelectedData,
-} from "../../../../redux/actions";
+import { fetchMasterData } from "../../../../redux/actions";
 
 import { buildItemsObj } from "../../../../utils/helpers";
 
 const initialState = {
   isReady: false,
   items: {},
-  sort: "id",
+  sort: "product_name",
   isDesc: false,
-  order: "desc",
+  order: "asc",
   orderList: ["asc", "desc"],
 };
 
-class TemplateTable extends Component {
+class MasterTable extends Component {
   constructor(props) {
     super(props);
 
     this.state = initialState;
 
-    this.handleClick = this.handleClick.bind(this);
     this.handleFetchData = this.handleFetchData.bind(this);
     this.handlePagination = this.handlePagination.bind(this);
-    this.handleFetchSelectedData = this.handleFetchSelectedData.bind(this);
   }
 
   componentDidMount() {
     new Promise((resolve) => resolve())
       .then(() => this.setState({ items: buildItemsObj(arrs) }))
-      .then(() => {
-        this.handleFetchData();
-        this.handleFetchSelectedData();
-      })
+      .then(() => this.handleFetchData())
       .then(() => {
         setTimeout(() => this.setState({ isReady: true }), 500);
       });
   }
 
-  handleClick = async (item, selectedUnit) => {
-    return new Promise((resolve) => resolve())
-      .then(() => {
-        const { createFormDetail, match } = this.props;
-        const { params } = match;
-
-        let parameters = {
-          ...params,
-          item,
-          selectedUnit,
-        };
-
-        createFormDetail(parameters);
-      })
-      .then(() => setTimeout(() => this.handleFetchSelectedData(), 250));
-  };
-
   handleFetchData = async (
     page = 1,
-    sort = "id",
-    order = "desc",
+    sort = "product_name",
+    order = "asc",
     isDesc = false
   ) => {
     return new Promise((resolve) => resolve())
@@ -99,19 +72,15 @@ class TemplateTable extends Component {
       .then(() => {
         let { items } = this.state;
         let { sort: sortState, order: orderState } = items[sort];
+        let { fetchMasterData } = this.props;
 
-        const { fetchTemplateViewData, match } = this.props;
-        const { params } = match;
-        const { templateId } = params;
-
-        let parameters = {
+        let params = {
           sort: sortState,
           order: orderState,
-          templateId,
           page,
         };
 
-        fetchTemplateViewData(parameters);
+        fetchMasterData(params);
 
         window.scrollTo(0, 0);
       });
@@ -125,22 +94,11 @@ class TemplateTable extends Component {
     });
   };
 
-  handleFetchSelectedData = () => {
-    let { fetchFormDetailsSelectedData, match } = this.props;
-    let { params } = match;
-
-    let parameters = {
-      ...params,
-    };
-
-    fetchFormDetailsSelectedData(parameters);
-  };
-
   render() {
     const { isReady } = this.state;
-    const { templatesDetails, selected } = this.props;
+    const { master, pageNumber, selectedItems: selected } = this.props;
 
-    const { total, current_page, per_page, last_page } = templatesDetails;
+    const { total, current_page, per_page, last_page } = master;
     const newProps = {
       totalCount: total,
       pageNumber: current_page,
@@ -148,19 +106,15 @@ class TemplateTable extends Component {
       handlePagination: this.handlePagination,
     };
 
-    const { data } = templatesDetails;
+    const { data: masterItems } = master;
 
     const hasPagination = (lastPage) => {
       return lastPage > 1 ? <PaginationSection {...newProps} /> : null;
     };
 
-    if (!data) return <></>;
-
-    const { details: templateItems } = data;
-
-    const templateDataItems =
-      templateItems &&
-      Object.values(templateItems).map((item) => {
+    const masterDataItems =
+      masterItems &&
+      Object.values(masterItems).map((item) => {
         const DefaultItem = ({ arr, item }) => {
           return <td key={`inner-${arr.title}-${item.id}`}>{item[arr.key]}</td>;
         };
@@ -189,95 +143,27 @@ class TemplateTable extends Component {
           );
         };
 
-        const ActionItem = ({ arr, item }) => {
-          let itemUnits = Object.entries(item.units);
-          let selectedLimit = 1;
-          let selectedCount = 0;
+        const ActionItem = ({ item }) => {
+          let isSelected = selected.includes(item.product_code);
 
           return (
-            <React.Fragment key={`inner-${arr.title}-${item.id}`}>
-              <td className="unit-actions unit-section">
-                {itemUnits.length > 0 &&
-                  itemUnits.map((unit, index) => {
-                    let isSelected = selected.some((target) => {
-                      let targetUnit = target.unit,
-                        realUnit = unit[0];
-
-                      return (
-                        target.product_code == item.product_code &&
-                        targetUnit.trim() == realUnit.trim()
-                      );
-                    });
-
-                    if (isSelected == true) {
-                      selectedCount += 1;
-                    }
-
-                    let isDisabled = selected.some((target) => {
-                      return (
-                        selectedCount > selectedLimit &&
-                        target.product_code == item.product_code
-                      );
-                    });
-
-                    const SelectedBtn = () => {
-                      return (
-                        <button className="unit-added btn btn-warning">
-                          Added
-                        </button>
-                      );
-                    };
-
-                    const CustomBtn = () => {
-                      return !isDisabled ? <NormalBtn /> : <DisabledBtn />;
-                    };
-
-                    const NormalBtn = () => {
-                      return (
-                        <button
-                          className="btn btn-info"
-                          onClick={() => this.handleClick(item, unit[0])}
-                        >
-                          + Add
-                        </button>
-                      );
-                    };
-
-                    const DisabledBtn = () => {
-                      return (
-                        <button className="unit-added btn btn-secondary">
-                          -
-                        </button>
-                      );
-                    };
-
-                    const FinalBtn = () => {
-                      return selectedCount <= selectedLimit ? (
-                        <CustomBtn />
-                      ) : (
-                        <DisabledBtn />
-                      );
-                    };
-
-                    const ResultBtn = () => {
-                      return isSelected ? <SelectedBtn /> : <FinalBtn />;
-                    };
-
-                    return (
-                      <div key={index} className="unit-container">
-                        <div className="unit-detail">
-                          <ResultBtn />
-                        </div>
-                      </div>
-                    );
-                  })}
-              </td>
-            </React.Fragment>
+            <td className="unit-actions">
+              {isSelected ? (
+                <button className="unit-added btn btn-warning">Added</button>
+              ) : (
+                <button
+                  className="btn btn-info"
+                  onClick={() => this.props.handleClick(item, pageNumber)}
+                >
+                  + Add
+                </button>
+              )}
+            </td>
           );
         };
 
         return (
-          <tr key={item.id}>
+          <tr key={item.product_id}>
             {arrs.map((arr, index) => {
               let params = { arr, item };
               let entities = {
@@ -340,7 +226,6 @@ class TemplateTable extends Component {
                           let newOrder = orderList[isDesc ? 0 : 1];
 
                           arr.key !== "actions" &&
-                            arr.key !== "units" &&
                             this.handleFetchData(
                               current_page,
                               sort,
@@ -349,7 +234,7 @@ class TemplateTable extends Component {
                             );
                         }}
                       >
-                        {arr.key !== "actions" && arr.key !== "units" && (
+                        {arr.key !== "actions" && (
                           <>{newIsDesc ? <FaAngleUp /> : <FaAngleDown />}</>
                         )}
 
@@ -360,7 +245,7 @@ class TemplateTable extends Component {
                 </tr>
               </thead>
 
-              <tbody>{templateDataItems}</tbody>
+              <tbody>{masterDataItems}</tbody>
             </table>
           </div>
 
@@ -369,8 +254,8 @@ class TemplateTable extends Component {
       );
     };
 
-    const TemplateTable = () => {
-      if (!data || !isReady) {
+    const MasterTable = () => {
+      if (!isReady) {
         return (
           <div className="template-edit-section col-6">
             <Loader />
@@ -381,7 +266,7 @@ class TemplateTable extends Component {
       return (
         <div className="template-edit-section col-6">
           <div className="template-header-section">
-            <h6 className="h6">{data.title}'s Template</h6>
+            <h6 className="h6">Master Data</h6>
           </div>
 
           <ContentSection />
@@ -389,32 +274,18 @@ class TemplateTable extends Component {
       );
     };
 
-    return <TemplateTable />;
+    return <MasterTable />;
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    formDetails: state.form.data,
-    templatesDetails: state.template.data,
-    selected: state.formDetailsSelected.data,
-  };
-};
+const mapStateToProps = (state) => ({
+  master: state.master.data,
+});
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchTemplateViewData: (params) => {
+  fetchMasterData: (params) => {
     return new Promise((resolve) => {
-      dispatch(fetchTemplateViewData(params)).then(() => resolve());
-    });
-  },
-  fetchFormDetailsSelectedData: (params) => {
-    return new Promise((resolve) => {
-      dispatch(fetchFormDetailsSelectedData(params)).then(() => resolve());
-    });
-  },
-  createFormDetail: (params) => {
-    return new Promise((resolve) => {
-      dispatch(createFormDetail(params)).then(() => resolve());
+      dispatch(fetchMasterData(params)).then(() => resolve());
     });
   },
 });
@@ -422,4 +293,4 @@ const mapDispatchToProps = (dispatch) => ({
 export default compose(
   withRouter,
   connect(mapStateToProps, mapDispatchToProps)
-)(TemplateTable);
+)(MasterTable);
