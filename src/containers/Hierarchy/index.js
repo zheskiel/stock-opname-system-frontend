@@ -19,7 +19,7 @@ import "../../assets/scss/hierarchy.scss";
 import { fetchHierarchyData } from "../../redux/actions";
 
 const initialState = {
-  isReady: false,
+  isMounted: false,
 };
 
 class HierarchyContainer extends Component {
@@ -44,7 +44,7 @@ class HierarchyContainer extends Component {
       .then(() => {
         setTimeout(() => {
           this.setState({
-            isReady: true,
+            isMounted: true,
           });
         }, 500);
       })
@@ -267,9 +267,9 @@ class HierarchyContainer extends Component {
   };
 
   render() {
-    const { isReady } = this.state;
+    const { isMounted } = this.state;
 
-    if (!isReady) {
+    if (!isMounted) {
       return (
         <LayoutContainer>
           <MainSection>

@@ -21,7 +21,7 @@ import { fetchTemplatesData } from "../../redux/actions";
 import "../../assets/scss/templates.scss";
 
 const initialState = {
-  isReady: false,
+  isMounted: false,
   templates: [],
 };
 
@@ -38,7 +38,7 @@ class TemplatesContainer extends Component {
     new Promise((resolve) => resolve())
       .then(() => this.handleFetchData())
       .then(() => {
-        setTimeout(() => this.setState({ isReady: true }), 500);
+        setTimeout(() => this.setState({ isMounted: true }), 500);
       });
   }
 
@@ -59,7 +59,7 @@ class TemplatesContainer extends Component {
   };
 
   render() {
-    const { isReady } = this.state;
+    const { isMounted } = this.state;
     const { templates } = this.props;
     const { data: items } = templates;
 
@@ -76,7 +76,7 @@ class TemplatesContainer extends Component {
     };
 
     const ContentSection = () => {
-      if (!items || !isReady)
+      if (!items || !isMounted)
         return (
           <div className="templates-container card-container">
             <Loader />

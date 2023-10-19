@@ -26,10 +26,10 @@ import {
 import { buildItemsObj, getEntity } from "../../../../utils/helpers";
 
 const initialState = {
-  isReady: false,
+  isMounted: false,
   items: {},
   sort: "id",
-  isDesc: false,
+  isDesc: true,
   order: "desc",
   orderList: ["asc", "desc"],
 };
@@ -54,7 +54,7 @@ class TemplateTable extends Component {
         this.handleFetchSelectedData();
       })
       .then(() => {
-        setTimeout(() => this.setState({ isReady: true }), 500);
+        setTimeout(() => this.setState({ isMounted: true }), 500);
       });
   }
 
@@ -79,7 +79,7 @@ class TemplateTable extends Component {
     page = 1,
     sort = "id",
     order = "desc",
-    isDesc = false
+    isDesc = true
   ) => {
     return new Promise((resolve) => resolve())
       .then(() => {
@@ -138,7 +138,7 @@ class TemplateTable extends Component {
   };
 
   render() {
-    const { isReady } = this.state;
+    const { isMounted } = this.state;
     const { templatesDetails, selected } = this.props;
 
     const { total, current_page, per_page, last_page } = templatesDetails;
@@ -353,7 +353,7 @@ class TemplateTable extends Component {
     };
 
     const TemplateTable = () => {
-      if (!data || !isReady) {
+      if (!data || !isMounted) {
         return (
           <div className="template-edit-section col-6">
             <Loader />

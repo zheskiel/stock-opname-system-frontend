@@ -19,6 +19,7 @@ export const fetchMasterData = (params) => (dispatch) => {
           dispatch(fetchMasterDataSuccess(result));
         } else {
           dispatch(fetchMasterDataFailed(result));
+          errorHandler(result);
         }
 
         resolve(result);

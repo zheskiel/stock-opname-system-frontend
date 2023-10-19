@@ -25,7 +25,7 @@ import {
 import { getEntity } from "../../../../utils/helpers";
 
 const initialState = {
-  isReady: false,
+  isMounted: false,
 };
 
 class TemplateTable extends Component {
@@ -43,7 +43,7 @@ class TemplateTable extends Component {
     new Promise((resolve) => resolve())
       .then(() => this.handleFetchData())
       .then(() => {
-        setTimeout(() => this.setState({ isReady: true }), 500);
+        setTimeout(() => this.setState({ isMounted: true }), 500);
       });
   }
 
@@ -118,7 +118,7 @@ class TemplateTable extends Component {
   };
 
   render() {
-    const { isReady } = this.state;
+    const { isMounted } = this.state;
     const { details } = this.props;
     const { total, current_page, per_page, last_page } = details;
     const newProps = {
@@ -244,7 +244,7 @@ class TemplateTable extends Component {
     };
 
     const TemplateTable = () => {
-      if (!data || !isReady) {
+      if (!data || !isMounted) {
         return (
           <div className="template-edit-section col-6">
             <Loader />

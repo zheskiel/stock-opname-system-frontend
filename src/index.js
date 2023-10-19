@@ -20,6 +20,10 @@ import LayoutContainer from "./containers/Layout";
 // Components
 import Loader from "./components/Loader";
 
+// Plugins
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+
 const FallBack = () => {
   return (
     <LayoutContainer>
@@ -33,6 +37,21 @@ const FallBack = () => {
 ReactDOM.render(
   <Provider store={store}>
     <PersistGate persistor={persistor}>
+      <ToastContainer
+        className="toast-container"
+        bodyClassName="toast-body"
+        progressClassName="toast-progress-bar"
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnVisibilityChange
+        draggable
+        pauseOnHover
+      />
+
       <Router history={history}>
         <Suspense fallback={<FallBack />}>
           <App />

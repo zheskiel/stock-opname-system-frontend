@@ -7,3 +7,9 @@ export const config = {
 export const isLogin = () => {
   return store.getState().auth.isAuth;
 };
+
+export const isEligible = (routeName) => {
+  let permissions = store.getState().auth.data.permissions;
+
+  return permissions.includes(routeName);
+};

@@ -16,7 +16,7 @@ import Loader from "../../../../components/Loader";
 import { getEntity } from "../../../../utils/helpers";
 
 const initialState = {
-  isReady: false,
+  isMounted: false,
 };
 
 class TemplateTable extends Component {
@@ -28,12 +28,12 @@ class TemplateTable extends Component {
 
   componentDidMount() {
     new Promise((resolve) => resolve()).then(() => {
-      setTimeout(() => this.setState({ isReady: true }), 500);
+      setTimeout(() => this.setState({ isMounted: true }), 500);
     });
   }
 
   render() {
-    const { isReady } = this.state;
+    const { isMounted } = this.state;
     const {
       handlePagination,
       templateItems,
@@ -161,7 +161,7 @@ class TemplateTable extends Component {
     };
 
     const TemplateTable = () => {
-      if (!isReady) {
+      if (!isMounted) {
         return (
           <div className="template-edit-section col-6">
             <Loader />

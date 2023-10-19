@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 
+import { FaAngleUp, FaAngleDown } from "react-icons/fa";
+
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { compose } from "redux";
@@ -21,10 +23,15 @@ import {
 } from "../../../../redux/actions";
 
 // Helpers
-import { getEntity } from "../../../../utils/helpers";
+import { buildItemsObj, getEntity } from "../../../../utils/helpers";
 
 const initialState = {
-  isReady: false,
+  isMounted: false,
+  items: {},
+  sort: "id",
+  isDesc: true,
+  order: "desc",
+  orderList: ["asc", "desc"],
 };
 
 class TemplateTable extends Component {
@@ -40,9 +47,10 @@ class TemplateTable extends Component {
 
   componentDidMount() {
     new Promise((resolve) => resolve())
+      .then(() => this.setState({ items: buildItemsObj(arrs) }))
       .then(() => this.handleFetchData())
       .then(() => {
-        setTimeout(() => this.setState({ isReady: true }), 500);
+        setTimeout(() => this.setState({ isMounted: true }), 500);
       });
   }
 
@@ -61,19 +69,55 @@ class TemplateTable extends Component {
     });
   };
 
-  handleFetchData = (page = 1) => {
-    const { fetchTemplateViewData, match } = this.props;
-    // const { params } = match;
-    // const { templateId } = params;
+  handleFetchData = async (
+    page = 1,
+    sort = "id",
+    order = "desc",
+    isDesc = true
+  ) => {
+    return new Promise((resolve) => resolve())
+      .then(() => {
+        let { items } = this.state;
 
-    let parameters = {
-      templateId: 1,
-      page,
-    };
+        this.setState({ sort, order, isDesc });
+        this.setState({
+          items: {
+            ...items,
+            [sort]: {
+              sort,
+              order,
+              isDesc,
+            },
+          },
+        });
+      })
+      .then(() => {
+        let { items } = this.state;
+        let { sort: sortState, order: orderState } = items[sort];
 
-    fetchTemplateViewData(parameters);
+        const { fetchTemplateViewData, match } = this.props;
+        // const { params } = match;
+        // const { templateId } = params;
 
-    window.scrollTo(0, 0);
+        let parameters = {
+          sort: sortState,
+          order: orderState,
+          templateId: 1,
+          page,
+        };
+
+        fetchTemplateViewData(parameters);
+
+        window.scrollTo(0, 0);
+      });
+  };
+
+  handlePagination = async (page) => {
+    return new Promise((resolve) => resolve()).then(() => {
+      let { sort, order, isDesc } = this.state;
+
+      this.handleFetchData(page, sort, order, isDesc);
+    });
   };
 
   handleFetchSelectedData = () => {
@@ -88,7 +132,7 @@ class TemplateTable extends Component {
   };
 
   render() {
-    const { isReady } = this.state;
+    const { isMounted } = this.state;
     const { templatesDetails, selectedItems: selected } = this.props;
 
     const { total, current_page, per_page, last_page } = templatesDetails;
@@ -96,7 +140,7 @@ class TemplateTable extends Component {
       totalCount: total,
       pageNumber: current_page,
       pageSize: per_page,
-      handlePagination: this.handleFetchData,
+      handlePagination: this.handlePagination,
     };
 
     const { data } = templatesDetails;
@@ -257,8 +301,35 @@ class TemplateTable extends Component {
               <thead>
                 <tr>
                   {arrs.map((arr) => {
+                    let { items } = this.state;
+                    let { isDesc } = items[arr.key];
+                    let newIsDesc = !isDesc;
+
                     return (
-                      <th scope="col" width={arr.width} key={arr.title}>
+                      <th
+                        scope="col"
+                        width={arr.width}
+                        key={arr.title}
+                        onClick={() => {
+                          let { items, orderList } = this.state;
+                          let { sort, isDesc } = items[arr.key];
+                          let newIsDesc = !isDesc;
+                          let newOrder = orderList[isDesc ? 0 : 1];
+
+                          arr.key !== "actions" &&
+                            arr.key !== "units" &&
+                            this.handleFetchData(
+                              current_page,
+                              sort,
+                              newOrder,
+                              newIsDesc
+                            );
+                        }}
+                      >
+                        {arr.key !== "actions" && arr.key !== "units" && (
+                          <>{newIsDesc ? <FaAngleUp /> : <FaAngleDown />}</>
+                        )}
+
                         {arr.title}
                       </th>
                     );
@@ -276,7 +347,7 @@ class TemplateTable extends Component {
     };
 
     const TemplateTable = () => {
-      if (!data || !isReady) {
+      if (!data || !isMounted) {
         return (
           <div className="template-edit-section col-6">
             <Loader />

@@ -21,52 +21,6 @@ export const getEntity = (entities, params) => {
   return Item;
 };
 
-export const buildFormCreateFormatted = (params) => {
-  let { order, item, selectedUnit, detailItems, units } = params;
-  let selected = item.units[selectedUnit];
-  let unitArrs = {
-    unit: selectedUnit,
-    unit_value: selected.value,
-    unit_sku: selected.sku,
-  };
-
-  let unitResult =
-    typeof units[item.id] !== "undefined"
-      ? [...units[item.id], unitArrs]
-      : [unitArrs];
-
-  let unitSet = {
-    ...units,
-    [`${item.id}`]: sortData(unitResult, "unit_value"),
-  };
-
-  let newArrs = {
-    order: order++,
-    id: item.id,
-    forms_id: 0,
-    product_id: item.product_id,
-    product_name: item.product_name,
-    product_code: item.product_code,
-    unit: selectedUnit,
-    value: 0,
-    units: unitResult,
-  };
-
-  let items = {
-    [item.id]: { ...newArrs },
-  };
-
-  let result = {
-    ...detailItems,
-    ...items,
-  };
-
-  return {
-    unitSet,
-    result,
-  };
-};
-
 export const buildItemsObj = (arrs) => {
   let items = {};
 

@@ -15,7 +15,7 @@ import LayoutContainer from "../../Layout";
 // Styling
 import "../../../assets/scss/templates.scss";
 
-import { sortData, buildFormCreateFormatted } from "../../../utils/helpers";
+import { sortData } from "../../../utils/helpers";
 
 const initialState = {
   detailArrs: [],
@@ -58,42 +58,53 @@ class FormCreate extends Component {
       return this.handlePagination(page - 1);
     }
 
-    this.setState({
-      detailArrs: currentItems,
-      pageNumber: page,
-    });
+    this.setState({ detailArrs: currentItems, pageNumber: page });
   };
 
   handleClick = async (item, selectedUnit) => {
     return new Promise((resolve) => resolve())
       .then(() => {
         let { detailItems, units } = this.state;
-
-        let params = {
-          order,
-          item,
-          units,
-          selectedUnit,
-          detailItems,
+        let selected = item.units[selectedUnit];
+        let unitArrs = {
+          unit: selectedUnit,
+          unit_value: selected.value,
+          unit_sku: selected.sku,
         };
 
-        let { unitSet, result } = buildFormCreateFormatted(params);
+        let unitResult =
+          typeof units[item.id] !== "undefined"
+            ? [...units[item.id], unitArrs]
+            : [unitArrs];
 
-        this.setState({
-          units: unitSet,
-          detailItems: result,
-        });
+        let unitSet = {
+          ...units,
+          [`${item.id}`]: sortData(unitResult, "unit_value"),
+        };
+
+        let result = {
+          ...detailItems,
+          [item.id]: {
+            order: order++,
+            id: item.id,
+            forms_id: 0,
+            product_id: item.product_id,
+            product_name: item.product_name,
+            product_code: item.product_code,
+            unit: selectedUnit,
+            value: 0,
+            units: unitResult,
+          },
+        };
+
+        this.setState({ units: unitSet, detailItems: result });
       })
       .then(() => {
         let { detailItems } = this.state;
-
         let values = Object.values(detailItems);
+        let sorted = sortData([...values], "order");
 
-        const sorted = sortData([...values], "order");
-
-        this.setState({
-          detailFitered: sorted,
-        });
+        this.setState({ detailFitered: sorted });
       })
       .then(() => this.handlePagination())
       .then(() => {

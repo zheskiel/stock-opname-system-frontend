@@ -29,7 +29,7 @@ import { buildItemsObj } from "../../utils/helpers";
 import "../../assets/scss/templates.scss";
 
 const initialState = {
-  isReady: false,
+  isMounted: false,
   items: {},
   sort: "id",
   order: "asc",
@@ -50,7 +50,7 @@ class FormContainer extends Component {
       .then(() => this.setState({ items: buildItemsObj(arrs) }))
       .then(() => this.handleFetchData())
       .then(() => {
-        setTimeout(() => this.setState({ isReady: true }), 500);
+        setTimeout(() => this.setState({ isMounted: true }), 500);
       });
   }
 
@@ -103,7 +103,7 @@ class FormContainer extends Component {
   };
 
   render() {
-    const { isReady } = this.state;
+    const { isMounted } = this.state;
     const { details, match } = this.props;
     const { params } = match;
 
@@ -124,7 +124,7 @@ class FormContainer extends Component {
     const { data } = details;
 
     const ContentSection = () => {
-      if (!isReady) {
+      if (!isMounted) {
         return (
           <div className="table-responsive small">
             <Loader />

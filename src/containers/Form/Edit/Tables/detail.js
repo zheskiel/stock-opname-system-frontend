@@ -24,7 +24,7 @@ import {
 import { getEntity } from "../../../../utils/helpers";
 
 const initialState = {
-  isReady: false,
+  isMounted: false,
 };
 
 class DetailTable extends Component {
@@ -42,7 +42,7 @@ class DetailTable extends Component {
     new Promise((resolve) => resolve())
       .then(() => this.handleFetchData())
       .then(() => {
-        setTimeout(() => this.setState({ isReady: true }), 500);
+        setTimeout(() => this.setState({ isMounted: true }), 500);
       });
   }
 
@@ -114,7 +114,7 @@ class DetailTable extends Component {
   };
 
   render() {
-    const { isReady } = this.state;
+    const { isMounted } = this.state;
     const { details } = this.props;
 
     const { total, current_page, per_page, last_page } = details;
@@ -246,7 +246,7 @@ class DetailTable extends Component {
     };
 
     const DetailTable = () => {
-      if (!data || !isReady) {
+      if (!data || !isMounted) {
         return (
           <div className="template-edit-section col-6">
             <Loader />

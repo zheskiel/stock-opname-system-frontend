@@ -24,7 +24,7 @@ import {
 import { buildItemsObj } from "../../../../utils/helpers";
 
 const initialState = {
-  isReady: false,
+  isMounted: false,
   items: {},
   sort: "product_name",
   isDesc: false,
@@ -52,7 +52,7 @@ class MasterTable extends Component {
         this.handleFetchSelectedData();
       })
       .then(() => {
-        setTimeout(() => this.setState({ isReady: true }), 500);
+        setTimeout(() => this.setState({ isMounted: true }), 500);
       });
   }
 
@@ -131,7 +131,7 @@ class MasterTable extends Component {
   };
 
   render() {
-    const { isReady } = this.state;
+    const { isMounted } = this.state;
     const { master, selected } = this.props;
 
     const { total, current_page, per_page, last_page } = master;
@@ -291,7 +291,7 @@ class MasterTable extends Component {
     };
 
     const MasterTable = () => {
-      if (!master || !isReady) {
+      if (!master || !isMounted) {
         return (
           <div className="template-edit-section col-6">
             <Loader />

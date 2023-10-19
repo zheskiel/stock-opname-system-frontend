@@ -29,6 +29,7 @@ import "../../assets/scss/master.scss";
 import "../../assets/scss/templates.scss";
 
 const initialState = {
+  isMounted: false,
   isReady: false,
   items: {},
   sort: "id",
@@ -50,7 +51,24 @@ class MasterContainer extends Component {
       .then(() => this.setState({ items: buildItemsObj(arrs) }))
       .then(() => this.handleFetchData())
       .then(() => {
-        setTimeout(() => this.setState({ isReady: true }), 500);
+        // const { master, history } = this.props;
+        // const { status_code } = master;
+
+        // // if (status_code !== 200) {
+        // //   this.setState({ isReady: false }, () => {
+        // //     history.push("/dashboard");
+        // //   });
+        // // } else {
+        // //   this.setState({ isReady: true });
+        // // }
+        this.setState({ isReady: true });
+      })
+      .then(() => {
+        const { isReady } = this.state;
+
+        isReady
+          ? setTimeout(() => this.setState({ isMounted: true }), 500)
+          : null;
       });
   }
 
@@ -103,10 +121,11 @@ class MasterContainer extends Component {
   };
 
   render() {
-    const { isReady } = this.state;
+    const { isMounted } = this.state;
     const { master } = this.props;
+    const { data } = master;
 
-    const { total, current_page, per_page, last_page } = master;
+    const { total, current_page, per_page, last_page } = data;
     const newProps = {
       totalCount: total,
       pageNumber: current_page,
@@ -119,7 +138,7 @@ class MasterContainer extends Component {
     };
 
     const ContentSection = () => {
-      if (!master || !isReady) {
+      if (!master || !isMounted) {
         return (
           <div className="table-responsive small">
             <Loader />
@@ -168,7 +187,7 @@ class MasterContainer extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  master: state.master.data,
+  master: state.master,
 });
 
 const mapDispatchToProps = (dispatch) => ({

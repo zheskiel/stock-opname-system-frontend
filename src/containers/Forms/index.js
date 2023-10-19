@@ -21,7 +21,7 @@ import { fetchFormsData } from "../../redux/actions";
 import "../../assets/scss/templates.scss";
 
 const initialState = {
-  isReady: false,
+  isMounted: false,
 };
 
 class FormsContainer extends Component {
@@ -37,7 +37,7 @@ class FormsContainer extends Component {
     new Promise((resolve) => resolve())
       .then(() => this.handleFetchData())
       .then(() => {
-        setTimeout(() => this.setState({ isReady: true }), 500);
+        setTimeout(() => this.setState({ isMounted: true }), 500);
       });
   }
 
@@ -53,12 +53,12 @@ class FormsContainer extends Component {
   };
 
   render() {
-    const { isReady } = this.state;
+    const { isMounted } = this.state;
     const { staffData } = this.props;
     const { staff } = staffData;
 
     const ContentSection = () => {
-      if (!staffData || !isReady) {
+      if (!staffData || !isMounted) {
         return (
           <div className="table-responsive small">
             <Loader />

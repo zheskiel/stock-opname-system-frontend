@@ -24,7 +24,7 @@ import {
 import { buildItemsObj, getEntity } from "../../../../utils/helpers";
 
 const initialState = {
-  isReady: false,
+  isMounted: false,
   items: {},
   sort: "product_name",
   isDesc: false,
@@ -56,7 +56,7 @@ class MasterTableCommon extends Component {
         }
       })
       .then(() => {
-        setTimeout(() => this.setState({ isReady: true }), 500);
+        setTimeout(() => this.setState({ isMounted: true }), 500);
       });
   }
 
@@ -135,7 +135,7 @@ class MasterTableCommon extends Component {
   };
 
   render() {
-    const { isReady } = this.state;
+    const { isMounted } = this.state;
     const { master, pageNumber, mode } = this.props;
 
     // Only Execute if edit mode
@@ -285,7 +285,7 @@ class MasterTableCommon extends Component {
     };
 
     const MasterTable = () => {
-      if (!master || !isReady) {
+      if (!master || !isMounted) {
         return (
           <div className="template-edit-section col-6">
             <Loader />

@@ -4,7 +4,12 @@ import { Route, Redirect, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { compose } from "redux";
 
-const PublicRoute = ({ component: Component, restricted, isAuth, ...rest }) => {
+const PublicRouteState = ({
+  component: Component,
+  restricted,
+  isAuth,
+  ...rest
+}) => {
   return (
     <Route
       {...rest}
@@ -23,4 +28,4 @@ const mapStateToProps = (state) => ({
   isAuth: state.auth.isAuth,
 });
 
-export default compose(withRouter, connect(mapStateToProps))(PublicRoute);
+export default compose(withRouter, connect(mapStateToProps))(PublicRouteState);

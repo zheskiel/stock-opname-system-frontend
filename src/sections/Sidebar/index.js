@@ -1,8 +1,60 @@
 import React, { Component } from "react";
 import Link from "../../components/Link";
 
+import { isEligible } from "../../utils/config";
+
+const sideBarRoutes = [
+  {
+    url: "dashboard",
+    name: "dashboard",
+    content: "Dashboard",
+  },
+  {
+    url: "dashboard",
+    name: "dashboard",
+    content: "Calendar",
+  },
+  {
+    url: "master",
+    name: "master",
+    content: "Master Data",
+  },
+  {
+    url: "templates",
+    name: "templates",
+    content: "Templates",
+  },
+  {
+    url: "forms",
+    name: "forms",
+    content: "Forms",
+  },
+  {
+    url: "hierarchy",
+    name: "hierarchy",
+    content: "Hierarchy",
+  },
+];
+
 class SidebarSection extends Component {
   render() {
+    let RouteFormatted = () => {
+      return sideBarRoutes.map((route, index) => {
+        let result = isEligible(route.name) ? (
+          <li key={index} className="nav-item">
+            <Link
+              className="nav-link d-flex align-items-center gap-2"
+              href={`/${route.url}`}
+            >
+              {route.content}
+            </Link>
+          </li>
+        ) : null;
+
+        return result;
+      });
+    };
+
     return (
       <div className="sidebar border border-right col-md-3 col-lg-2 p-0">
         <div
@@ -15,6 +67,7 @@ class SidebarSection extends Component {
             <h5 className="offcanvas-title" id="sidebarMenuLabel">
               Company name
             </h5>
+
             <button
               type="button"
               className="btn-close"
@@ -23,59 +76,10 @@ class SidebarSection extends Component {
               aria-label="Close"
             ></button>
           </div>
+
           <div className="offcanvas-body d-md-flex flex-column p-0 pt-lg-3">
             <ul className="nav flex-column">
-              <li className="nav-item">
-                <Link
-                  className="nav-link d-flex align-items-center gap-2"
-                  href={`/dashboard`}
-                >
-                  Dashboard
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link
-                  className="nav-link d-flex align-items-center gap-2"
-                  href={`/dashboard`}
-                >
-                  Calendar
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link
-                  className="nav-link d-flex align-items-center gap-2"
-                  href={`/master`}
-                >
-                  Master Data
-                </Link>
-              </li>
-
-              <li className="nav-item">
-                <Link
-                  className="nav-link d-flex align-items-center gap-2"
-                  href={`/templates`}
-                >
-                  Templates
-                </Link>
-              </li>
-
-              <li className="nav-item">
-                <Link
-                  className="nav-link d-flex align-items-center gap-2"
-                  href={`/forms`}
-                >
-                  Forms
-                </Link>
-              </li>
-
-              <li className="nav-item">
-                <Link
-                  className="nav-link d-flex align-items-center gap-2"
-                  href={`/hierarchy`}
-                >
-                  Hierarchy
-                </Link>
-              </li>
+              <RouteFormatted />
 
               <li className="nav-item accordion accordion-flush">
                 <div className="accordion-item">

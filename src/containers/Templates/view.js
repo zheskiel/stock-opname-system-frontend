@@ -29,7 +29,7 @@ import { buildItemsObj } from "../../utils/helpers";
 import "../../assets/scss/templates.scss";
 
 const initialState = {
-  isReady: false,
+  isMounted: false,
   items: {},
   sort: "id",
   order: "asc",
@@ -51,7 +51,7 @@ class TemplatesViewContainer extends Component {
       .then(() => this.setState({ items: buildItemsObj(arrs) }))
       .then(() => this.handleFetchData())
       .then(() => {
-        setTimeout(() => this.setState({ isReady: true }), 500);
+        setTimeout(() => this.setState({ isMounted: true }), 500);
       });
   }
 
@@ -107,7 +107,7 @@ class TemplatesViewContainer extends Component {
   };
 
   render() {
-    const { isReady } = this.state;
+    const { isMounted } = this.state;
     const { details } = this.props;
     const { total, current_page, per_page, last_page } = details;
     const newProps = {
@@ -124,7 +124,7 @@ class TemplatesViewContainer extends Component {
     };
 
     const ContentSection = () => {
-      if (!detail || !isReady)
+      if (!detail || !isMounted)
         return (
           <div className="template-view-container table-responsive small">
             <Loader />

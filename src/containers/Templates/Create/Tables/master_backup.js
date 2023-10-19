@@ -20,7 +20,7 @@ import { fetchMasterData } from "../../../../redux/actions";
 import { buildItemsObj } from "../../../../utils/helpers";
 
 const initialState = {
-  isReady: false,
+  isMounted: false,
   items: {},
   sort: "product_name",
   isDesc: false,
@@ -43,7 +43,7 @@ class MasterTable extends Component {
       .then(() => this.setState({ items: buildItemsObj(arrs) }))
       .then(() => this.handleFetchData())
       .then(() => {
-        setTimeout(() => this.setState({ isReady: true }), 500);
+        setTimeout(() => this.setState({ isMounted: true }), 500);
       });
   }
 
@@ -95,7 +95,7 @@ class MasterTable extends Component {
   };
 
   render() {
-    const { isReady } = this.state;
+    const { isMounted } = this.state;
     const { master, pageNumber, selectedItems: selected } = this.props;
 
     const { total, current_page, per_page, last_page } = master;
@@ -255,7 +255,7 @@ class MasterTable extends Component {
     };
 
     const MasterTable = () => {
-      if (!isReady) {
+      if (!isMounted) {
         return (
           <div className="template-edit-section col-6">
             <Loader />

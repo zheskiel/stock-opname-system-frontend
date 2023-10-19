@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { compose } from "redux";
 
 import { PublicRoutes, PrivateRoutes } from "./routes";
-import { PublicRoute, PrivateRoute } from "./routes/states";
+import { PublicRouteState, PrivateRouteState } from "./routes/states";
 
 import "./assets/scss/app.scss";
 
@@ -16,7 +16,7 @@ class App extends Component {
       <Switch>
         {PublicRoutes.map((route, index) => {
           return (
-            <PublicRoute
+            <PublicRouteState
               key={index}
               path={route.path}
               component={route.component}
@@ -28,8 +28,9 @@ class App extends Component {
 
         {PrivateRoutes.map((route, index) => {
           return (
-            <PrivateRoute
+            <PrivateRouteState
               key={index}
+              name={route.name}
               path={route.path}
               component={route.component}
               exact={route.exact}
