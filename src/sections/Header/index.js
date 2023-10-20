@@ -4,8 +4,10 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { compose } from "redux";
 
+// Actions
 import { AuthLogout } from "../../redux/actions/auth";
 
+// Components
 import Link from "../../components/Link";
 
 import "../../assets/scss/header.scss";

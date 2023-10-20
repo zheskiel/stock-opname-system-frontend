@@ -2,6 +2,9 @@ import React, { Component } from "react";
 
 import { FaAngleUp, FaAngleDown } from "react-icons/fa";
 
+// Helpers
+import { getEntity } from "../../utils/helpers";
+
 class ViewDesktop extends Component {
   render() {
     const { items, arrs } = this.props;
@@ -44,8 +47,7 @@ class ViewDesktop extends Component {
                 custom: CustomItem,
               };
 
-              let Entity =
-                arr.key != "units" ? entities.default : entities.custom;
+              let Entity = getEntity(entities, params);
 
               return <Entity key={index} {...params} />;
             })}

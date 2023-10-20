@@ -1,6 +1,7 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
-import { isLogin, isEligible } from "../../utils/config";
+
+import { isEligible, isLogin } from "../../utils/helpers";
 
 const PrivateRouteState = ({ component: Component, ...rest }) => {
   return (

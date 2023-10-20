@@ -51,24 +51,7 @@ class MasterContainer extends Component {
       .then(() => this.setState({ items: buildItemsObj(arrs) }))
       .then(() => this.handleFetchData())
       .then(() => {
-        // const { master, history } = this.props;
-        // const { status_code } = master;
-
-        // // if (status_code !== 200) {
-        // //   this.setState({ isReady: false }, () => {
-        // //     history.push("/dashboard");
-        // //   });
-        // // } else {
-        // //   this.setState({ isReady: true });
-        // // }
-        this.setState({ isReady: true });
-      })
-      .then(() => {
-        const { isReady } = this.state;
-
-        isReady
-          ? setTimeout(() => this.setState({ isMounted: true }), 500)
-          : null;
+        setTimeout(() => this.setState({ isMounted: true }), 500);
       });
   }
 

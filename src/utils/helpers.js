@@ -1,4 +1,15 @@
 import dayjs from "dayjs";
+import store from "../store";
+
+export const isLogin = () => {
+  return store.getState().auth.isAuth;
+};
+
+export const isEligible = (routeName) => {
+  let permissions = store.getState().auth.data.permissions;
+
+  return permissions?.includes(routeName);
+};
 
 export const getEntity = (entities, params) => {
   let Item;

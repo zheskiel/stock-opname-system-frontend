@@ -1,6 +1,12 @@
 import { lazy } from "react";
 
+const DashboardContainer = lazy(() => import("../containers/Dashboard"));
+const HierarchyContainer = lazy(() => import("../containers/Hierarchy"));
 const MasterContainer = lazy(() => import("../containers/Master"));
+const FormContainer = lazy(() => import("../containers/Form"));
+const FormEditContainer = lazy(() => import("../containers/Form/Edit"));
+const FormCreateContainer = lazy(() => import("../containers/Form/Create"));
+const FormsContainer = lazy(() => import("../containers/Forms"));
 const TemplatesContainer = lazy(() => import("../containers/Templates"));
 const TemplatesViewContainer = lazy(() =>
   import("../containers/Templates/view")
@@ -11,15 +17,6 @@ const TemplatesEditContainer = lazy(() =>
 const TemplatesCreateContainer = lazy(() =>
   import("../containers/Templates/Create")
 );
-
-const FormContainer = lazy(() => import("../containers/Form"));
-const FormEditContainer = lazy(() => import("../containers/Form/Edit"));
-const FormCreateContainer = lazy(() => import("../containers/Form/Create"));
-const FormsContainer = lazy(() => import("../containers/Forms"));
-
-const DashboardContainer = lazy(() => import("../containers/Dashboard"));
-
-const HierarchyContainer = lazy(() => import("../containers/Hierarchy"));
 
 const PrivateRoutes = [
   {

@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 
+import { getEntity } from "../../utils/helpers";
+
 class ViewMobile extends Component {
   render() {
     const { items, arrs } = this.props;
@@ -50,8 +52,7 @@ class ViewMobile extends Component {
                     custom: CustomItem,
                   };
 
-                  let Entity =
-                    arr.key != "units" ? entities.default : entities.custom;
+                  let Entity = getEntity(entities, params);
 
                   return (
                     <Entity key={`inner-${arr.title}-${item.id}`} {...params} />

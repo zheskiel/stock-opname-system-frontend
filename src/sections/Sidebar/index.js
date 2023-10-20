@@ -1,58 +1,98 @@
 import React, { Component } from "react";
+
+import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+import { compose } from "redux";
+
+// Actions
+import { AuthLogout } from "../../redux/actions";
+
+// Components
 import Link from "../../components/Link";
 
-import { isEligible } from "../../utils/config";
+// Helpers
+import { isEligible } from "../../utils/helpers";
 
-const sideBarRoutes = [
-  {
-    url: "dashboard",
-    name: "dashboard",
-    content: "Dashboard",
-  },
-  {
-    url: "dashboard",
-    name: "dashboard",
-    content: "Calendar",
-  },
-  {
-    url: "master",
-    name: "master",
-    content: "Master Data",
-  },
-  {
-    url: "templates",
-    name: "templates",
-    content: "Templates",
-  },
-  {
-    url: "forms",
-    name: "forms",
-    content: "Forms",
-  },
-  {
-    url: "hierarchy",
-    name: "hierarchy",
-    content: "Hierarchy",
-  },
-];
+// Config
+import { sideBarRoutes } from "../../utils/config";
 
 class SidebarSection extends Component {
+  constructor(props) {
+    super(props);
+
+    this.handleLogout = this.handleLogout.bind(this);
+  }
+
+  handleLogout = async (e) => {
+    e.preventDefault();
+
+    const { AuthLogout, history } = this.props;
+
+    return new Promise((resolve) => {
+      AuthLogout();
+      resolve();
+    }).then(() => history.push("/"));
+  };
+
   render() {
     let RouteFormatted = () => {
       return sideBarRoutes.map((route, index) => {
-        let result = isEligible(route.name) ? (
-          <li key={index} className="nav-item">
-            <Link
-              className="nav-link d-flex align-items-center gap-2"
-              href={`/${route.url}`}
+        let RouteOption =
+          typeof route.children !== "undefined" ? RouteChildren : RouteDefault;
+
+        return isEligible(route.name) ? (
+          <RouteOption key={index} route={route} />
+        ) : null;
+      });
+    };
+
+    let RouteDefault = ({ route }) => {
+      return (
+        <li className="nav-item">
+          <Link
+            className="nav-link d-flex align-items-center gap-2"
+            href={`/${route.url}`}
+          >
+            {route.content}
+          </Link>
+        </li>
+      );
+    };
+
+    let RouteChildren = ({ route }) => {
+      let items = route.children;
+
+      return (
+        <li className="nav-item accordion accordion-flush">
+          <div className="accordion-item">
+            <a
+              className="nav-link d-flex align-items-center gap-2 accordion-button collapsed"
+              data-bs-toggle="collapse"
+              data-bs-target={`#${route.name}-collapse`}
+              aria-controls={`${route.name}-collapse`}
+              aria-expanded="false"
             >
               {route.content}
-            </Link>
-          </li>
-        ) : null;
+            </a>
 
-        return result;
-      });
+            {items && (
+              <div
+                id={`${route.name}-collapse`}
+                className="accordion-collapse collapse"
+                aria-labelledby="headingOne"
+              >
+                <ul>
+                  {items.map((item, index) => {
+                    return isEligible(item.name) ? (
+                      <RouteDefault key={index} route={item} />
+                    ) : null;
+                  })}
+                </ul>
+              </div>
+            )}
+          </div>
+        </li>
+      );
     };
 
     return (
@@ -80,122 +120,6 @@ class SidebarSection extends Component {
           <div className="offcanvas-body d-md-flex flex-column p-0 pt-lg-3">
             <ul className="nav flex-column">
               <RouteFormatted />
-
-              <li className="nav-item accordion accordion-flush">
-                <div className="accordion-item">
-                  <a
-                    className="nav-link d-flex align-items-center gap-2 accordion-button collapsed"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#product-collapse"
-                    aria-expanded="false"
-                    aria-controls="product-collapse"
-                  >
-                    Products
-                  </a>
-                  <div
-                    id="product-collapse"
-                    className="accordion-collapse collapse"
-                    aria-labelledby="headingOne"
-                  >
-                    <ul>
-                      <li>
-                        <a
-                          className="nav-link d-flex align-items-center gap-2"
-                          href="#"
-                        >
-                          Products 1
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          className="nav-link d-flex align-items-center gap-2"
-                          href="#"
-                        >
-                          Products 2
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          className="nav-link d-flex align-items-center gap-2"
-                          href="#"
-                        >
-                          Products 3
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </li>
-
-              <li className="nav-item">
-                <a
-                  className="nav-link d-flex align-items-center gap-2"
-                  href="#"
-                >
-                  Customers
-                </a>
-              </li>
-              <li className="nav-item">
-                <a
-                  className="nav-link d-flex align-items-center gap-2"
-                  href="#"
-                >
-                  Reports
-                </a>
-              </li>
-              <li className="nav-item">
-                <a
-                  className="nav-link d-flex align-items-center gap-2"
-                  href="#"
-                >
-                  Integrations
-                </a>
-              </li>
-            </ul>
-
-            <h6 className="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-body-secondary text-uppercase">
-              <span>Saved reports</span>
-              <a
-                className="link-secondary"
-                href="#"
-                aria-label="Add a new report"
-              >
-                +
-              </a>
-            </h6>
-            <ul className="nav flex-column mb-auto">
-              <li className="nav-item">
-                <a
-                  className="nav-link d-flex align-items-center gap-2"
-                  href="#"
-                >
-                  Current month
-                </a>
-              </li>
-              <li className="nav-item">
-                <a
-                  className="nav-link d-flex align-items-center gap-2"
-                  href="#"
-                >
-                  Last quarter
-                </a>
-              </li>
-              <li className="nav-item">
-                <a
-                  className="nav-link d-flex align-items-center gap-2"
-                  href="#"
-                >
-                  Social engagement
-                </a>
-              </li>
-              <li className="nav-item">
-                <a
-                  className="nav-link d-flex align-items-center gap-2"
-                  href="#"
-                >
-                  Year-end sale
-                </a>
-              </li>
             </ul>
 
             <hr className="my-3" />
@@ -212,7 +136,7 @@ class SidebarSection extends Component {
               <li className="nav-item">
                 <a
                   className="nav-link d-flex align-items-center gap-2"
-                  href="#"
+                  onClick={this.handleLogout}
                 >
                   Sign out
                 </a>
@@ -225,4 +149,18 @@ class SidebarSection extends Component {
   }
 }
 
-export default SidebarSection;
+const mapStateToProps = (state) => ({
+  isAuth: state.auth.isAuth,
+  user: state.auth.data.user,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  AuthLogout: () => {
+    dispatch(AuthLogout());
+  },
+});
+
+export default compose(
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps)
+)(SidebarSection);

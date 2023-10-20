@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 
+// Helpers
+import { getEntity } from "../../../utils/helpers";
+
 class MobileView extends Component {
   render() {
     const { items, arrs } = this.props;
@@ -52,8 +55,7 @@ class MobileView extends Component {
                     custom: CustomItem,
                   };
 
-                  let Entity =
-                    arr.key != "units" ? entities.default : entities.custom;
+                  let Entity = getEntity(entities, params);
 
                   return (
                     <Entity key={`inner-${arr.title}-${item.id}`} {...params} />
