@@ -1,3 +1,4 @@
+import React from "react";
 import dayjs from "dayjs";
 import store from "../store";
 
@@ -31,6 +32,82 @@ export const getEntity = (entities, params) => {
 
   return Item;
 };
+
+const CustomDefaultType = ({ itemUnits, item, arr }) => {
+  return (
+    <td key={`inner-${arr.title}-${item.id}`} className="unit-section">
+      {itemUnits.length > 0 &&
+        itemUnits.map((unit, index) => {
+          return (
+            <div key={index} className="unit-container">
+              <div className="unit-detail">
+                <span>{unit[0]}</span>
+                <span>
+                  {unit[1].value} {unit[1].sku}
+                </span>
+              </div>
+            </div>
+          );
+        })}
+    </td>
+  );
+};
+
+const CustomBagdeType = ({ itemUnits, item, arr }) => {
+  return (
+    <td
+      key={`inner-${arr.title}-${item.id}`}
+      className="unit-section badges-section"
+    >
+      {itemUnits.length > 0 &&
+        itemUnits.map((unit, index) => {
+          return (
+            <div key={index} className="unit-container">
+              <div className="unit-detail">
+                <span className="badge bg-primary">{unit[1].unit}</span>
+              </div>
+            </div>
+          );
+        })}
+    </td>
+  );
+};
+
+export const DefaultItem = ({ arr, item }) => {
+  return <td key={`inner-${arr.title}-${item.id}`}>{item[arr.key]}</td>;
+};
+
+export const CustomItem = ({ arr, item, type = "default" }) => {
+  let itemUnits = Object.entries(item.units);
+  let params = { itemUnits, item, arr };
+  let entities = {
+    default: CustomDefaultType,
+    badge: CustomBagdeType,
+  };
+
+  let Entity = type == "default" ? entities.default : entities.badge;
+
+  return <Entity {...params} />;
+};
+
+export const buildDesktopDataItems = (items, arrs, type = "default") =>
+  Object.values(items).map((item) => {
+    return (
+      <tr key={item.id}>
+        {arrs.map((arr, index) => {
+          let params = { arr, item, type };
+          let entities = {
+            default: DefaultItem,
+            custom: CustomItem,
+          };
+
+          let Entity = getEntity(entities, params);
+
+          return <Entity key={index} {...params} />;
+        })}
+      </tr>
+    );
+  });
 
 export const buildItemsObj = (arrs) => {
   let items = {};

@@ -19,6 +19,11 @@ export const sideBarRoutes = [
     content: "Master Data",
   },
   {
+    url: "report",
+    name: "report",
+    content: "Report",
+  },
+  {
     url: "templates",
     name: "templates",
     content: "Templates",

@@ -13,7 +13,7 @@ import PaginationSection from "../../../../sections/Pagination";
 import Loader from "../../../../components/Loader";
 
 // Helpers
-import { getEntity } from "../../../../utils/helpers";
+import { getEntity, DefaultItem, CustomItem } from "../../../../utils/helpers";
 
 const initialState = {
   isMounted: false,
@@ -58,33 +58,6 @@ class DetailTable extends Component {
     const dataItems =
       detailArrs &&
       Object.values(detailArrs).map((item) => {
-        const DefaultItem = ({ arr, item }) => {
-          return <td key={`inner-${arr.title}-${item.id}`}>{item[arr.key]}</td>;
-        };
-
-        const CustomItem = ({ arr, item }) => {
-          let itemUnits = Object.entries(item.units);
-
-          return (
-            <React.Fragment key={`inner-${arr.title}-${item.id}`}>
-              <td className="unit-section badges-section">
-                <div className="unit-container">
-                  {itemUnits.length > 0 &&
-                    itemUnits.map((unit, index) => {
-                      return (
-                        <React.Fragment key={index}>
-                          <span className="badge bg-primary">
-                            {unit[1].unit}
-                          </span>
-                        </React.Fragment>
-                      );
-                    })}
-                </div>
-              </td>
-            </React.Fragment>
-          );
-        };
-
         const ActionItem = ({ arr, item }) => {
           return (
             <React.Fragment key={`inner-${arr.title}-${item.id}`}>
@@ -109,7 +82,7 @@ class DetailTable extends Component {
         return (
           <tr key={item.id}>
             {arrs.map((arr, index) => {
-              let params = { arr, item };
+              let params = { arr, item, type: "badge" };
               let entities = {
                 action: ActionItem,
                 custom: CustomItem,

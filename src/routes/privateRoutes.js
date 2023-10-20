@@ -17,8 +17,15 @@ const TemplatesEditContainer = lazy(() =>
 const TemplatesCreateContainer = lazy(() =>
   import("../containers/Templates/Create")
 );
+const ReportContainer = lazy(() => import("../containers/Reports"));
 
 const PrivateRoutes = [
+  {
+    path: "/report",
+    name: "report",
+    component: ReportContainer,
+    exact: true,
+  },
   {
     path: "/master",
     name: "master",

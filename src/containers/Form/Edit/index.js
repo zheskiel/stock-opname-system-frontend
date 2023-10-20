@@ -12,6 +12,7 @@ import TemplateTable from "./Tables/template";
 import DetailTable from "./Tables/detail";
 import LayoutContainer from "../../Layout";
 
+// Styling
 import "../../../assets/scss/templates.scss";
 
 class FormEdit extends Component {

@@ -3,57 +3,12 @@ import React, { Component } from "react";
 import { FaAngleUp, FaAngleDown } from "react-icons/fa";
 
 // Helpers
-import { getEntity } from "../../utils/helpers";
+import { buildDesktopDataItems } from "../../utils/helpers";
 
 class ViewDesktop extends Component {
   render() {
     const { items, arrs } = this.props;
-
-    const dataItems =
-      items &&
-      Object.values(items).map((item) => {
-        const DefaultItem = ({ arr, item }) => {
-          return <td key={`inner-${arr.title}-${item.id}`}>{item[arr.key]}</td>;
-        };
-
-        const CustomItem = ({ arr, item }) => {
-          let itemUnits = Object.entries(item.units);
-
-          return (
-            <td key={`inner-${arr.title}-${item.id}`} className="unit-section">
-              {itemUnits.length > 0 &&
-                itemUnits.map((unit, index) => {
-                  return (
-                    <div key={index} className="unit-container">
-                      <div className="unit-detail">
-                        <span>{unit[0]}</span>
-                        <span>
-                          {unit[1].value} {unit[1].sku}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
-            </td>
-          );
-        };
-
-        return (
-          <tr key={item.product_id}>
-            {arrs.map((arr, index) => {
-              let params = { arr, item };
-              let entities = {
-                default: DefaultItem,
-                custom: CustomItem,
-              };
-
-              let Entity = getEntity(entities, params);
-
-              return <Entity key={index} {...params} />;
-            })}
-          </tr>
-        );
-      });
+    const dataItems = buildDesktopDataItems(items, arrs);
 
     return (
       <table className="table table-striped table-sm desktop-main-data">

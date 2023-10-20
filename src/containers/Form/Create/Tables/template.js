@@ -23,7 +23,12 @@ import {
 } from "../../../../redux/actions";
 
 // Helpers
-import { buildItemsObj, getEntity } from "../../../../utils/helpers";
+import {
+  buildItemsObj,
+  getEntity,
+  DefaultItem,
+  CustomItem,
+} from "../../../../utils/helpers";
 
 const initialState = {
   isMounted: false,
@@ -156,34 +161,6 @@ class TemplateTable extends Component {
     const templateDataItems =
       templateItems &&
       Object.values(templateItems).map((item) => {
-        const DefaultItem = ({ arr, item }) => {
-          return <td key={`inner-${arr.title}-${item.id}`}>{item[arr.key]}</td>;
-        };
-
-        const CustomItem = ({ arr, item }) => {
-          let itemUnits = Object.entries(item.units);
-
-          return (
-            <React.Fragment key={`inner-${arr.title}-${item.id}`}>
-              <td className="unit-section">
-                {itemUnits.length > 0 &&
-                  itemUnits.map((unit, index) => {
-                    return (
-                      <div key={index} className="unit-container">
-                        <div className="unit-detail">
-                          <span>{unit[0]}</span>
-                          <span>
-                            {unit[1].value} {unit[1].sku}
-                          </span>
-                        </div>
-                      </div>
-                    );
-                  })}
-              </td>
-            </React.Fragment>
-          );
-        };
-
         const ActionItem = ({ arr, item }) => {
           let itemUnits = Object.entries(item.units);
           let selectedLimit = 1;
