@@ -117,9 +117,9 @@ class TemplatesContainer extends Component {
                           Edit
                         </Link>
 
-                        <a href="#" className="btn btn-danger me">
+                        {/* <a href="#" className="btn btn-danger me">
                           Delete
-                        </a>
+                        </a> */}
                       </div>
                     </div>
                   </div>
