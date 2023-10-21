@@ -11,17 +11,24 @@ export const sideBarRoutes = [
   {
     url: "dashboard",
     name: "dashboard",
-    content: "Calendar",
+    content: "Stock Opname",
+    children: [
+      {
+        url: "dashboard",
+        name: "dashboard",
+        content: "Calendar",
+      },
+      {
+        url: "report",
+        name: "report",
+        content: "Report",
+      },
+    ],
   },
   {
     url: "master",
     name: "master",
     content: "Master Data",
-  },
-  {
-    url: "report",
-    name: "report",
-    content: "Report",
   },
   {
     url: "templates",

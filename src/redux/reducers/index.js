@@ -4,6 +4,7 @@ import auth from "./auth";
 import form from "./form";
 import forms from "./forms";
 import master from "./master";
+import reports from "./reports";
 import viewMode from "./viewMode";
 import template from "./template";
 import templates from "./templates";
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   form,
   forms,
   master,
+  reports,
   viewMode,
   hierarchy,
   template,

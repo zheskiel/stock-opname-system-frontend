@@ -26,3 +26,5 @@ export const TEMPLATE_REMOVE_DETAIL_URL =
 
 export const TEMPLATE_REMOVE_ALL_DETAIL_URL =
   API_URL + `/template/{0}/remove-all-detail`;
+
+export const REPORT_URL = API_URL + "/reports";

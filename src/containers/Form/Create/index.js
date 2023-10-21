@@ -202,7 +202,7 @@ class FormCreate extends Component {
       <LayoutContainer>
         <MainSection>
           <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h2 className="h2">Create Form</h2>
+            <h4 className="h4">Create Form</h4>
           </div>
 
           <div className="template-edit-container card-container pt-3">

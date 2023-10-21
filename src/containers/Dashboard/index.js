@@ -3,6 +3,9 @@ import React, { Component } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 
+// Sections
+import MainSection from "../../sections/Main";
+
 // Containers
 import LayoutContainer from "../Layout";
 
@@ -62,9 +65,9 @@ class DashboardContainer extends Component {
 
     return (
       <LayoutContainer>
-        <div className="main-content col-md-9 ms-sm-auto col-lg-10 px-md-4 pb-4">
+        <MainSection>
           <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h2 className="h2">Dashboard Section</h2>
+            <h4 className="h4">Dashboard Section</h4>
           </div>
 
           <div className="calendar-container">
@@ -80,7 +83,7 @@ class DashboardContainer extends Component {
               step={60}
             />
           </div>
-        </div>
+        </MainSection>
       </LayoutContainer>
     );
   }

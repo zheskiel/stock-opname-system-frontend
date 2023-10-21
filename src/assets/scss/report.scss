@@ -61,9 +61,11 @@
       line-height: 30px;
     }
     .product_remove {
+      line-height: 30px;
+      min-width: 30px;
       width: 30px;
       height: 30px;
-      line-height: 30px;
+      padding: 0px;
     }
   }
 }

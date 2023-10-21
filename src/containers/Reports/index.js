@@ -7,8 +7,14 @@ import { compose } from "redux";
 // Sections
 import MainSection from "../../sections/Main";
 
+// Components
+import Loader from "../../components/Loader";
+
 // Containers
 import LayoutContainer from "../Layout";
+
+// Actions
+import { fetchReportsData } from "../../redux/actions";
 
 // Styling
 import "../../assets/scss/report.scss";
@@ -30,76 +36,7 @@ const defaultCodeItems = {
 
 const initialState = {
   isMounted: false,
-  items: {
-    additional: {
-      name: "Penambahan Barang",
-      items: [
-        {
-          name: "Tutup Botol",
-          unit: "pieces",
-          value: "100",
-          file: "",
-          name_disabled: true,
-          unit_disabled: true,
-          value_disabled: true,
-          file_disabled: true,
-        },
-        {
-          name: "Tutup Panci",
-          unit: "pieces",
-          value: "10",
-          file: "",
-          name_disabled: true,
-          unit_disabled: true,
-          value_disabled: true,
-          file_disabled: true,
-        },
-      ],
-    },
-    waste: {
-      name: "Waste",
-      items: [
-        {
-          name: "Telur Ayam",
-          code: "kode",
-          unit: "gram",
-          value: "100",
-          file: "",
-          name_disabled: true,
-          unit_disabled: true,
-          value_disabled: true,
-          file_disabled: true,
-        },
-        {
-          name: "Telur Bebek",
-          code: "kode",
-          unit: "gram",
-          value: "100",
-          file: "",
-          name_disabled: true,
-          unit_disabled: true,
-          value_disabled: true,
-          file_disabled: true,
-        },
-      ],
-    },
-    damage: {
-      name: "Kerusakan Barang",
-      items: [
-        {
-          name: "Teflon",
-          code: "kode",
-          unit: "pieces",
-          value: "1",
-          file: "",
-          name_disabled: true,
-          unit_disabled: true,
-          value_disabled: true,
-          file_disabled: true,
-        },
-      ],
-    },
-  },
+  items: {},
   notes: "",
 };
 
@@ -113,6 +50,24 @@ class ReportContainer extends Component {
     this.handleRemove = this.handleRemove.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleNotesChange = this.handleNotesChange.bind(this);
+  }
+
+  componentDidMount() {
+    new Promise((resolve) => resolve())
+      .then(async () => {
+        const { fetchReportsData } = this.props;
+
+        await fetchReportsData();
+      })
+      .then(() => {
+        const { reports } = this.props;
+        const { items, notes } = reports;
+
+        this.setState({ items, notes });
+      })
+      .then(() => {
+        setTimeout(() => this.setState({ isMounted: true }), 500);
+      });
   }
 
   handleClick = (e, itemKey) => {
@@ -205,7 +160,17 @@ class ReportContainer extends Component {
   };
 
   render() {
-    const { items, notes } = this.state;
+    const { isMounted, items, notes } = this.state;
+
+    if (!isMounted)
+      return (
+        <LayoutContainer>
+          <MainSection>
+            <Loader />
+          </MainSection>
+        </LayoutContainer>
+      );
+
     const entries = Object.entries(items);
 
     return (
@@ -215,20 +180,6 @@ class ReportContainer extends Component {
             <h4 className="h4">Daily Report</h4>
           </div>
 
-          <nav aria-label="breadcrumb">
-            <ol class="breadcrumb p-3 bg-body-tertiary rounded-3">
-              <li class="breadcrumb-item">
-                <a href="#">Home</a>
-              </li>
-              <li class="breadcrumb-item">
-                <a href="#">Library</a>
-              </li>
-              <li class="breadcrumb-item active" aria-current="page">
-                Data
-              </li>
-            </ol>
-          </nav>
-
           <div className="container">
             <div className="col-md-8 col-12 pt-2 pb-5 mx-auto">
               {entries.map((entry) => {
@@ -236,13 +187,16 @@ class ReportContainer extends Component {
                 let items = entry[1].items;
 
                 return (
-                  <div className={`report-container ${itemKey}-container`}>
+                  <div
+                    key={itemKey}
+                    className={`report-container ${itemKey}-container`}
+                  >
                     <h5>{entry[1].name}</h5>
 
                     <div className="report-wrapper">
                       {items.map((item, index) => {
                         return (
-                          <div className="report-details">
+                          <div className="report-details" key={index}>
                             <div className="pe-3 product_index">
                               {index + 1}
                             </div>
@@ -356,8 +310,17 @@ class ReportContainer extends Component {
   }
 }
 
-const mapStateToProps = () => ({});
-const mapDispatchToProps = () => ({});
+const mapStateToProps = (state) => ({
+  reports: state.reports.data,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchReportsData: (params) => {
+    return new Promise((resolve) => {
+      dispatch(fetchReportsData(params)).then(() => resolve());
+    });
+  },
+});
 
 export default compose(
   withRouter,
