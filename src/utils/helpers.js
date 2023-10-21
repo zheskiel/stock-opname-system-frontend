@@ -73,8 +73,53 @@ const CustomBagdeType = ({ itemUnits, item, arr }) => {
   );
 };
 
+const CustomMobileDefaultType = ({ itemUnits, item, arr }) => {
+  return (
+    <div className="division-section" key={`inner-${arr.title}-${item.id}`}>
+      <span className="division-title">{arr.title}</span>
+      <span className="units-section">
+        {itemUnits.length > 0 &&
+          itemUnits.map((unit, index) => {
+            return (
+              <div key={index}>
+                {unit[0]} -- {unit[1].value} {unit[1].sku}
+              </div>
+            );
+          })}
+      </span>
+    </div>
+  );
+};
+
+const CustomMobileBadgeType = ({ itemUnits, item, arr }) => {
+  return (
+    <div className="division-section" key={`inner-${arr.title}-${item.id}`}>
+      <span className="division-title">{arr.title}</span>
+      <span className="units-section badges-section">
+        {itemUnits.length > 0 &&
+          itemUnits.map((unit, index) => {
+            return (
+              <div key={index} className="badge bg-primary">
+                {unit[1].unit}
+              </div>
+            );
+          })}
+      </span>
+    </div>
+  );
+};
+
 export const DefaultItem = ({ arr, item }) => {
   return <td key={`inner-${arr.title}-${item.id}`}>{item[arr.key]}</td>;
+};
+
+export const DefaultMobileItem = ({ arr, item }) => {
+  return (
+    <div className="division-section" key={`inner-${arr.title}-${item.id}`}>
+      <span className="division-title">{arr.title}</span>
+      <span>{item[arr.key]}</span>
+    </div>
+  );
 };
 
 export const CustomItem = ({ arr, item, type = "default" }) => {
@@ -83,6 +128,20 @@ export const CustomItem = ({ arr, item, type = "default" }) => {
   let entities = {
     default: CustomDefaultType,
     badge: CustomBagdeType,
+  };
+
+  let Entity = type == "default" ? entities.default : entities.badge;
+
+  return <Entity {...params} />;
+};
+
+export const CustomMobileItem = ({ arr, item, type = "default" }) => {
+  let itemUnits = Object.entries(item.units);
+
+  let params = { itemUnits, item, arr };
+  let entities = {
+    default: CustomMobileDefaultType,
+    badge: CustomMobileBadgeType,
   };
 
   let Entity = type == "default" ? entities.default : entities.badge;
