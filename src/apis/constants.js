@@ -28,3 +28,4 @@ export const TEMPLATE_REMOVE_ALL_DETAIL_URL =
   API_URL + `/template/{0}/remove-all-detail`;
 
 export const REPORT_URL = API_URL + "/reports";
+export const FETCH_WASTE_URL = API_URL + `/fetch/{0}/waste`;

@@ -36,6 +36,7 @@
       .report-details {
         .product_name {
           width: 35%;
+          max-width: 217px;
         }
         .product_code,
         .product_unit {
@@ -46,6 +47,7 @@
         }
         .product_file {
           width: 40%;
+          flex: 1;
         }
       }
     }
@@ -66,6 +68,42 @@
       width: 30px;
       height: 30px;
       padding: 0px;
+    }
+  }
+
+  &.waste-container {
+    .custom-options-container {
+      position: relative;
+      margin-right: 1%;
+      .product_name {
+        width: 100% !important;
+        max-width: 217px;
+      }
+
+      .custom-options-wrapper {
+        position: absolute;
+        width: 100%;
+        background-color: #fff;
+        border: 1px solid #000;
+        border-top: none;
+        padding: 5px;
+        z-index: 100;
+        font-size: 12px;
+        font-weight: 500;
+        overflow-y: scroll;
+        height: 250px;
+
+        .custom-option {
+          padding: 5px;
+          &:hover {
+            cursor: pointer;
+          }
+          &:nth-child(odd) {
+            background-color: rgba(18, 17, 17, 0.2);
+            color: #000;
+          }
+        }
+      }
     }
   }
 }

@@ -15,6 +15,10 @@ import LayoutContainer from "../Layout";
 
 // Actions
 import { fetchReportsData } from "../../redux/actions";
+import { fetchWastByTemplateApi } from "../../apis";
+
+// Helpers
+import { debounce } from "../../utils/helpers";
 
 // Styling
 import "../../assets/scss/report.scss";
@@ -36,6 +40,8 @@ const defaultCodeItems = {
 
 const initialState = {
   isMounted: false,
+  currentSelect: null,
+  selection: {},
   items: {},
   notes: "",
 };
@@ -46,10 +52,13 @@ class ReportContainer extends Component {
 
     this.state = initialState;
 
-    this.handleClick = this.handleClick.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleNameChange = this.handleNameChange.bind(this);
+    this.handleAddNewClick = this.handleAddNewClick.bind(this);
     this.handleNotesChange = this.handleNotesChange.bind(this);
+    this.handleNumberChange = this.handleNumberChange.bind(this);
+    this.handleOptionsClick = this.handleOptionsClick.bind(this);
   }
 
   componentDidMount() {
@@ -70,7 +79,7 @@ class ReportContainer extends Component {
       });
   }
 
-  handleClick = (e, itemKey) => {
+  handleAddNewClick = (e, itemKey) => {
     e.preventDefault();
 
     const { items } = this.state;
@@ -79,18 +88,19 @@ class ReportContainer extends Component {
     let itemsArr = itemKey == "additional" ? defaultItems : defaultCodeItems;
     let initial = Object.assign({}, itemsArr);
     let newItems = [...targetItems, initial];
-    let params = {
-      ...this.state,
-      items: {
-        ...this.state.items,
-        [itemKey]: {
-          ...this.state.items[itemKey],
-          items: newItems,
-        },
-      },
-    };
 
-    this.setState(params);
+    // focus on new input
+    let targetElem = e.target.parentNode.querySelector(".report-wrapper");
+    let childCount = targetElem.children.length;
+
+    setTimeout(() => {
+      targetElem.childNodes
+        .item(childCount)
+        .querySelector(".product_name")
+        .focus();
+    }, 100);
+
+    this.proceedAddOrRemove(itemKey, newItems);
   };
 
   handleRemove = (e, itemKey, index) => {
@@ -103,29 +113,15 @@ class ReportContainer extends Component {
     });
 
     let newItems = [...targetItems];
-    let params = {
-      ...this.state,
-      items: {
-        ...this.state.items,
-        [itemKey]: {
-          ...this.state.items[itemKey],
-          items: newItems,
-        },
-      },
-    };
 
-    this.setState(params);
+    this.proceedAddOrRemove(itemKey, newItems);
   };
 
-  handleChange = (e, itemKey, index) => {
-    e.preventDefault();
+  proceedAddOrRemove = (itemKey, newItems) => {
+    this.proceedResult(itemKey, newItems);
+  };
 
-    const { items } = this.state;
-
-    const target = e.target;
-    const name = target.name;
-    const value = target.value;
-
+  proceedChange = ({ itemKey, index, items, name, value }) => {
     const targetItems = items[itemKey].items;
     const targetItem = targetItems[index];
 
@@ -136,15 +132,112 @@ class ReportContainer extends Component {
 
     targetItems[index] = itemTarget;
 
+    this.proceedResult(itemKey, targetItems);
+  };
+
+  proceedResult = (itemKey, resultItems) => {
     let params = {
-      ...this.state.items,
-      [itemKey]: {
-        ...this.state.items[itemKey],
-        items: targetItems,
+      ...this.state,
+      items: {
+        ...this.state.items,
+        [itemKey]: {
+          ...this.state.items[itemKey],
+          items: resultItems,
+        },
       },
     };
 
     this.setState(params);
+  };
+
+  handleOptionsClick = (e, itemKey, index, selected) => {
+    e.preventDefault();
+
+    const { items } = this.state;
+
+    const targetItems = items[itemKey].items;
+    const targetItem = targetItems[index];
+
+    new Promise((resolve) => resolve())
+      .then(() => {
+        let itemTarget = {
+          ...targetItem,
+          name: selected.product_name,
+          code: selected.product_code,
+          unit: selected.product_sku,
+        };
+
+        targetItems[index] = itemTarget;
+
+        // Filter out same options
+        let resultItems = targetItems.filter((elem, elemIndex) => {
+          let targetIndex = targetItems.findIndex(
+            (el) => el.code === elem.code && el.name == elem.name
+          );
+
+          return elemIndex == targetIndex;
+        });
+
+        this.proceedResult(itemKey, resultItems);
+      })
+      .then(() => {
+        this.setState({ selection: {} });
+      });
+  };
+
+  handleNameChange = (e, itemKey, index) => {
+    e.preventDefault();
+
+    const { items } = this.state;
+
+    const target = e.target;
+    const { name, value } = target;
+
+    new Promise((resolve) => resolve())
+      .then(() => this.proceedChange({ itemKey, index, items, name, value }))
+      .then(
+        debounce(async () => {
+          if (value.length == 0) {
+            this.setState({ selection: {} });
+            return;
+          }
+
+          if (!(value.length > 2)) return;
+
+          const result = await fetchWastByTemplateApi({
+            templateId: 1,
+            query: value,
+          });
+
+          this.setState({ currentSelect: index, selection: result.data });
+        }, 500)
+      );
+  };
+
+  handleNumberChange = (e, itemKey, index) => {
+    e.preventDefault();
+
+    const { items } = this.state;
+
+    const target = e.target;
+    const { name, value } = target;
+
+    const re = /^[0-9\b]+$/; //rules
+
+    if (re.test(e.target.value)) {
+      this.proceedChange({ itemKey, index, items, name, value });
+    }
+  };
+
+  handleChange = (e, itemKey, index) => {
+    e.preventDefault();
+
+    const { items } = this.state;
+
+    const target = e.target;
+    const { name, value } = target;
+
+    this.proceedChange({ itemKey, index, items, name, value });
   };
 
   handleNotesChange = (e) => {
@@ -154,13 +247,11 @@ class ReportContainer extends Component {
     const name = target.name;
     const value = target.value;
 
-    this.setState({
-      [name]: value,
-    });
+    this.setState({ [name]: value });
   };
 
   render() {
-    const { isMounted, items, notes } = this.state;
+    const { isMounted, items, notes, selection, currentSelect } = this.state;
 
     if (!isMounted)
       return (
@@ -195,11 +286,8 @@ class ReportContainer extends Component {
 
                     <div className="report-wrapper">
                       {items.map((item, index) => {
-                        return (
-                          <div className="report-details" key={index}>
-                            <div className="pe-3 product_index">
-                              {index + 1}
-                            </div>
+                        let customItem = (
+                          <div className="custom-options-container">
                             <input
                               className="product_name"
                               placeholder="Product Name"
@@ -209,10 +297,60 @@ class ReportContainer extends Component {
                               disabled={item.unit_disabled}
                               onChange={(e) =>
                                 item.unit_disabled == false
-                                  ? this.handleChange(e, itemKey, index)
+                                  ? this.handleNameChange(e, itemKey, index)
                                   : null
                               }
                             />
+
+                            {!item.unit_disabled &&
+                              selection.length > 0 &&
+                              index == currentSelect && (
+                                <div className="custom-options-wrapper">
+                                  {selection.map((selected) => {
+                                    return (
+                                      <div
+                                        className="custom-option"
+                                        onClick={(e) =>
+                                          this.handleOptionsClick(
+                                            e,
+                                            itemKey,
+                                            index,
+                                            selected
+                                          )
+                                        }
+                                      >
+                                        {selected.product_name}
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              )}
+                          </div>
+                        );
+
+                        let defaultItem = (
+                          <input
+                            className="product_name"
+                            placeholder="Product Name"
+                            name="name"
+                            type="text"
+                            value={item.name}
+                            disabled={item.unit_disabled}
+                            onChange={(e) =>
+                              item.unit_disabled == false
+                                ? this.handleChange(e, itemKey, index)
+                                : null
+                            }
+                          />
+                        );
+
+                        return (
+                          <div className="report-details" key={index}>
+                            <div className="pe-3 product_index">
+                              {index + 1}
+                            </div>
+
+                            {itemKey == "waste" ? customItem : defaultItem}
 
                             {item.code && (
                               <input
@@ -231,10 +369,12 @@ class ReportContainer extends Component {
                               name="unit"
                               type="text"
                               value={item.unit}
-                              disabled={item.unit_disabled}
+                              disabled={
+                                itemKey == "waste" || item.unit_disabled
+                              }
                               onChange={(e) =>
                                 item.unit_disabled == false
-                                  ? this.handleChange(e, itemKey, index)
+                                  ? this.handleNumberChange(e, itemKey, index)
                                   : null
                               }
                             />
@@ -245,10 +385,10 @@ class ReportContainer extends Component {
                               name="value"
                               type="text"
                               value={item.value}
-                              disabled={item.unit_disabled}
+                              disabled={item.value_disabled}
                               onChange={(e) =>
-                                item.unit_disabled == false
-                                  ? this.handleChange(e, itemKey, index)
+                                item.value_disabled == false
+                                  ? this.handleNumberChange(e, itemKey, index)
                                   : null
                               }
                             />
@@ -259,6 +399,11 @@ class ReportContainer extends Component {
                               type="file"
                               value={item.file}
                               disabled={item.unit_disabled}
+                              onChange={(e) =>
+                                item.unit_disabled == false
+                                  ? this.handleChange(e, itemKey, index)
+                                  : null
+                              }
                             />
 
                             <a
@@ -276,7 +421,7 @@ class ReportContainer extends Component {
 
                     <a
                       className="btn btn-primary ms-4"
-                      onClick={(e) => this.handleClick(e, itemKey)}
+                      onClick={(e) => this.handleAddNewClick(e, itemKey)}
                     >
                       + Add New
                     </a>
