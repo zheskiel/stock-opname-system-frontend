@@ -15,7 +15,7 @@ import LayoutContainer from "../Layout";
 
 // Actions
 import { fetchReportsData } from "../../redux/actions";
-import { fetchWastByTemplateApi } from "../../apis";
+import { fetchWasteByTemplateApi } from "../../apis";
 
 // Helpers
 import { debounce } from "../../utils/helpers";
@@ -35,7 +35,7 @@ const defaultItems = {
 };
 const defaultCodeItems = {
   ...defaultItems,
-  code: "kode",
+  code: "",
 };
 
 const initialState = {
@@ -204,7 +204,7 @@ class ReportContainer extends Component {
 
           if (!(value.length > 2)) return;
 
-          const result = await fetchWastByTemplateApi({
+          const result = await fetchWasteByTemplateApi({
             templateId: 1,
             query: value,
           });
@@ -252,17 +252,186 @@ class ReportContainer extends Component {
 
   render() {
     const { isMounted, items, notes, selection, currentSelect } = this.state;
-
-    if (!isMounted)
-      return (
-        <LayoutContainer>
-          <MainSection>
-            <Loader />
-          </MainSection>
-        </LayoutContainer>
-      );
-
     const entries = Object.entries(items);
+
+    const ContentSection = (
+      <div className="container">
+        <div className="col-lg-8 col-12 pt-2 pb-5 mx-auto">
+          {entries.map((entry) => {
+            let itemKey = entry[0];
+            let items = entry[1].items;
+
+            return (
+              <div
+                key={itemKey}
+                className={`report-container ${itemKey}-container`}
+              >
+                <h5>{entry[1].name}</h5>
+
+                <div className="report-wrapper">
+                  {items.map((item, index) => {
+                    let customItem = (
+                      <div className="custom-options-container">
+                        <input
+                          className="product_name"
+                          placeholder="Product Name"
+                          name="name"
+                          type="text"
+                          value={item.name}
+                          disabled={item.unit_disabled}
+                          onChange={(e) =>
+                            item.unit_disabled == false
+                              ? this.handleNameChange(e, itemKey, index)
+                              : null
+                          }
+                        />
+
+                        {!item.unit_disabled &&
+                          selection.length > 0 &&
+                          index == currentSelect && (
+                            <div className="custom-options-wrapper">
+                              {selection.map((selected) => {
+                                let selectKey = `${itemKey}.${selected.product_code}`;
+
+                                return (
+                                  <div
+                                    key={selectKey}
+                                    className="custom-option"
+                                    onClick={(e) =>
+                                      this.handleOptionsClick(
+                                        e,
+                                        itemKey,
+                                        index,
+                                        selected
+                                      )
+                                    }
+                                  >
+                                    {selected.product_name}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          )}
+                      </div>
+                    );
+
+                    let defaultItem = (
+                      <input
+                        className="product_name"
+                        placeholder="Product Name"
+                        name="name"
+                        type="text"
+                        value={item.name}
+                        disabled={item.name_disabled}
+                        onChange={(e) =>
+                          item.unit_disabled == false
+                            ? this.handleChange(e, itemKey, index)
+                            : null
+                        }
+                      />
+                    );
+
+                    return (
+                      <div
+                        className="report-details"
+                        key={`${itemKey}.${item.code}.${index}`}
+                      >
+                        <div className="pe-3 product_index">{index + 1}</div>
+
+                        {itemKey !== "additional" ? customItem : defaultItem}
+
+                        <input
+                          className="product_code"
+                          placeholder="Product Code"
+                          name="code"
+                          type="text"
+                          value={item.code}
+                          disabled
+                        />
+
+                        <input
+                          className="product_unit"
+                          placeholder="Unit"
+                          name="unit"
+                          type="text"
+                          value={item.unit}
+                          disabled={itemKey == "waste" || item.unit_disabled}
+                          onChange={(e) =>
+                            item.unit_disabled == false
+                              ? this.handleNumberChange(e, itemKey, index)
+                              : null
+                          }
+                        />
+
+                        <input
+                          className="product_value"
+                          placeholder="Value"
+                          name="value"
+                          type="text"
+                          value={item.value}
+                          disabled={item.value_disabled}
+                          onChange={(e) =>
+                            item.value_disabled == false
+                              ? this.handleNumberChange(e, itemKey, index)
+                              : null
+                          }
+                        />
+
+                        <input
+                          className="product_file"
+                          name="file"
+                          type="file"
+                          value={item.file}
+                          disabled={item.unit_disabled}
+                          onChange={(e) =>
+                            item.unit_disabled == false
+                              ? this.handleChange(e, itemKey, index)
+                              : null
+                          }
+                        />
+
+                        <a
+                          className="btn btn-danger product_remove"
+                          onClick={(e) => this.handleRemove(e, itemKey, index)}
+                        >
+                          X
+                        </a>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <a
+                  className="btn btn-primary ms-4"
+                  onClick={(e) => this.handleAddNewClick(e, itemKey)}
+                >
+                  + Add New
+                </a>
+              </div>
+            );
+          })}
+
+          <div className="report-container notes-container">
+            <h5>Notes</h5>
+
+            <div className="report-wrapper">
+              <textarea
+                rows="8"
+                name="notes"
+                className="p-2"
+                value={notes}
+                placeholder="Write something..."
+                onChange={(e) => this.handleNotesChange(e)}
+              ></textarea>
+            </div>
+          </div>
+
+          <a className="btn btn-primary" href="#">
+            Submit
+          </a>
+        </div>
+      </div>
+    );
 
     return (
       <LayoutContainer>
@@ -271,184 +440,7 @@ class ReportContainer extends Component {
             <h4 className="h4">Daily Report</h4>
           </div>
 
-          <div className="container">
-            <div className="col-md-8 col-12 pt-2 pb-5 mx-auto">
-              {entries.map((entry) => {
-                let itemKey = entry[0];
-                let items = entry[1].items;
-
-                return (
-                  <div
-                    key={itemKey}
-                    className={`report-container ${itemKey}-container`}
-                  >
-                    <h5>{entry[1].name}</h5>
-
-                    <div className="report-wrapper">
-                      {items.map((item, index) => {
-                        let customItem = (
-                          <div className="custom-options-container">
-                            <input
-                              className="product_name"
-                              placeholder="Product Name"
-                              name="name"
-                              type="text"
-                              value={item.name}
-                              disabled={item.unit_disabled}
-                              onChange={(e) =>
-                                item.unit_disabled == false
-                                  ? this.handleNameChange(e, itemKey, index)
-                                  : null
-                              }
-                            />
-
-                            {!item.unit_disabled &&
-                              selection.length > 0 &&
-                              index == currentSelect && (
-                                <div className="custom-options-wrapper">
-                                  {selection.map((selected) => {
-                                    return (
-                                      <div
-                                        className="custom-option"
-                                        onClick={(e) =>
-                                          this.handleOptionsClick(
-                                            e,
-                                            itemKey,
-                                            index,
-                                            selected
-                                          )
-                                        }
-                                      >
-                                        {selected.product_name}
-                                      </div>
-                                    );
-                                  })}
-                                </div>
-                              )}
-                          </div>
-                        );
-
-                        let defaultItem = (
-                          <input
-                            className="product_name"
-                            placeholder="Product Name"
-                            name="name"
-                            type="text"
-                            value={item.name}
-                            disabled={item.unit_disabled}
-                            onChange={(e) =>
-                              item.unit_disabled == false
-                                ? this.handleChange(e, itemKey, index)
-                                : null
-                            }
-                          />
-                        );
-
-                        return (
-                          <div className="report-details" key={index}>
-                            <div className="pe-3 product_index">
-                              {index + 1}
-                            </div>
-
-                            {itemKey == "waste" ? customItem : defaultItem}
-
-                            {item.code && (
-                              <input
-                                className="product_code"
-                                placeholder="Product Code"
-                                name="code"
-                                type="text"
-                                value={item.code}
-                                disabled
-                              />
-                            )}
-
-                            <input
-                              className="product_unit"
-                              placeholder="Unit"
-                              name="unit"
-                              type="text"
-                              value={item.unit}
-                              disabled={
-                                itemKey == "waste" || item.unit_disabled
-                              }
-                              onChange={(e) =>
-                                item.unit_disabled == false
-                                  ? this.handleNumberChange(e, itemKey, index)
-                                  : null
-                              }
-                            />
-
-                            <input
-                              className="product_value"
-                              placeholder="Value"
-                              name="value"
-                              type="text"
-                              value={item.value}
-                              disabled={item.value_disabled}
-                              onChange={(e) =>
-                                item.value_disabled == false
-                                  ? this.handleNumberChange(e, itemKey, index)
-                                  : null
-                              }
-                            />
-
-                            <input
-                              className="product_file"
-                              name="file"
-                              type="file"
-                              value={item.file}
-                              disabled={item.unit_disabled}
-                              onChange={(e) =>
-                                item.unit_disabled == false
-                                  ? this.handleChange(e, itemKey, index)
-                                  : null
-                              }
-                            />
-
-                            <a
-                              className="btn btn-danger product_remove"
-                              onClick={(e) =>
-                                this.handleRemove(e, itemKey, index)
-                              }
-                            >
-                              X
-                            </a>
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    <a
-                      className="btn btn-primary ms-4"
-                      onClick={(e) => this.handleAddNewClick(e, itemKey)}
-                    >
-                      + Add New
-                    </a>
-                  </div>
-                );
-              })}
-
-              <div className="report-container notes-container">
-                <h5>Notes</h5>
-
-                <div className="report-wrapper">
-                  <textarea
-                    rows="8"
-                    name="notes"
-                    className="p-2"
-                    value={notes}
-                    placeholder="Write something..."
-                    onChange={(e) => this.handleNotesChange(e)}
-                  ></textarea>
-                </div>
-              </div>
-
-              <a className="btn btn-primary" href="#">
-                Submit
-              </a>
-            </div>
-          </div>
+          {!isMounted ? <Loader /> : ContentSection}
         </MainSection>
       </LayoutContainer>
     );

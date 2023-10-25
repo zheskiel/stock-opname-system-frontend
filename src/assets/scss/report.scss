@@ -46,6 +46,7 @@
           width: 10%;
         }
         .product_file {
+          color: transparent;
           width: 40%;
           flex: 1;
         }
@@ -71,7 +72,8 @@
     }
   }
 
-  &.waste-container {
+  &.waste-container,
+  &.damage-container {
     .custom-options-container {
       position: relative;
       margin-right: 1%;
@@ -90,16 +92,14 @@
         z-index: 100;
         font-size: 12px;
         font-weight: 500;
-        overflow-y: scroll;
+        overflow-y: auto;
         height: 250px;
 
         .custom-option {
           padding: 5px;
           &:hover {
-            cursor: pointer;
-          }
-          &:nth-child(odd) {
             background-color: rgba(18, 17, 17, 0.2);
+            cursor: pointer;
             color: #000;
           }
         }

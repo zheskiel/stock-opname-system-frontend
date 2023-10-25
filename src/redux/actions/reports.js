@@ -5,7 +5,6 @@ import {
 } from "./types";
 
 import { fetchReportsApi } from "../../apis";
-
 import errorHandler from "../../utils/errHandler";
 
 export const fetchReportsData = () => (dispatch) => {
@@ -37,12 +36,14 @@ export const fetchReportsDataRequest = () => {
     type: FETCH_REPORTS_REQUEST,
   };
 };
+
 export const fetchReportsDataSuccess = (result) => {
   return {
     type: FETCH_REPORTS_SUCEESS,
     payload: result,
   };
 };
+
 export const fetchReportsDataFailed = (result) => {
   return {
     type: FETCH_REPORTS_FAILED,

@@ -15,6 +15,8 @@ export const FORM_REMOVE_DETAIL_URL = API_URL + `/form/{0}/{1}/remove-detail`;
 export const FORM_REMOVE_ALL_DETAIL_URL =
   API_URL + `/form/{0}/{1}/remove-all-detail`;
 
+export const COMBINED_FORMS_URL = API_URL + "/form/{0}/outlet/{1}/combined";
+
 export const TEMPLATES_URL = API_URL + "/templates";
 export const TEMPLATE_VIEW_URL = API_URL + `/template/{0}/view`;
 export const TEMPLATE_SELECTED_ALL_URL = API_URL + `/template/{0}/all`;

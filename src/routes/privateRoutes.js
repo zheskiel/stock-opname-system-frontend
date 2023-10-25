@@ -18,12 +18,21 @@ const TemplatesCreateContainer = lazy(() =>
   import("../containers/Templates/Create")
 );
 const ReportContainer = lazy(() => import("../containers/Reports"));
+const CombinedFormsContainer = lazy(() =>
+  import("../containers/Reports/CombinedForms")
+);
 
 const PrivateRoutes = [
   {
     path: "/report",
     name: "report",
     component: ReportContainer,
+    exact: true,
+  },
+  {
+    path: "/report/:managerId/outlet/:outletId/combined",
+    name: "report",
+    component: CombinedFormsContainer,
     exact: true,
   },
   {

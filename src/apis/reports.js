@@ -9,7 +9,7 @@ export const fetchReportsApi = () => {
   return axiosInstance.get(url);
 };
 
-export const fetchWastByTemplateApi = ({ templateId, query = "" }) => {
+export const fetchWasteByTemplateApi = ({ templateId, query = "" }) => {
   let args = [templateId];
   let targetUrl = formatUrl(FETCH_WASTE_URL, args);
   let url = new URL(targetUrl);

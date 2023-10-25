@@ -17,7 +17,7 @@ class BreadCrumbs extends Component {
 
     return (
       <nav aria-label="breadcrumb">
-        <ol className="breadcrumb pt-3 mb-0">
+        <ol className="breadcrumb pt-1 mb-0">
           <li className="breadcrumb-item">
             <Link href="dashboard">Home</Link>
           </li>

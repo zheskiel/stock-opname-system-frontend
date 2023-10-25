@@ -1,7 +1,7 @@
 import {
-  FETCH_REPORTS_REQUEST,
-  FETCH_REPORTS_SUCEESS,
-  FETCH_REPORTS_FAILED,
+  FETCH_COMBINED_REQUEST,
+  FETCH_COMBINED_SUCCESS,
+  FETCH_COMBINED_FAILED,
 } from "../actions/types";
 
 const initialState = {
@@ -10,12 +10,12 @@ const initialState = {
   data: [],
 };
 
-const Reports = (state = initialState, action) => {
+const combinedForms = (state = initialState, action) => {
   switch (action.type) {
-    case FETCH_REPORTS_REQUEST:
+    case FETCH_COMBINED_REQUEST:
       return { ...state };
 
-    case FETCH_REPORTS_SUCEESS:
+    case FETCH_COMBINED_SUCCESS:
       var { success, message, data } = action.payload;
 
       var newState = {
@@ -26,7 +26,7 @@ const Reports = (state = initialState, action) => {
 
       return { ...state, ...newState };
 
-    case FETCH_REPORTS_FAILED:
+    case FETCH_COMBINED_FAILED:
       var { success, message } = action.payload;
 
       var newState = {
@@ -41,4 +41,4 @@ const Reports = (state = initialState, action) => {
   }
 };
 
-export default Reports;
+export default combinedForms;
