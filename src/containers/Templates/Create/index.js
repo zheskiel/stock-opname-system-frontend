@@ -64,9 +64,7 @@ class TemplateCreate extends Component {
 
         let newItems = [...[item], ...templateItems];
 
-        this.setState({
-          templateItems: newItems,
-        });
+        this.setState({ templateItems: newItems });
       })
       .then(() => this.handlePagination())
       .then(() => {
@@ -76,9 +74,7 @@ class TemplateCreate extends Component {
           (f) => templateItems[f].product_code
         );
 
-        this.setState({
-          selectedItems: items,
-        });
+        this.setState({ selectedItems: items });
       });
   };
 

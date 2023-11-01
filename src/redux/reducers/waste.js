@@ -1,7 +1,7 @@
 import {
-  FETCH_REPORTS_REQUEST,
-  FETCH_REPORTS_SUCCESS,
-  FETCH_REPORTS_FAILED,
+  FETCH_COMPARE_WASTE_REQUEST,
+  FETCH_COMPARE_WASTE_SUCCESS,
+  FETCH_COMPARE_WASTE_FAILED,
 } from "../actions/types";
 
 const initialState = {
@@ -10,12 +10,12 @@ const initialState = {
   data: [],
 };
 
-const Reports = (state = initialState, action) => {
+const compareWaste = (state = initialState, action) => {
   switch (action.type) {
-    case FETCH_REPORTS_REQUEST:
+    case FETCH_COMPARE_WASTE_REQUEST:
       return { ...state };
 
-    case FETCH_REPORTS_SUCCESS:
+    case FETCH_COMPARE_WASTE_SUCCESS:
       var { success, message, data } = action.payload;
 
       var newState = {
@@ -26,7 +26,7 @@ const Reports = (state = initialState, action) => {
 
       return { ...state, ...newState };
 
-    case FETCH_REPORTS_FAILED:
+    case FETCH_COMPARE_WASTE_FAILED:
       var { success, message } = action.payload;
 
       var newState = {
@@ -41,4 +41,4 @@ const Reports = (state = initialState, action) => {
   }
 };
 
-export default Reports;
+export default compareWaste;

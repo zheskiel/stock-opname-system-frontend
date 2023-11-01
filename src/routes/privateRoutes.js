@@ -18,9 +18,14 @@ const TemplatesCreateContainer = lazy(() =>
   import("../containers/Templates/Create")
 );
 const ReportContainer = lazy(() => import("../containers/Reports"));
+const CompareFormsContainer = lazy(() =>
+  import("../containers/Reports/CompareForms")
+);
+
 const CombinedFormsContainer = lazy(() =>
   import("../containers/Reports/CombinedForms")
 );
+const FinalForm = lazy(() => import("../containers/Reports/FinalForm"));
 
 const PrivateRoutes = [
   {
@@ -30,11 +35,24 @@ const PrivateRoutes = [
     exact: true,
   },
   {
+    path: "/report/:managerId/outlet/:outletId/final",
+    name: "report",
+    component: FinalForm,
+    exact: true,
+  },
+  {
+    path: "/report/:managerId/outlet/:outletId/compare",
+    name: "report",
+    component: CompareFormsContainer,
+    exact: true,
+  },
+  {
     path: "/report/:managerId/outlet/:outletId/combined",
     name: "report",
     component: CombinedFormsContainer,
     exact: true,
   },
+
   {
     path: "/master",
     name: "master",

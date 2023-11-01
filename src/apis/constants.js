@@ -30,4 +30,8 @@ export const TEMPLATE_REMOVE_ALL_DETAIL_URL =
   API_URL + `/template/{0}/remove-all-detail`;
 
 export const REPORT_URL = API_URL + "/reports";
+export const CREATE_REPORT_URL = API_URL + "/reports/create";
 export const FETCH_WASTE_URL = API_URL + `/fetch/{0}/waste`;
+export const FETCH_COMPARE_WASTE_URL = API_URL + `/form/compare/{0}/waste`;
+export const STOCK_POSITION_REPORT_URL = API_URL + `/form/position/report`;
+export const FINAL_REPORT_URL = API_URL + `/form/final`;

@@ -10,6 +10,7 @@ import PaginationSection from "../../../sections/Pagination";
 
 // Components
 import Loader from "../../../components/Loader";
+import BtnLoader from "../../../components/Loader/btn";
 
 // Containers
 import LayoutContainer from "../../Layout";
@@ -19,9 +20,11 @@ import { fetchCombinedFormsData } from "../../../redux/actions";
 
 // Styling
 import "../../../assets/scss/combined.scss";
+import { sleep } from "../../../utils/helpers";
 
 const initialState = {
   isMounted: false,
+  btnLoading: false,
 };
 
 class CombinedFormsContainer extends Component {
@@ -30,6 +33,7 @@ class CombinedFormsContainer extends Component {
 
     this.state = initialState;
 
+    this.handleClick = this.handleClick.bind(this);
     this.handleFetchData = this.handleFetchData.bind(this);
   }
 
@@ -48,13 +52,26 @@ class CombinedFormsContainer extends Component {
       page,
     };
 
-    fetchCombinedFormsData(parameters);
+    await fetchCombinedFormsData(parameters);
 
     window.scrollTo(0, 0);
   };
 
+  handleClick = (e) => {
+    e.preventDefault();
+
+    new Promise((resolve) => resolve())
+      .then(async () => {
+        this.setState({ btnLoading: true });
+
+        await sleep(1000);
+      })
+      .then(() => this.props.history.push("/report/1/outlet/1/compare"))
+      .then(() => this.setState({ btnLoading: false }));
+  };
+
   render() {
-    const { isMounted } = this.state;
+    const { isMounted, btnLoading } = this.state;
     const { combinedFormsData } = this.props;
     const { data } = combinedFormsData;
 
@@ -117,6 +134,17 @@ class CombinedFormsContainer extends Component {
       );
     });
 
+    const BtnComponent = () => {
+      return (
+        <button
+          className="btn btn-primary"
+          onClick={(e) => this.handleClick(e)}
+        >
+          Compare
+        </button>
+      );
+    };
+
     const ContentSection = (
       <>
         <div className="d-flex">
@@ -124,7 +152,13 @@ class CombinedFormsContainer extends Component {
             <div className="section-container">
               <h6>Combined Form Items</h6>
               <div className="combined-section">
-                {dataItems}
+                <div
+                  className={`combined-inner-wrapper ${
+                    last_page > 1 ? "has-pagination" : ""
+                  }`}
+                >
+                  {dataItems}
+                </div>
 
                 {hasPagination(last_page)}
               </div>
@@ -139,8 +173,8 @@ class CombinedFormsContainer extends Component {
           </div>
         </div>
 
-        <div className="col-12 pt-1 pb-3">
-          <button className="btn btn-primary">Compare</button>
+        <div className="col-12 pt-3 pb-3">
+          {btnLoading ? <BtnLoader /> : <BtnComponent />}
         </div>
       </>
     );

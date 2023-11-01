@@ -37,7 +37,9 @@ main {
   }
 
   .main-content {
-    min-height: calc(100vh - 56px - 57px - 1.5rem);
+    // min-height: calc(100vh - 56px - 57px - 1.5rem);
+
+    min-height: calc(100vh - 56px - 57px - 3.5rem);
   }
 }
 
@@ -169,6 +171,22 @@ table {
   }
 }
 
+.btn-loading-container {
+  background-color: #0d6efd;
+  height: 38px;
+  line-height: 25px;
+  width: 101px;
+  &:hover {
+    cursor: not-allowed;
+  }
+  svg {
+    width: 25px;
+    height: 25px;
+    &:hover {
+      cursor: not-allowed;
+    }
+  }
+}
 .loading-container {
   display: flex;
   align-items: center;

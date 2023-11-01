@@ -1,0 +1,71 @@
+.final-form-section {
+  background-color: #ffcccc;
+  padding: 5px 10px;
+  border: none;
+  .final-form-header {
+    th {
+      padding: 5px 0px 0px 0px;
+    }
+  }
+
+  .final-form-header,
+  .final-form-body {
+    height: 32px;
+    max-height: 32px;
+    table-layout: fixed;
+  }
+
+  .final-form-table-container {
+    min-height: 509px;
+  }
+  .final-form-container {
+    width: 100%;
+
+    .product_name {
+      width: 30%;
+    }
+
+    .product_stock_position_value,
+    .product_combined_form_value,
+    .product_calculated_value,
+    .product_waste_value,
+    .product_code,
+    .product_sku {
+      width: 5%;
+      height: 32px;
+
+      input {
+        &:hover {
+          cursor: not-allowed;
+        }
+      }
+    }
+
+    .product_result_value,
+    .product_actions {
+      width: 8%;
+      height: 32px;
+    }
+
+    .product_actions {
+      min-width: 125px;
+      height: 32px;
+    }
+
+    .product_index {
+      width: 2%;
+      max-width: 30px;
+      height: 32px;
+    }
+
+    .product_calculated_value {
+      input {
+        font-weight: bolder;
+        background-color: #ffe6cc;
+      }
+    }
+    input {
+      width: 100%;
+    }
+  }
+}

@@ -9,16 +9,14 @@ import MainSection from "../../sections/Main";
 
 // Components
 import Loader from "../../components/Loader";
+import BtnLoader from "../../components/Loader/btn";
 
 // Containers
 import LayoutContainer from "../Layout";
 
 // Actions
-import { fetchReportsData } from "../../redux/actions";
+import { createReportsData, fetchReportsData } from "../../redux/actions";
 import { fetchWasteByTemplateApi } from "../../apis";
-
-// Helpers
-import { debounce } from "../../utils/helpers";
 
 // Styling
 import "../../assets/scss/report.scss";
@@ -40,6 +38,8 @@ const defaultCodeItems = {
 
 const initialState = {
   isMounted: false,
+  btnLoading: false,
+  currentKey: null,
   currentSelect: null,
   selection: {},
   items: {},
@@ -54,6 +54,7 @@ class ReportContainer extends Component {
 
     this.handleRemove = this.handleRemove.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleAddNewClick = this.handleAddNewClick.bind(this);
     this.handleNotesChange = this.handleNotesChange.bind(this);
@@ -62,6 +63,8 @@ class ReportContainer extends Component {
   }
 
   componentDidMount() {
+    this.timer = null;
+
     new Promise((resolve) => resolve())
       .then(async () => {
         const { fetchReportsData } = this.props;
@@ -78,6 +81,26 @@ class ReportContainer extends Component {
         setTimeout(() => this.setState({ isMounted: true }), 500);
       });
   }
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+
+    new Promise((resolve) => resolve())
+      .then(() => this.setState({ btnLoading: true }))
+      .then(async () => {
+        const { items, notes } = this.state;
+        const { createReportsData } = this.props;
+
+        let params = { items, notes };
+
+        await createReportsData(params);
+      })
+      .then(() => {
+        console.log("success");
+        this.props.history.push("/report/1/outlet/1/combined");
+      })
+      .then(() => this.setState({ btnLoading: false }));
+  };
 
   handleAddNewClick = (e, itemKey) => {
     e.preventDefault();
@@ -188,30 +211,34 @@ class ReportContainer extends Component {
   handleNameChange = (e, itemKey, index) => {
     e.preventDefault();
 
-    const { items } = this.state;
+    clearTimeout(this.timer);
 
-    const target = e.target;
-    const { name, value } = target;
+    const { items } = this.state;
+    const { name, value } = e.target;
 
     new Promise((resolve) => resolve())
       .then(() => this.proceedChange({ itemKey, index, items, name, value }))
-      .then(
-        debounce(async () => {
-          if (value.length == 0) {
-            this.setState({ selection: {} });
-            return;
-          }
+      .then(() => {
+        if (value.length == 0) {
+          this.setState({ selection: {} });
+          return;
+        }
 
-          if (!(value.length > 2)) return;
+        if (!(value.length > 2)) return;
 
+        this.timer = setTimeout(async () => {
           const result = await fetchWasteByTemplateApi({
             templateId: 1,
             query: value,
           });
 
-          this.setState({ currentSelect: index, selection: result.data });
-        }, 500)
-      );
+          this.setState({
+            currentKey: itemKey,
+            currentSelect: index,
+            selection: result.data,
+          });
+        }, 500);
+      });
   };
 
   handleNumberChange = (e, itemKey, index) => {
@@ -251,7 +278,27 @@ class ReportContainer extends Component {
   };
 
   render() {
-    const { isMounted, items, notes, selection, currentSelect } = this.state;
+    const {
+      isMounted,
+      btnLoading,
+      items,
+      notes,
+      selection,
+      currentSelect,
+      currentKey,
+    } = this.state;
+
+    const BtnComponent = () => {
+      return (
+        <button
+          className="btn btn-primary"
+          onClick={(e) => this.handleSubmit(e)}
+        >
+          Submit
+        </button>
+      );
+    };
+
     const entries = Object.entries(items);
 
     const ContentSection = (
@@ -288,7 +335,8 @@ class ReportContainer extends Component {
 
                         {!item.unit_disabled &&
                           selection.length > 0 &&
-                          index == currentSelect && (
+                          index == currentSelect &&
+                          itemKey == currentKey && (
                             <div className="custom-options-wrapper">
                               {selection.map((selected) => {
                                 let selectKey = `${itemKey}.${selected.product_code}`;
@@ -340,14 +388,16 @@ class ReportContainer extends Component {
 
                         {itemKey !== "additional" ? customItem : defaultItem}
 
-                        <input
-                          className="product_code"
-                          placeholder="Product Code"
-                          name="code"
-                          type="text"
-                          value={item.code}
-                          disabled
-                        />
+                        {itemKey !== "additional" && (
+                          <input
+                            className="product_code"
+                            placeholder="Product Code"
+                            name="code"
+                            type="text"
+                            value={item.code}
+                            disabled
+                          />
+                        )}
 
                         <input
                           className="product_unit"
@@ -358,8 +408,8 @@ class ReportContainer extends Component {
                           disabled={itemKey == "waste" || item.unit_disabled}
                           onChange={(e) =>
                             item.unit_disabled == false
-                              ? this.handleNumberChange(e, itemKey, index)
-                              : null
+                              ? this.handleChange(e, itemKey, index)
+                              : ``
                           }
                         />
 
@@ -368,7 +418,7 @@ class ReportContainer extends Component {
                           placeholder="Value"
                           name="value"
                           type="text"
-                          value={item.value}
+                          value={item.value ?? ``}
                           disabled={item.value_disabled}
                           onChange={(e) =>
                             item.value_disabled == false
@@ -381,7 +431,7 @@ class ReportContainer extends Component {
                           className="product_file"
                           name="file"
                           type="file"
-                          value={item.file}
+                          value={item.file ?? ""}
                           disabled={item.unit_disabled}
                           onChange={(e) =>
                             item.unit_disabled == false
@@ -412,7 +462,7 @@ class ReportContainer extends Component {
           })}
 
           <div className="report-container notes-container">
-            <h5>Notes</h5>
+            <h5>Notes ke Manager</h5>
 
             <div className="report-wrapper">
               <textarea
@@ -426,9 +476,7 @@ class ReportContainer extends Component {
             </div>
           </div>
 
-          <a className="btn btn-primary" href="#">
-            Submit
-          </a>
+          {btnLoading ? <BtnLoader /> : <BtnComponent />}
         </div>
       </div>
     );
@@ -452,6 +500,11 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  createReportsData: (params) => {
+    return new Promise((resolve) => {
+      dispatch(createReportsData(params)).then(() => resolve());
+    });
+  },
   fetchReportsData: (params) => {
     return new Promise((resolve) => {
       dispatch(fetchReportsData(params)).then(() => resolve());

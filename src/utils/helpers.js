@@ -234,18 +234,14 @@ export const multiDimensionalUnique = (arr) => {
   return uniques;
 };
 
-export const debounce = (func, wait) => {
-  let timeout;
+export const debounce = (func, interval) => {
+  let timer = null;
 
-  return function executedFunction(...args) {
-    const later = () => {
-      timeout = null;
-      func(...args);
-    };
-
-    clearTimeout(timeout);
-
-    timeout = setTimeout(later, wait);
+  return (...args) => {
+    clearTimeout(timer);
+    return new Promise((resolve) => {
+      timer = setTimeout(() => resolve(func(...args)), interval);
+    });
   };
 };
 
