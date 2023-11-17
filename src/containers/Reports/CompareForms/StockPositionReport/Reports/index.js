@@ -49,7 +49,7 @@ class StockPositionReports extends Component {
 
         await fetchStockPosition(parameters);
 
-        window.scrollTo(0, 0);
+        // window.scrollTo(0, 0);
       })
       .then(() =>
         withLoad

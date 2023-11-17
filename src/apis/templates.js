@@ -5,20 +5,23 @@ import {
   TEMPLATE_CREATE_DETAIL_URL,
   TEMPLATE_REMOVE_DETAIL_URL,
   TEMPLATE_REMOVE_ALL_DETAIL_URL,
+  TEMPLATE_CREATE_BY_OUTLET_URL,
 } from "./constants";
 
 import axiosInstance from "../utils/axiosInstance";
 import { buildUrl, formatUrl } from "../utils/helpers";
 
-export const fetchTemplatesApi = ({ page = 1 }) => {
+export const fetchTemplatesApi = ({ role, page = 1 }) => {
+  let args = [];
+  let targetUrl = formatUrl(TEMPLATES_URL, args);
+  let url = new URL(targetUrl);
+
   let parameters = {
+    role,
     page,
   };
 
-  let url = new URL(TEMPLATES_URL);
-  let target = buildUrl(url, parameters);
-
-  return axiosInstance.get(target);
+  return axiosInstance.post(url, parameters);
 };
 
 export const fetchTemplateViewApi = ({
@@ -52,6 +55,31 @@ export const fetchTemplateAllSelectedApi = ({ templateId }) => {
   let target = buildUrl(url, parameters);
 
   return axiosInstance.get(target);
+};
+
+export const createTemplateForOutletApi = ({
+  title,
+  outletId,
+  supervisorId,
+  supervisorDuty,
+  managerId,
+  items,
+}) => {
+  let args = [];
+  let targetUrl = formatUrl(TEMPLATE_CREATE_BY_OUTLET_URL, args);
+
+  let url = new URL(targetUrl);
+
+  let parameters = {
+    title,
+    items,
+    outletId,
+    supervisorId,
+    supervisorDuty,
+    managerId,
+  };
+
+  return axiosInstance.post(url, parameters);
 };
 
 export const createTemplateDetailApi = ({ templateId, item }) => {

@@ -11,6 +11,7 @@ import PaginationSection from "../../../sections/Pagination";
 // Components
 import Loader from "../../../components/Loader";
 import BtnLoader from "../../../components/Loader/btn";
+import Progress from "../../../components/Progress";
 
 // Containers
 import LayoutContainer from "../../Layout";
@@ -38,11 +39,20 @@ class CombinedFormsContainer extends Component {
   }
 
   componentDidMount() {
+    let isMounted = true; // Track the mounted status
+
     new Promise((resolve) => resolve())
       .then(() => this.handleFetchData())
       .then(() => {
-        setTimeout(() => this.setState({ isMounted: true }), 500);
+        isMounted
+          ? setTimeout(() => this.setState({ isMounted: true }), 500)
+          : null;
       });
+
+    // Set isMounted to false when the component is unmounted
+    return () => {
+      isMounted = false;
+    };
   }
 
   handleFetchData = async (page = 1) => {
@@ -54,7 +64,7 @@ class CombinedFormsContainer extends Component {
 
     await fetchCombinedFormsData(parameters);
 
-    window.scrollTo(0, 0);
+    // window.scrollTo(0, 0);
   };
 
   handleClick = (e) => {
@@ -66,8 +76,7 @@ class CombinedFormsContainer extends Component {
 
         await sleep(1000);
       })
-      .then(() => this.props.history.push("/report/1/outlet/1/compare"))
-      .then(() => this.setState({ btnLoading: false }));
+      .then(() => this.props.history.push("/report/1/outlet/1/compare"));
   };
 
   render() {
@@ -182,9 +191,11 @@ class CombinedFormsContainer extends Component {
     return (
       <LayoutContainer>
         <MainSection>
-          <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-1 border-bottom">
+          <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h4 className="h4">Combined Forms</h4>
           </div>
+
+          <Progress active={`combined`} />
 
           {!isMounted ? <Loader /> : ContentSection}
         </MainSection>

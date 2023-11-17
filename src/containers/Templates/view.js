@@ -23,7 +23,13 @@ import PaginationSection from "../../sections/Pagination";
 import { fetchTemplateViewData } from "../../redux/actions";
 
 // Helpers
-import { buildItemsObj } from "../../utils/helpers";
+import {
+  formatUrl,
+  buildLinkUrl,
+  buildItemsObj,
+  fetchUrlByName,
+  checkUrlIsEligible,
+} from "../../utils/helpers";
 
 // Styling
 import "../../assets/scss/templates.scss";
@@ -94,7 +100,7 @@ class TemplatesViewContainer extends Component {
 
         fetchTemplateViewData(parameters);
 
-        window.scrollTo(0, 0);
+        // window.scrollTo(0, 0);
       });
   };
 
@@ -150,6 +156,8 @@ class TemplatesViewContainer extends Component {
       );
     };
 
+    let { linkParams, eligible } = buildLinkUrl("template.edit", [detail?.id]);
+
     return (
       <LayoutContainer>
         <MainSection>
@@ -158,17 +166,19 @@ class TemplatesViewContainer extends Component {
               {detail?.title ? `${detail.title}'s Details` : <>Loading...</>}
             </h4>
 
-            <div className="btn-toolbar mb-2 mb-md-0">
-              <div className="btn-group">
-                <Link
-                  type="button"
-                  className="btn btn-sm btn-warning"
-                  href={`/template/${detail?.id}/edit`}
-                >
-                  Edit
-                </Link>
+            {eligible && (
+              <div className="btn-toolbar mb-2 mb-md-0">
+                <div className="btn-group">
+                  <Link
+                    type="button"
+                    className="btn btn-sm btn-warning"
+                    href={linkParams.url}
+                  >
+                    Edit
+                  </Link>
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           <ContentSection />

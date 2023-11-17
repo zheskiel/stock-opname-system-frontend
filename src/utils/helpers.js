@@ -2,8 +2,35 @@ import React from "react";
 import dayjs from "dayjs";
 import store from "../store";
 
+import { PrivateRoutes } from "../routes";
+
 export const isLogin = () => {
   return store.getState().auth.isAuth;
+};
+
+export const buildLinkUrl = (name, args = []) => {
+  let formattedUrl = formatUrl(fetchUrlByName(name), args);
+  let linkParams = {
+    url: formattedUrl,
+    name,
+  };
+
+  let eligible = checkUrlIsEligible(linkParams);
+
+  return { linkParams, eligible };
+};
+
+export const fetchUrlByName = (name) => {
+  let url = PrivateRoutes.filter((route) => route.name == name)[0];
+
+  return url.regex;
+};
+
+export const checkUrlIsEligible = (params) => {
+  let { name } = params;
+  let url = PrivateRoutes.filter((route) => route.name == name)[0];
+
+  return isEligible(url.name);
 };
 
 export const isEligible = (routeName) => {

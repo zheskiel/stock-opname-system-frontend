@@ -106,7 +106,7 @@ class MasterTable extends Component {
 
         fetchMasterData(params);
 
-        window.scrollTo(0, 0);
+        // window.scrollTo(0, 0);
       });
   };
 

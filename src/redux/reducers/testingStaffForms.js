@@ -1,8 +1,7 @@
 import {
-  FETCH_TEMPLATES_REQUEST,
-  FETCH_TEMPLATES_SUCCESS,
-  FETCH_TEMPLATES_FAILED,
-  RESET_TEMPLATES,
+  FETCH_TESTING_STAFF_FORMS_REQUEST,
+  FETCH_TESTING_STAFF_FORMS_SUCCESS,
+  FETCH_TESTING_STAFF_FORMS_FAILED,
 } from "../actions/types";
 
 const initialState = {
@@ -11,12 +10,12 @@ const initialState = {
   data: [],
 };
 
-const Templates = (state = initialState, action) => {
+const testingStaffForms = (state = initialState, action) => {
   switch (action.type) {
-    case FETCH_TEMPLATES_REQUEST:
+    case FETCH_TESTING_STAFF_FORMS_REQUEST:
       return { ...state };
 
-    case FETCH_TEMPLATES_SUCCESS:
+    case FETCH_TESTING_STAFF_FORMS_SUCCESS:
       var { success, message, data } = action.payload;
 
       var newState = {
@@ -27,7 +26,7 @@ const Templates = (state = initialState, action) => {
 
       return { ...state, ...newState };
 
-    case FETCH_TEMPLATES_FAILED:
+    case FETCH_TESTING_STAFF_FORMS_FAILED:
       var { success, message } = action.payload;
 
       var newState = {
@@ -37,12 +36,9 @@ const Templates = (state = initialState, action) => {
 
       return { ...state, ...newState };
 
-    case RESET_TEMPLATES:
-      return initialState;
-
     default:
       return state;
   }
 };
 
-export default Templates;
+export default testingStaffForms;

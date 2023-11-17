@@ -2,6 +2,7 @@ import {
   FETCH_TEMPLATES_REQUEST,
   FETCH_TEMPLATES_SUCCESS,
   FETCH_TEMPLATES_FAILED,
+  RESET_TEMPLATES,
 } from "./types";
 
 import { fetchTemplatesApi } from "../../apis";
@@ -51,5 +52,11 @@ export const fetchTemplatesDataFailed = (result) => {
   return {
     type: FETCH_TEMPLATES_FAILED,
     payload: result,
+  };
+};
+
+export const resetTemplatesData = () => {
+  return {
+    type: RESET_TEMPLATES,
   };
 };

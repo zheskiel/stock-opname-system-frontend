@@ -1,0 +1,71 @@
+#progressbar {
+  margin-bottom: 15px;
+  overflow: hidden;
+  color: lightgrey;
+  padding: 0px;
+  .active {
+    color: #000000;
+  }
+
+  li {
+    list-style-type: none;
+    font-size: 12px;
+    width: 25%;
+    float: left;
+    position: relative;
+    text-align: center;
+
+    /*ProgressBar before any progress*/
+    .number {
+      width: 40px;
+      height: 40px;
+      line-height: 20px;
+      display: block;
+      font-size: 18px;
+      color: #ffffff;
+      background: lightgray;
+      border-radius: 50%;
+      margin: 0 auto 10px auto;
+      padding: 2px;
+      z-index: 2;
+      position: inherit;
+    }
+    > svg {
+      width: 40px;
+      height: 40px;
+      line-height: 35px;
+      display: block;
+      font-size: 18px;
+      color: #ffffff;
+      background: lightgray;
+      border-radius: 50%;
+      margin: 0 auto 10px auto;
+      padding: 2px;
+      z-index: 2;
+      position: inherit;
+    }
+
+    /*ProgressBar connectors*/
+    &:after {
+      content: "";
+      width: 100%;
+      height: 2px;
+      background: lightgray;
+      position: absolute;
+      left: 0;
+      top: 20px;
+      z-index: 1;
+    }
+  }
+}
+
+/*Color number of the step and the connector before it*/
+#progressbar li > svg,
+#progressbar li .number {
+  padding: 10px;
+}
+#progressbar li.active > svg,
+#progressbar li.active .number,
+#progressbar li.active:after {
+  background: #0d6efd;
+}

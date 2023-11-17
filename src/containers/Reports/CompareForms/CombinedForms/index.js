@@ -30,11 +30,20 @@ class CombinedFormsComponent extends Component {
   }
 
   componentDidMount() {
+    let isMounted = true; // Track the mounted status
+
     new Promise((resolve) => resolve())
       .then(() => this.handleFetchCombinedData())
       .then(() => {
-        setTimeout(() => this.setState({ isMounted: true }), 500);
+        isMounted
+          ? setTimeout(() => this.setState({ isMounted: true }), 500)
+          : null;
       });
+
+    // Set isMounted to false when the component is unmounted
+    return () => {
+      isMounted = false;
+    };
   }
 
   handleFetchCombinedData = async (page = 1) => {
@@ -46,7 +55,7 @@ class CombinedFormsComponent extends Component {
 
     await fetchCombinedFormsData(parameters);
 
-    window.scrollTo(0, 0);
+    // window.scrollTo(0, 0);
   };
 
   render() {

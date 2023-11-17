@@ -34,6 +34,9 @@
           &.product_name {
             flex: 1;
           }
+          &:hover {
+            cursor: not-allowed;
+          }
         }
       }
     }

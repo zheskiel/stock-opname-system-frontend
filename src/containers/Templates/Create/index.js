@@ -136,7 +136,7 @@ class TemplateCreate extends Component {
             <h4 className="h4">Create Template</h4>
           </div>
 
-          <div className="template-edit-container card-container">
+          <div className="template-create-container template-edit-container card-container">
             <div className="row">
               <MasterTemplate {...masterProps} />
               <TemplateTable {...templateProps} />

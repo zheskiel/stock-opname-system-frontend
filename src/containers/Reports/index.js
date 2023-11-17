@@ -4,12 +4,15 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { compose } from "redux";
 
+import { toast } from "react-toastify";
+
 // Sections
 import MainSection from "../../sections/Main";
 
 // Components
 import Loader from "../../components/Loader";
 import BtnLoader from "../../components/Loader/btn";
+import Progress from "../../components/Progress";
 
 // Containers
 import LayoutContainer from "../Layout";
@@ -35,7 +38,6 @@ const defaultCodeItems = {
   ...defaultItems,
   code: "",
 };
-
 const initialState = {
   isMounted: false,
   btnLoading: false,
@@ -64,6 +66,7 @@ class ReportContainer extends Component {
 
   componentDidMount() {
     this.timer = null;
+    let isMounted = true; // Track the mounted status
 
     new Promise((resolve) => resolve())
       .then(async () => {
@@ -72,14 +75,25 @@ class ReportContainer extends Component {
         await fetchReportsData();
       })
       .then(() => {
-        const { reports } = this.props;
-        const { items, notes } = reports;
+        if (isMounted) {
+          // Check if the component is still mounted
+          const { reports } = this.props;
+          const { items, notes } = reports;
 
-        this.setState({ items, notes });
+          this.setState({ items, notes });
+        }
       })
       .then(() => {
-        setTimeout(() => this.setState({ isMounted: true }), 500);
+        if (isMounted) {
+          // Check if the component is still mounted
+          setTimeout(() => this.setState({ isMounted: true }), 500);
+        }
       });
+
+    // Set isMounted to false when the component is unmounted
+    return () => {
+      isMounted = false;
+    };
   }
 
   handleSubmit = (e) => {
@@ -98,8 +112,7 @@ class ReportContainer extends Component {
       .then(() => {
         console.log("success");
         this.props.history.push("/report/1/outlet/1/combined");
-      })
-      .then(() => this.setState({ btnLoading: false }));
+      });
   };
 
   handleAddNewClick = (e, itemKey) => {
@@ -244,15 +257,19 @@ class ReportContainer extends Component {
   handleNumberChange = (e, itemKey, index) => {
     e.preventDefault();
 
-    const { items } = this.state;
+    let { items } = this.state;
 
-    const target = e.target;
-    const { name, value } = target;
+    let target = e.target;
+    let value = parseInt(target.value !== "" ? target.value : 0);
+
+    let { name } = target;
 
     const re = /^[0-9\b]+$/; //rules
 
     if (re.test(e.target.value)) {
       this.proceedChange({ itemKey, index, items, name, value });
+    } else {
+      toast.error("Please input number only");
     }
   };
 
@@ -303,7 +320,7 @@ class ReportContainer extends Component {
 
     const ContentSection = (
       <div className="container">
-        <div className="col-lg-8 col-12 pt-2 pb-5 mx-auto">
+        <div className="col-lg-8 col-12 pt-2 pb-2 mx-auto">
           {entries.map((entry) => {
             let itemKey = entry[0];
             let items = entry[1].items;
@@ -316,139 +333,141 @@ class ReportContainer extends Component {
                 <h5>{entry[1].name}</h5>
 
                 <div className="report-wrapper">
-                  {items.map((item, index) => {
-                    let customItem = (
-                      <div className="custom-options-container">
+                  {items &&
+                    items.map((item, index) => {
+                      let customItem = (
+                        <div className="custom-options-container">
+                          <input
+                            className="product_name"
+                            placeholder="Product Name"
+                            name="name"
+                            type="text"
+                            value={item.name}
+                            disabled={item.unit_disabled}
+                            onChange={(e) =>
+                              item.unit_disabled == false
+                                ? this.handleNameChange(e, itemKey, index)
+                                : null
+                            }
+                          />
+
+                          {!item.unit_disabled &&
+                            selection.length > 0 &&
+                            index == currentSelect &&
+                            itemKey == currentKey && (
+                              <div className="custom-options-wrapper">
+                                {selection.map((selected) => {
+                                  let selectKey = `${itemKey}.${selected.product_code}`;
+
+                                  return (
+                                    <div
+                                      key={selectKey}
+                                      className="custom-option"
+                                      onClick={(e) =>
+                                        this.handleOptionsClick(
+                                          e,
+                                          itemKey,
+                                          index,
+                                          selected
+                                        )
+                                      }
+                                    >
+                                      {selected.product_name}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            )}
+                        </div>
+                      );
+
+                      let defaultItem = (
                         <input
                           className="product_name"
                           placeholder="Product Name"
                           name="name"
                           type="text"
                           value={item.name}
-                          disabled={item.unit_disabled}
-                          onChange={(e) =>
-                            item.unit_disabled == false
-                              ? this.handleNameChange(e, itemKey, index)
-                              : null
-                          }
-                        />
-
-                        {!item.unit_disabled &&
-                          selection.length > 0 &&
-                          index == currentSelect &&
-                          itemKey == currentKey && (
-                            <div className="custom-options-wrapper">
-                              {selection.map((selected) => {
-                                let selectKey = `${itemKey}.${selected.product_code}`;
-
-                                return (
-                                  <div
-                                    key={selectKey}
-                                    className="custom-option"
-                                    onClick={(e) =>
-                                      this.handleOptionsClick(
-                                        e,
-                                        itemKey,
-                                        index,
-                                        selected
-                                      )
-                                    }
-                                  >
-                                    {selected.product_name}
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          )}
-                      </div>
-                    );
-
-                    let defaultItem = (
-                      <input
-                        className="product_name"
-                        placeholder="Product Name"
-                        name="name"
-                        type="text"
-                        value={item.name}
-                        disabled={item.name_disabled}
-                        onChange={(e) =>
-                          item.unit_disabled == false
-                            ? this.handleChange(e, itemKey, index)
-                            : null
-                        }
-                      />
-                    );
-
-                    return (
-                      <div
-                        className="report-details"
-                        key={`${itemKey}.${item.code}.${index}`}
-                      >
-                        <div className="pe-3 product_index">{index + 1}</div>
-
-                        {itemKey !== "additional" ? customItem : defaultItem}
-
-                        {itemKey !== "additional" && (
-                          <input
-                            className="product_code"
-                            placeholder="Product Code"
-                            name="code"
-                            type="text"
-                            value={item.code}
-                            disabled
-                          />
-                        )}
-
-                        <input
-                          className="product_unit"
-                          placeholder="Unit"
-                          name="unit"
-                          type="text"
-                          value={item.unit}
-                          disabled={itemKey == "waste" || item.unit_disabled}
-                          onChange={(e) =>
-                            item.unit_disabled == false
-                              ? this.handleChange(e, itemKey, index)
-                              : ``
-                          }
-                        />
-
-                        <input
-                          className="product_value"
-                          placeholder="Value"
-                          name="value"
-                          type="text"
-                          value={item.value ?? ``}
-                          disabled={item.value_disabled}
-                          onChange={(e) =>
-                            item.value_disabled == false
-                              ? this.handleNumberChange(e, itemKey, index)
-                              : null
-                          }
-                        />
-
-                        <input
-                          className="product_file"
-                          name="file"
-                          type="file"
-                          value={item.file ?? ""}
-                          disabled={item.unit_disabled}
+                          disabled={item.name_disabled}
                           onChange={(e) =>
                             item.unit_disabled == false
                               ? this.handleChange(e, itemKey, index)
                               : null
                           }
                         />
+                      );
 
-                        <a
-                          className="btn btn-danger product_remove"
-                          onClick={(e) => this.handleRemove(e, itemKey, index)}
+                      return (
+                        <div
+                          className="report-details"
+                          key={`${itemKey}.${item.code}.${index}`}
                         >
-                          X
-                        </a>
-                      </div>
-                    );
-                  })}
+                          <div className="pe-3 product_index">{index + 1}</div>
+
+                          {itemKey !== "additional" ? customItem : defaultItem}
+                          {itemKey !== "additional" && (
+                            <input
+                              className="product_code"
+                              placeholder="Product Code"
+                              name="code"
+                              type="text"
+                              value={item.code}
+                              disabled
+                            />
+                          )}
+
+                          <input
+                            className="product_unit"
+                            placeholder="Unit"
+                            name="unit"
+                            type="text"
+                            value={item.unit}
+                            disabled={itemKey == "waste" || item.unit_disabled}
+                            onChange={(e) =>
+                              item.unit_disabled == false
+                                ? this.handleChange(e, itemKey, index)
+                                : ``
+                            }
+                          />
+
+                          <input
+                            className="product_value"
+                            placeholder="Value"
+                            name="value"
+                            type="text"
+                            value={item.value ?? ``}
+                            disabled={item.value_disabled}
+                            onChange={(e) =>
+                              item.value_disabled == false
+                                ? this.handleNumberChange(e, itemKey, index)
+                                : null
+                            }
+                          />
+
+                          <input
+                            className="product_file"
+                            name="file"
+                            type="file"
+                            value={item.file ?? ""}
+                            disabled={item.unit_disabled}
+                            onChange={(e) =>
+                              item.unit_disabled == false
+                                ? this.handleChange(e, itemKey, index)
+                                : null
+                            }
+                          />
+
+                          <a
+                            className="btn btn-danger product_remove"
+                            onClick={(e) =>
+                              this.handleRemove(e, itemKey, index)
+                            }
+                          >
+                            X
+                          </a>
+                        </div>
+                      );
+                    })}
                 </div>
 
                 <a
@@ -466,7 +485,7 @@ class ReportContainer extends Component {
 
             <div className="report-wrapper">
               <textarea
-                rows="8"
+                rows="5"
                 name="notes"
                 className="p-2"
                 value={notes}
@@ -487,6 +506,8 @@ class ReportContainer extends Component {
           <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h4 className="h4">Daily Report</h4>
           </div>
+
+          <Progress active={`report`} />
 
           {!isMounted ? <Loader /> : ContentSection}
         </MainSection>

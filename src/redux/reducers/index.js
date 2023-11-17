@@ -16,6 +16,10 @@ import stockPosition from "./stockPosition";
 import templateSelected from "./templateSelected";
 import formDetailsSelected from "./formDetailsSelected";
 
+import testingForms from "./testingForms";
+import testingOutlet from "./testingOutlet";
+import testingStaffForms from "./testingStaffForms";
+
 const rootReducer = combineReducers({
   auth,
   form,
@@ -32,6 +36,9 @@ const rootReducer = combineReducers({
   stockPosition,
   compareWaste,
   formDetailsSelected,
+  testingForms,
+  testingOutlet,
+  testingStaffForms,
 });
 
 export default rootReducer;

@@ -9,6 +9,7 @@ import MainSection from "../../../sections/Main";
 
 // Components
 import BtnLoader from "../../../components/Loader/btn";
+import Progress from "../../../components/Progress";
 
 // Containers
 import LayoutContainer from "../../Layout";
@@ -45,8 +46,7 @@ class CompareFormsContainer extends Component {
         let newUrl = url.replace("compare", "final");
 
         history.push(newUrl);
-      })
-      .then(() => this.setState({ btnLoading: false }));
+      });
   };
 
   render() {
@@ -101,6 +101,8 @@ class CompareFormsContainer extends Component {
           <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h4 className="h4">Compare Forms</h4>
           </div>
+
+          <Progress active={`compare`} />
 
           {ContentSection}
         </MainSection>

@@ -11,3 +11,7 @@ export * from "./viewMode";
 export * from "./reports";
 export * from "./stockPosition";
 export * from "./waste";
+
+export * from "./testingOutlet";
+export * from "./testingForms";
+export * from "./testingStaffForms";

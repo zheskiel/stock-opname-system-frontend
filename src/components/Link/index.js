@@ -11,19 +11,13 @@ class Link extends Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
-  hasPrefix = () => {
-    let prefix = `/`;
-    let hasPrefix = `${prefix !== "undefined" ? prefix : ""}`;
-
-    return hasPrefix;
-  };
-
   handleClick = (e) => {
     e.preventDefault();
 
-    let url = `${this.props.href}`;
+    let url = `/${this.props.href}`;
+    let formattedUrl = url.replace("//", "/");
 
-    this.props.history.push(url);
+    this.props.history.push(formattedUrl);
   };
 
   render() {
@@ -31,11 +25,11 @@ class Link extends Component {
 
     let newProps = {
       className: props.className,
-      href: `${this.hasPrefix()}${props.href}`,
+      href: `/${props.href}`,
     };
 
     return (
-      <a {...newProps} onClick={this.handleClick}>
+      <a {...newProps} onClick={(e) => this.handleClick(e)}>
         {children}
       </a>
     );

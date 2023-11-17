@@ -77,34 +77,43 @@ class HeaderSection extends Component {
             </div>
 
             {isAuth ? (
-              <div className="user-profile flex-shrink-0 dropdown">
-                <a
-                  href="#"
-                  className="d-block link-body-emphasis text-decoration-none dropdown-toggle"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  <img
-                    src="https://www.gravatar.com/avatar/05b6d7cc7c662bf81e01b39254f88a49?d=identicon"
-                    width="32"
-                    height="32"
-                    className="rounded-circle"
-                  />
-                </a>
-                <ul className="dropdown-menu text-small shadow">
-                  <li style={{ padding: "0.25rem 1rem", whiteSpace: "nowrap" }}>
-                    {user.email}
-                  </li>
-                  <li>
-                    <hr className="dropdown-divider" />
-                  </li>
-                  <li>
-                    <a className="dropdown-item" onClick={this.handleLogout}>
-                      Sign out
-                    </a>
-                  </li>
-                </ul>
-              </div>
+              <>
+                <div className="user-information">
+                  <div>{user.email}</div>
+                  <div>{user.role}</div>
+                </div>
+
+                <div className="user-profile flex-shrink-0 dropdown">
+                  <a
+                    href="#"
+                    className="d-block link-body-emphasis text-decoration-none dropdown-toggle"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <img
+                      src="https://www.gravatar.com/avatar/05b6d7cc7c662bf81e01b39254f88a49?d=identicon"
+                      width="32"
+                      height="32"
+                      className="rounded-circle"
+                    />
+                  </a>
+                  <ul className="dropdown-menu text-small shadow">
+                    <li
+                      style={{ padding: "0.25rem 1rem", whiteSpace: "nowrap" }}
+                    >
+                      {user.email}
+                    </li>
+                    <li>
+                      <hr className="dropdown-divider" />
+                    </li>
+                    <li>
+                      <a className="dropdown-item" onClick={this.handleLogout}>
+                        Sign out
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </>
             ) : (
               <div className="login-temp">
                 <button className="btn btn-info" onClick={this.handleLogin}>

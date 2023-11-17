@@ -23,7 +23,7 @@ import MainSection from "../../sections/Main";
 import { fetchFormDetailsData } from "../../redux/actions";
 
 // Helpers
-import { buildItemsObj } from "../../utils/helpers";
+import { buildItemsObj, buildLinkUrl } from "../../utils/helpers";
 
 // Styling
 import "../../assets/scss/templates.scss";
@@ -90,7 +90,7 @@ class FormContainer extends Component {
 
         fetchFormDetailsData(params);
 
-        window.scrollTo(0, 0);
+        // window.scrollTo(0, 0);
       });
   };
 
@@ -143,31 +143,37 @@ class FormContainer extends Component {
       );
     };
 
+    let urlName = `form.edit`;
+    let { linkParams, eligible } = buildLinkUrl(urlName, [
+      managerId,
+      staffId,
+      data.template_id,
+    ]);
+
+    let contentLoader = (
+      <div className="table-responsive small">
+        <Loader />
+      </div>
+    );
+
     return (
       <LayoutContainer>
         <MainSection>
           <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h4 className="h4">Form Details - {data?.staff.name}</h4>
 
-            <div className="btn-toolbar mb-2 mb-md-0">
-              <div className="btn-group">
-                <Link
-                  className="btn btn-warning me-2"
-                  href={`/form/${managerId}/${staffId}/details/${data?.template_id}/edit`}
-                >
-                  Edit
-                </Link>
+            {eligible && (
+              <div className="btn-toolbar mb-2 mb-md-0">
+                <div className="btn-group">
+                  <Link className="btn btn-warning me-2" href={linkParams.url}>
+                    Edit
+                  </Link>
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
-          {!isMounted ? (
-            <div className="table-responsive small">
-              <Loader />
-            </div>
-          ) : (
-            <ContentSection />
-          )}
+          {!isMounted ? contentLoader : <ContentSection />}
         </MainSection>
       </LayoutContainer>
     );

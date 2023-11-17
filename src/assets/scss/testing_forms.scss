@@ -1,0 +1,102 @@
+.testing-container {
+  min-width: 1024px;
+}
+.template-view-section {
+  .pagination-container {
+    &.no-pagination {
+      margin: 15px 0px;
+      justify-content: flex-end !important;
+    }
+  }
+}
+.card-containers {
+  position: relative;
+  white-space: nowrap;
+  overflow-x: auto;
+  padding-bottom: 10px;
+
+  .card-wrapper {
+    max-width: 600px;
+    min-width: 600px;
+    display: inline-block;
+    white-space: normal;
+    &:not(:last-child) {
+      margin-right: 15px;
+    }
+
+    .card-title {
+      margin-bottom: 10px !important;
+    }
+    .card {
+      border-radius: 0;
+
+      .card-body {
+        min-height: 565px;
+
+        .table-container {
+          min-height: 497px;
+          &.has-pagination {
+            min-height: 497px;
+          }
+          table {
+            tr {
+              height: 30px;
+              vertical-align: middle;
+              td {
+                padding-top: 0px;
+                padding-bottom: 0px;
+              }
+            }
+            thead {
+              th {
+                &.product-no {
+                  width: 30px;
+                  min-width: 30px;
+                  max-width: 30px;
+                }
+                &.product-code {
+                  width: 120px;
+                  min-width: 120px;
+                  max-width: 120px;
+                }
+                &.product-value,
+                &.product-unit,
+                &.product-sku {
+                  width: 55px;
+                  min-width: 55px;
+                  max-width: 55px;
+                }
+                &.product-name {
+                  width: 250px;
+                  min-width: 250px;
+                  max-width: 250px;
+                }
+              }
+            }
+            tbody {
+              td {
+                &.product-value {
+                  input {
+                    text-align: right;
+                    width: 100%;
+                  }
+                }
+                &.product-name {
+                  padding: 0.25rem 0px !important;
+                  .product-name-division {
+                    width: 250px;
+                    min-width: 250px;
+                    max-width: 250px;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

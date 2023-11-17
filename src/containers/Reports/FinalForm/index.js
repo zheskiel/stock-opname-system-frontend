@@ -6,6 +6,7 @@ import { compose } from "redux";
 
 // Components
 import Loader from "../../../components/Loader";
+import Progress from "../../../components/Progress";
 
 // Sections
 import MainSection from "../../../sections/Main";
@@ -34,9 +35,21 @@ class FinalForm extends Component {
   }
 
   componentDidMount() {
+    let isMounted = true; // Track the mounted status
+
     new Promise((resolve) => resolve())
       .then(() => this.handleFetchData())
-      .then(() => setTimeout(() => this.setState({ isMounted: true }), 500));
+      .then(() => {
+        if (isMounted) {
+          // Check if the component is still mounted
+          setTimeout(() => this.setState({ isMounted: true }), 500);
+        }
+      });
+
+    // Set isMounted to false when the component is unmounted
+    return () => {
+      isMounted = false;
+    };
   }
 
   handleFetchData = (page = 1) => {
@@ -48,7 +61,7 @@ class FinalForm extends Component {
 
       await fetchFinalFormsData(parameters);
 
-      window.scrollTo(0, 0);
+      // window.scrollTo(0, 0);
     });
   };
 
@@ -179,6 +192,8 @@ class FinalForm extends Component {
           <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h4 className="h4">Final Form</h4>
           </div>
+
+          <Progress active={`final`} />
 
           <>{!isMounted && !data ? <Loader /> : <ContentItems />}</>
         </MainSection>

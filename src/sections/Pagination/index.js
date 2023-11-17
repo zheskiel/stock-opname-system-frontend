@@ -36,16 +36,13 @@ class PaginationSection extends Component {
       );
     };
 
-    const PrevBtn = () => {
-      const isEligible = currentPage > firstPage;
+    const NavButton = ({ type }) => {
+      const isEligible =
+        type === "prev" ? currentPage > firstPage : currentPage < lastPage;
 
-      return processBtn("prev", isEligible, pageNumber - 1);
-    };
+      const page = type === "prev" ? pageNumber - 1 : pageNumber + 1;
 
-    const NextBtn = () => {
-      const isEligible = currentPage < lastPage;
-
-      return processBtn("next", isEligible, pageNumber + 1);
+      return processBtn(type, isEligible, page);
     };
 
     const PageBtn = () => {
@@ -57,7 +54,7 @@ class PaginationSection extends Component {
           <li className="page-item" key={index}>
             <a
               className={`${anchorClass}${activeClass}`}
-              onClick={() => handlePagination(page)}
+              onClick={() => (!isNaN(page) ? handlePagination(page) : null)}
             >
               {page}
             </a>
@@ -70,9 +67,11 @@ class PaginationSection extends Component {
       <div className="pagination-section">
         <nav aria-label="Page navigation">
           <ul className="pagination">
-            <PrevBtn />
+            <NavButton type="prev" />
+
             <PageBtn />
-            <NextBtn />
+
+            <NavButton type="next" />
           </ul>
         </nav>
       </div>

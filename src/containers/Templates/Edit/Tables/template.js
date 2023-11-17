@@ -114,7 +114,7 @@ class TemplateTable extends Component {
 
     fetchTemplateViewData(parameters);
 
-    window.scrollTo(0, 0);
+    // window.scrollTo(0, 0);
   };
 
   render() {

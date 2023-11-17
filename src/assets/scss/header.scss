@@ -31,6 +31,20 @@
     right: 10px;
   }
 
+  .user-information {
+    position: absolute;
+    top: -5px;
+    right: calc(5px + 55px + 75px);
+
+    color: #fff;
+  }
+
+  @media (min-width: 768px) {
+    .user-information {
+      right: calc(5px + 55px);
+    }
+  }
+
   .user-profile {
     position: absolute;
     top: 3px;

@@ -20,9 +20,18 @@ class StockPositionReport extends Component {
   }
 
   componentDidMount() {
+    let isMounted = true; // Track the mounted status
+
     new Promise((resolve) => resolve()).then(() => {
-      setTimeout(() => this.setState({ isMounted: true }), 500);
+      isMounted
+        ? setTimeout(() => this.setState({ isMounted: true }), 500)
+        : null;
     });
+
+    // Set isMounted to false when the component is unmounted
+    return () => {
+      isMounted = false;
+    };
   }
 
   render() {

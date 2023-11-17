@@ -51,7 +51,7 @@ class SidebarSection extends Component {
         <li className="nav-item">
           <Link
             className="nav-link d-flex align-items-center gap-2"
-            href={`/${route.url}`}
+            href={`${route.url}`}
           >
             {route.content}
           </Link>

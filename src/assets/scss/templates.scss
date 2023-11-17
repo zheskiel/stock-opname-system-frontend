@@ -16,8 +16,14 @@
   min-width: 1000px;
 }
 
+.template-create-container {
+  .table-container {
+    min-height: calc(452px + 1rem);
+  }
+}
+
 .table-container {
-  min-height: calc(600px + 1rem);
+  min-height: calc(448px + 1rem);
   // max-height: calc(600px + 1rem);
   // overflow-y: auto;
 }
@@ -80,6 +86,7 @@
   position: relative;
   .unit-actions {
     position: absolute;
+    top: 15px;
     right: 0;
   }
 }
@@ -90,5 +97,22 @@
     tr {
       vertical-align: top;
     }
+  }
+}
+
+.content-manager-section {
+  border: 1px solid #ddd;
+  padding: 10px;
+  padding-bottom: 0px;
+
+  &:not(:last-child) {
+    margin-bottom: 10px;
+  }
+
+  .content-manager-per-supervisor {
+    border: 1px solid #ddd;
+    padding: 10px;
+    padding-bottom: 0px;
+    margin-bottom: 10px;
   }
 }

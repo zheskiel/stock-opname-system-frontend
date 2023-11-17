@@ -21,8 +21,20 @@
   .final-form-container {
     width: 100%;
 
+    .final-form-body {
+      .product_index {
+        font-size: 12px;
+        font-weight: 700;
+      }
+    }
+
     .product_name {
       width: 30%;
+
+      input {
+        font-size: 12px;
+        font-weight: 700;
+      }
     }
 
     .product_stock_position_value,
@@ -35,6 +47,9 @@
       height: 32px;
 
       input {
+        font-size: 12px;
+        font-weight: 700;
+
         &:hover {
           cursor: not-allowed;
         }

@@ -17,6 +17,9 @@ import MainSection from "../../sections/Main";
 // Actions
 import { fetchFormsData } from "../../redux/actions";
 
+// Helpers
+import { buildLinkUrl } from "../../utils/helpers";
+
 // Styling
 import "../../assets/scss/templates.scss";
 
@@ -49,7 +52,7 @@ class FormsContainer extends Component {
 
     fetchFormsData(params);
 
-    window.scrollTo(0, 0);
+    // window.scrollTo(0, 0);
   };
 
   render() {
@@ -81,21 +84,29 @@ class FormsContainer extends Component {
               <tbody>
                 {staff &&
                   Object.values(staff).map((item, index) => {
+                    let { linkParams, eligible } = buildLinkUrl(
+                      "form.details",
+                      [item.manager_id, item.id]
+                    );
+
                     return (
                       <tr key={index}>
                         <td>{index + 1}</td>
                         <td>{item.name}</td>
-                        <td
-                          className="unit-actions"
-                          style={{ verticalAlign: "middle" }}
-                        >
-                          <Link
-                            className="btn btn-warning"
-                            href={`form/${item.manager_id}/${item.id}/details`}
+
+                        {eligible && (
+                          <td
+                            className="unit-actions"
+                            style={{ verticalAlign: "middle" }}
                           >
-                            View Form
-                          </Link>
-                        </td>
+                            <Link
+                              className="btn btn-warning"
+                              href={linkParams.url}
+                            >
+                              View Form
+                            </Link>
+                          </td>
+                        )}
                       </tr>
                     );
                   })}
@@ -106,21 +117,24 @@ class FormsContainer extends Component {
       );
     };
 
+    let { linkParams, eligible } = buildLinkUrl("form.create");
+
     return (
       <LayoutContainer>
         <MainSection>
           <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h4 className="h4">Forms</h4>
 
-            <div className="btn-toolbar mb-2 mb-md-0">
-              <div className="btn-group">
-                <Link className="btn btn-warning me-2" href={`/form/create`}>
-                  Create
-                </Link>
+            {eligible && (
+              <div className="btn-toolbar mb-2 mb-md-0">
+                <div className="btn-group">
+                  <Link className="btn btn-warning me-2" href={linkParams.url}>
+                    Create
+                  </Link>
+                </div>
               </div>
-            </div>
+            )}
           </div>
-
           <ContentSection />
         </MainSection>
       </LayoutContainer>

@@ -55,7 +55,7 @@ class DetailTable extends Component {
 
     fetchFormDetailsData(params);
 
-    window.scrollTo(0, 0);
+    // window.scrollTo(0, 0);
   };
 
   handleRemoveAllData = async () => {

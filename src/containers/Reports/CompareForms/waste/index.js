@@ -35,6 +35,8 @@ class WasteReport extends Component {
   }
 
   componentDidMount() {
+    let isMounted = true; // Track the mounted status
+
     new Promise((resolve) => resolve())
       .then(() => this.handleFetchData())
       .then(() => {
@@ -49,7 +51,16 @@ class WasteReport extends Component {
         }, 500);
       })
       .then(() => setTimeout(() => this.handlePagination(), 500))
-      .then(() => setTimeout(() => this.setState({ isMounted: true }), 500));
+      .then(() => {
+        isMounted
+          ? setTimeout(() => this.setState({ isMounted: true }), 500)
+          : null;
+      });
+
+    // Set isMounted to false when the component is unmounted
+    return () => {
+      isMounted = false;
+    };
   }
 
   handlePagination = (page = 1) => {
@@ -76,7 +87,7 @@ class WasteReport extends Component {
 
       await fetchCompareWaste(parameters);
 
-      window.scrollTo(0, 0);
+      // window.scrollTo(0, 0);
     });
   };
 
