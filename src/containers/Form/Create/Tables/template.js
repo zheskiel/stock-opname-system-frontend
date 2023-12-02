@@ -15,28 +15,16 @@ import PaginationSection from "../../../../sections/Pagination";
 // Components
 import Loader from "../../../../components/Loader";
 
-// Actions
-import {
-  fetchTemplateViewData,
-  fetchFormDetailsSelectedData,
-  createFormDetail,
-} from "../../../../redux/actions";
-
 // Helpers
 import {
-  buildItemsObj,
   getEntity,
   DefaultItem,
   CustomItem,
+  isAdministrator,
 } from "../../../../utils/helpers";
 
 const initialState = {
   isMounted: false,
-  items: {},
-  sort: "id",
-  isDesc: true,
-  order: "desc",
-  orderList: ["asc", "desc"],
 };
 
 class TemplateTable extends Component {
@@ -44,117 +32,43 @@ class TemplateTable extends Component {
     super(props);
 
     this.state = initialState;
-
-    this.handleClick = this.handleClick.bind(this);
-    this.handleFetchData = this.handleFetchData.bind(this);
-    this.handleFetchSelectedData = this.handleFetchSelectedData.bind(this);
   }
 
   componentDidMount() {
-    new Promise((resolve) => resolve())
-      .then(() => this.setState({ items: buildItemsObj(arrs) }))
-      .then(() => this.handleFetchData())
-      .then(() => {
-        setTimeout(() => this.setState({ isMounted: true }), 500);
-      });
+    setTimeout(() => this.setState({ isMounted: true }), 500);
   }
-
-  handleClick = async (item, selectedUnit) => {
-    return new Promise((resolve) => resolve()).then(() => {
-      const { createFormDetail, match } = this.props;
-      const { params } = match;
-
-      let parameters = {
-        ...params,
-        item,
-        selectedUnit,
-      };
-
-      createFormDetail(parameters);
-    });
-  };
-
-  handleFetchData = async (
-    page = 1,
-    sort = "id",
-    order = "desc",
-    isDesc = true
-  ) => {
-    return new Promise((resolve) => resolve())
-      .then(() => {
-        let { items } = this.state;
-
-        this.setState({ sort, order, isDesc });
-        this.setState({
-          items: {
-            ...items,
-            [sort]: {
-              sort,
-              order,
-              isDesc,
-            },
-          },
-        });
-      })
-      .then(() => {
-        let { items } = this.state;
-        let { sort: sortState, order: orderState } = items[sort];
-
-        const { fetchTemplateViewData, match } = this.props;
-        // const { params } = match;
-        // const { templateId } = params;
-
-        let parameters = {
-          sort: sortState,
-          order: orderState,
-          templateId: 1,
-          page,
-        };
-
-        fetchTemplateViewData(parameters);
-
-        // window.scrollTo(0, 0);
-      });
-  };
-
-  handlePagination = async (page) => {
-    return new Promise((resolve) => resolve()).then(() => {
-      let { sort, order, isDesc } = this.state;
-
-      this.handleFetchData(page, sort, order, isDesc);
-    });
-  };
-
-  handleFetchSelectedData = () => {
-    let { fetchFormDetailsSelectedData, match } = this.props;
-    let { params } = match;
-
-    let parameters = {
-      ...params,
-    };
-
-    fetchFormDetailsSelectedData(parameters);
-  };
 
   render() {
     const { isMounted } = this.state;
-    const { templatesDetails, selectedItems: selected } = this.props;
+    const {
+      handlePagination,
+      templatesDetails,
+      selectedItems: selected,
+    } = this.props;
 
     const { total, current_page, per_page, last_page } = templatesDetails;
     const newProps = {
       totalCount: total,
       pageNumber: current_page,
       pageSize: per_page,
-      handlePagination: this.handlePagination,
+      handlePagination: handlePagination,
     };
 
     const { data } = templatesDetails;
+
+    const LoaderDom = () => {
+      return (
+        <div className="template-edit-section col-6">
+          <Loader />
+        </div>
+      );
+    };
 
     const hasPagination = (lastPage) => {
       return lastPage > 1 ? <PaginationSection {...newProps} /> : null;
     };
 
-    if (!data) return <></>;
+    if (!data) return <LoaderDom />;
 
     const { details: templateItems } = data;
 
@@ -278,7 +192,7 @@ class TemplateTable extends Component {
               <thead>
                 <tr>
                   {arrs.map((arr) => {
-                    let { items } = this.state;
+                    let { items } = this.props;
                     let { isDesc } = items[arr.key];
                     let newIsDesc = !isDesc;
 
@@ -288,14 +202,14 @@ class TemplateTable extends Component {
                         width={arr.width}
                         key={arr.title}
                         onClick={() => {
-                          let { items, orderList } = this.state;
+                          let { items, orderList } = this.props;
                           let { sort, isDesc } = items[arr.key];
                           let newIsDesc = !isDesc;
                           let newOrder = orderList[isDesc ? 0 : 1];
 
                           arr.key !== "actions" &&
                             arr.key !== "units" &&
-                            this.handleFetchData(
+                            this.props.handleFetchTemplatedata(
                               current_page,
                               sort,
                               newOrder,
@@ -324,18 +238,55 @@ class TemplateTable extends Component {
     };
 
     const TemplateTable = () => {
-      if (!data || !isMounted) {
-        return (
-          <div className="template-edit-section col-6">
-            <Loader />
-          </div>
-        );
-      }
+      let { selectedManager, managerItems } = this.props;
+      let managerOptions = (
+        <div className="col-6 pe-2">
+          <div>Manager : </div>
+          <select
+            value={selectedManager}
+            onChange={(e) => this.props.handleBeforeManagerChange(e)}
+          >
+            {managerItems.map((item) => {
+              return (
+                <option key={item.id} value={item.id}>
+                  {item.name}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+      );
+
+      let { selectedTemplate, templateItems } = this.props;
+      let templateOptions = (
+        <div className="col-6">
+          <div>Template : </div>
+          <select
+            value={selectedTemplate}
+            onChange={(e) => this.props.handleBeforeTemplateChange(e)}
+          >
+            {templateItems.map((item) => {
+              return (
+                <option key={item.id} value={item.id}>
+                  {item.title}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+      );
 
       return (
-        <div className="template-edit-section col-6">
-          <div className="template-header-section">
-            <h6 className="h6">{data.title}'s Template</h6>
+        <div className="template-edit-section form-create-section col-6">
+          <div className="template-upper-section">
+            <div className="template-header-section">
+              <h6 className="h6">{data.title}'s Template</h6>
+            </div>
+
+            <div className="d-flex justify-content-start mb-3">
+              {isAdministrator() && managerOptions}
+              {templateOptions}
+            </div>
           </div>
 
           <ContentSection />
@@ -343,35 +294,21 @@ class TemplateTable extends Component {
       );
     };
 
+    if (!data || !isMounted) {
+      return <LoaderDom />;
+    }
+
     return <TemplateTable />;
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    formDetails: state.form.data,
-    templatesDetails: state.template.data,
-    selected: state.formDetailsSelected.data,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => ({
-  fetchTemplateViewData: (params) => {
-    return new Promise((resolve) => {
-      dispatch(fetchTemplateViewData(params)).then(() => resolve());
-    });
-  },
-  fetchFormDetailsSelectedData: (params) => {
-    return new Promise((resolve) => {
-      dispatch(fetchFormDetailsSelectedData(params)).then(() => resolve());
-    });
-  },
-  createFormDetail: (params) => {
-    return new Promise((resolve) => {
-      dispatch(createFormDetail(params)).then(() => resolve());
-    });
-  },
+const mapStateToProps = (state) => ({
+  auth: state.auth.data,
+  formDetails: state.form.data,
+  templatesDetails: state.template.data,
+  selected: state.formDetailsSelected.data,
 });
+const mapDispatchToProps = (dispatch) => ({});
 
 export default compose(
   withRouter,

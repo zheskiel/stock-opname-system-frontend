@@ -4,6 +4,8 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { compose } from "redux";
 
+import { FaRegSun, FaSignOutAlt } from "react-icons/fa";
+
 // Actions
 import { AuthLogout } from "../../redux/actions";
 
@@ -53,7 +55,8 @@ class SidebarSection extends Component {
             className="nav-link d-flex align-items-center gap-2"
             href={`${route.url}`}
           >
-            {route.content}
+            <div className="nav-item-icon">{route.icon}</div>
+            <div className="nav-item-content">{route.content}</div>
           </Link>
         </li>
       );
@@ -72,7 +75,8 @@ class SidebarSection extends Component {
               aria-controls={`${route.name}-collapse`}
               aria-expanded="false"
             >
-              {route.content}
+              <div className="nav-item-icon">{route.icon}</div>
+              <div className="nav-item-content">{route.content}</div>
             </a>
 
             {items && (
@@ -101,12 +105,9 @@ class SidebarSection extends Component {
           className="offcanvas-md offcanvas-end"
           tabIndex="-1"
           id="sidebarMenu"
-          aria-labelledby="sidebarMenuLabel"
         >
           <div className="offcanvas-header">
-            <h5 className="offcanvas-title" id="sidebarMenuLabel">
-              Company name
-            </h5>
+            <h5 className="offcanvas-title">Zheskiel Labs</h5>
 
             <button
               type="button"
@@ -130,7 +131,10 @@ class SidebarSection extends Component {
                   className="nav-link d-flex align-items-center gap-2"
                   href="#"
                 >
-                  Settings
+                  <div className="nav-item-icon">
+                    <FaRegSun />
+                  </div>
+                  <div className="nav-item-content">Settings</div>
                 </a>
               </li>
               <li className="nav-item">
@@ -138,7 +142,10 @@ class SidebarSection extends Component {
                   className="nav-link d-flex align-items-center gap-2"
                   onClick={this.handleLogout}
                 >
-                  Sign out
+                  <div className="nav-item-icon">
+                    <FaSignOutAlt />
+                  </div>
+                  <div className="nav-item-content">Sign out</div>
                 </a>
               </li>
             </ul>

@@ -19,7 +19,12 @@ import MainSection from "../../sections/Main";
 import { fetchTemplatesData, resetTemplatesData } from "../../redux/actions";
 
 // Helpers
-import { checkUrlIsEligible, buildLinkUrl } from "../../utils/helpers";
+import {
+  checkUrlIsEligible,
+  buildLinkUrl,
+  getUserRole,
+  isManagerial,
+} from "../../utils/helpers";
 
 // Styling
 import "../../assets/scss/templates.scss";
@@ -86,6 +91,46 @@ class TemplatesContainer extends Component {
       return lastPage > 1 ? <PaginationSection {...newProps} /> : null;
     };
 
+    const AccordionDoms = ({ svItems }) => {
+      return (
+        <div className="outlet-section">
+          {Object.values(svItems).map((item, i) => {
+            let { outlet, items } = item;
+            let svItem = items[0].supervisor;
+            let selectedOutlet = outlet[0];
+
+            return (
+              <React.Fragment key={i}>
+                <h6>Outlet - {selectedOutlet.name}</h6>
+
+                <h2 className="accordion-header">
+                  <button
+                    className="accordion-button"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target={`#${`collapse-${svItem.slug}`}`}
+                    aria-expanded="true"
+                    aria-controls={`collapse-${svItem.slug}`}
+                  >
+                    {svItem.name}
+                  </button>
+                </h2>
+
+                <div
+                  id={`collapse-${svItem.slug}`}
+                  className="accordion-collapse collapse show"
+                >
+                  <div className="accordion-body">
+                    <Content items={items} />
+                  </div>
+                </div>
+              </React.Fragment>
+            );
+          })}
+        </div>
+      );
+    };
+
     const ContentPerManager = () => {
       return Object.values(listItems).map((listItem, index) => {
         const { manager, newItems } = listItem;
@@ -95,17 +140,15 @@ class TemplatesContainer extends Component {
             <h3>{manager.name}</h3>
 
             <div className="content-manager-section">
-              {Object.values(newItems).map((items) => {
-                return (
-                  <div className="content-manager-per-supervisor">
-                    <h6 className="card-title mb-2">
-                      <div>{items[0].supervisor.name}</div>
-                    </h6>
+              <div className="accordion mb-3">
+                <div className="accordion-item">
+                  {Object.values(newItems).map((items, x) => {
+                    let svItems = items;
 
-                    <Content items={items} />
-                  </div>
-                );
-              })}
+                    return <AccordionDoms key={x} svItems={svItems} />;
+                  })}
+                </div>
+              </div>
             </div>
           </React.Fragment>
         );
@@ -113,27 +156,35 @@ class TemplatesContainer extends Component {
     };
 
     const ContentDefault = () => {
-      return Object.values(listItems).map((listItem, index) => {
-        const { newItems } = listItem;
+      return listItems.length > 0 ? (
+        <>
+          {Object.values(listItems).map((listItem, index) => {
+            const { newItems } = listItem;
+            const newItemsValue = Object.values(newItems);
 
-        return (
-          <React.Fragment key={index}>
-            <div className="content-manager-section">
-              {Object.values(newItems).map((items) => {
-                return (
-                  <>
-                    <h6 className="card-title mb-2">
-                      <div>{items[0].supervisor.name}</div>
-                    </h6>
+            return (
+              <React.Fragment key={index}>
+                <div className="accordion mb-3">
+                  <div className="accordion-item">
+                    {Object.values(newItemsValue).map((items, x) => {
+                      let svItems = items;
 
-                    <Content items={items} />
-                  </>
-                );
-              })}
-            </div>
-          </React.Fragment>
-        );
-      });
+                      return <AccordionDoms key={x} svItems={svItems} />;
+                    })}
+                  </div>
+                </div>
+              </React.Fragment>
+            );
+          })}
+        </>
+      ) : (
+        <div className="d-flex flex-row justify-content-center align-items-center text-center">
+          <div>
+            <p>No Templates Created</p>
+            <p>{isManagerial() ? "Create Now" : "Ask manager to create one"}</p>
+          </div>
+        </div>
+      );
     };
 
     const Content = ({ items }) => {
@@ -155,16 +206,16 @@ class TemplatesContainer extends Component {
                     <div className="card">
                       <div className="card-body">
                         <div>
-                          <h6 className="card-title">
-                            <div>{item.title}</div>
+                          <h6 className="card-title" title={item.title}>
+                            {item.title}
                           </h6>
                         </div>
 
-                        <div>
+                        {/* <div>
                           <h6 className="card-title">
                             <div>{item.supervisor.name}</div>
                           </h6>
-                        </div>
+                        </div> */}
 
                         <p className="templates-text card-text">
                           Status: Published

@@ -1,3 +1,13 @@
+import React from "react";
+import {
+  FaHome,
+  FaRegCopy,
+  FaDatabase,
+  FaRegFileAlt,
+  FaNetworkWired,
+  FaCalendarCheck,
+} from "react-icons/fa";
+
 export const config = {
   pageSize: 5,
 };
@@ -7,11 +17,13 @@ export const sideBarRoutes = [
     url: "dashboard",
     name: "dashboard",
     content: "Dashboard",
+    icon: <FaHome />,
   },
   {
     url: "dashboard",
     name: "dashboard",
     content: "Stock Opname",
+    icon: <FaCalendarCheck />,
     children: [
       {
         url: "dashboard",
@@ -29,11 +41,13 @@ export const sideBarRoutes = [
     url: "master",
     name: "master",
     content: "Master Data",
+    icon: <FaDatabase />,
   },
   {
     url: "templates",
     name: "templates",
     content: "Templates",
+    icon: <FaRegCopy />,
     children: [
       {
         url: "templates",
@@ -51,6 +65,7 @@ export const sideBarRoutes = [
     url: "forms",
     name: "forms",
     content: "Forms",
+    icon: <FaRegFileAlt />,
     children: [
       {
         url: "forms",
@@ -68,5 +83,6 @@ export const sideBarRoutes = [
     url: "hierarchy",
     name: "hierarchy",
     content: "Hierarchy",
+    icon: <FaNetworkWired />,
   },
 ];

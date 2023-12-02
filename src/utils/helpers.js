@@ -4,6 +4,36 @@ import store from "../store";
 
 import { PrivateRoutes } from "../routes";
 
+export const getUserRole = () => {
+  const auth = store.getState().auth;
+
+  return auth.data.user?.role;
+};
+
+export const isAdministrator = () => {
+  let role = getUserRole();
+
+  return role === "superadmin" || role === "admin";
+};
+
+export const isManagerial = () => {
+  let role = getUserRole();
+
+  return isAdministrator() || role === "manager";
+};
+
+export const isManager = () => {
+  let role = getUserRole();
+
+  return role === "manager";
+};
+
+export const isSupervisor = () => {
+  let role = getUserRole();
+
+  return role === "supervisor";
+};
+
 export const isLogin = () => {
   return store.getState().auth.isAuth;
 };
@@ -273,11 +303,13 @@ export const debounce = (func, interval) => {
 };
 
 export const formatUrl = (target, parameters) => {
-  var args = Array.prototype.slice.call(parameters, 0);
+  let args = Array.prototype.slice.call(parameters, 0);
 
-  return target.replace(/{(\d+)}/g, function (match, number) {
+  let link = target.replace(/{(\d+)}/g, function (match, number) {
     return typeof args[number] != "undefined" ? args[number] : match;
   });
+
+  return link;
 };
 
 export const calculateWindowSize = () => {

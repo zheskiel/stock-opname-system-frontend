@@ -11,13 +11,21 @@ class Link extends Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
+  getFormattedUrl = () => {
+    let string = `${this.props.href}`;
+    let prefix = this.hasPrefix(string) ? "" : "/";
+
+    return `${prefix}${string}`.replace("//", "/");
+  };
+
+  hasPrefix = (string) => {
+    return string.startsWith("/");
+  };
+
   handleClick = (e) => {
     e.preventDefault();
 
-    let url = `/${this.props.href}`;
-    let formattedUrl = url.replace("//", "/");
-
-    this.props.history.push(formattedUrl);
+    this.props.history.push(this.getFormattedUrl());
   };
 
   render() {
@@ -25,7 +33,7 @@ class Link extends Component {
 
     let newProps = {
       className: props.className,
-      href: `/${props.href}`,
+      href: this.getFormattedUrl(),
     };
 
     return (

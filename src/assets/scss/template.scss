@@ -1,7 +1,13 @@
 .template-header-section {
+  &.master-section {
+    min-height: 113px !important;
+  }
   .template-item {
+    span {
+      text-wrap: nowrap;
+    }
     select {
-      max-width: 167px;
+      width: 100%;
     }
   }
 }

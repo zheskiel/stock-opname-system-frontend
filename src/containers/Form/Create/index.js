@@ -12,12 +12,41 @@ import TemplateTable from "../Create/Tables/template";
 import DetailTable from "./Tables/detail";
 import LayoutContainer from "../../Layout";
 
+// Apis
+import {
+  fetchManagersApi,
+  fetchOutletByManagerApi,
+  fetchSupervisorByManagerApi,
+  fetchTemplatesByManagerApi,
+} from "../../../apis";
+
+// Actions
+import {
+  fetchTemplateViewData,
+  fetchFormDetailsSelectedData,
+  createFormDetail,
+} from "../../../redux/actions";
+
+// Array Data
+import { typeOneArrs as arrs } from "../../../constants/arrays";
+
 // Styling
 import "../../../assets/scss/templates.scss";
 
-import { sortData } from "../../../utils/helpers";
+import {
+  sortData,
+  buildItemsObj,
+  isAdministrator,
+  isManager,
+  isSupervisor,
+} from "../../../utils/helpers";
 
 const initialState = {
+  items: {},
+  sort: "id",
+  isDesc: true,
+  order: "desc",
+  orderList: ["asc", "desc"],
   detailArrs: [],
   detailItems: [],
   detailFitered: [],
@@ -25,6 +54,14 @@ const initialState = {
   units: [],
   pageNumber: 1,
   pageSize: 15,
+  managerItems: [],
+  outletItems: [],
+  supervisorItems: [],
+  templateItems: [],
+  selectedManager: undefined,
+  selectedOutlet: undefined,
+  selectedSupervisor: undefined,
+  selectedTemplate: undefined,
 };
 
 let order = 0;
@@ -39,11 +76,220 @@ class FormCreate extends Component {
     this.handleRemoveData = this.handleRemoveData.bind(this);
     this.handlePagination = this.handlePagination.bind(this);
     this.handleRemoveAllData = this.handleRemoveAllData.bind(this);
+
+    this.handleFetchOutlet = this.handleFetchOutlet.bind(this);
+    this.handleFetchManager = this.handleFetchManager.bind(this);
+    this.handleFetchTemplate = this.handleFetchTemplate.bind(this);
+    this.handleFetchSupervisor = this.handleFetchSupervisor.bind(this);
+
+    this.handleOutletChange = this.handleOutletChange.bind(this);
+    this.handleManagerChange = this.handleManagerChange.bind(this);
+    this.handleSupervisorChange = this.handleSupervisorChange.bind(this);
+
+    this.handleFetchTemplateData = this.handleFetchTemplateData.bind(this);
+    this.handleTemplatePagination = this.handleTemplatePagination.bind(this);
+    this.handleBeforeManagerChange = this.handleBeforeManagerChange.bind(this);
+    this.handleBeforeTemplateChange =
+      this.handleBeforeTemplateChange.bind(this);
   }
 
   componentDidMount() {
-    this.handlePagination();
+    new Promise((resolve) => resolve())
+      .then(() => this.setState({ items: buildItemsObj(arrs) }))
+      .then(() => {
+        const { auth } = this.props;
+        const { user } = auth;
+
+        if (isAdministrator()) {
+          this.handleFetchManager();
+        } else if (isManager()) {
+          this.setState({ selectedManager: user.id }, () => {
+            this.handleFetchOutlet(user.id);
+            this.handleFetchTemplate(user.id);
+          });
+        } else if (isSupervisor()) {
+          this.setState({ selectedManager: user.manager_id }, () => {
+            this.handleFetchOutlet(user.manager_id);
+            this.handleFetchTemplate(user.manager_id);
+          });
+        }
+      })
+      .then(() => this.handlePagination())
+      .then(() => setTimeout(() => this.handleFetchTemplateData(), 1000));
   }
+
+  handleBeforeTemplateChange = async (e) => {
+    let target = e.target;
+    let value = target.value;
+
+    return new Promise((resolve) => resolve())
+      .then(() => this.setState({ selectedTemplate: value }))
+      .then(() => this.handleRemoveAllData())
+      .then(() => this.handleFetchTemplateData());
+  };
+  handleFetchTemplateData = async (
+    page = 1,
+    sort = "id",
+    order = "desc",
+    isDesc = true
+  ) => {
+    return new Promise((resolve) => resolve())
+      .then(() => {
+        let { items } = this.state;
+        let params = { sort, order, isDesc };
+
+        this.setState(params);
+        this.setState({
+          items: {
+            ...items,
+            [sort]: params,
+          },
+        });
+      })
+      .then(() => {
+        let { items, selectedTemplate } = this.state;
+        let { sort: sortState, order: orderState } = items[sort];
+
+        const { fetchTemplateViewData } = this.props;
+
+        let parameters = {
+          sort: sortState,
+          order: orderState,
+          templateId: selectedTemplate ?? undefined,
+          page,
+        };
+
+        fetchTemplateViewData(parameters);
+
+        // window.scrollTo(0, 0);
+      });
+  };
+
+  handleTemplatePagination = async (page) => {
+    return new Promise((resolve) => resolve()).then(() => {
+      let { sort, order, isDesc } = this.state;
+
+      this.handleFetchTemplateData(page, sort, order, isDesc);
+    });
+  };
+
+  handleFetchManager = () => {
+    fetchManagersApi()
+      .then((response) => response)
+      .then((result) => {
+        this.setState(
+          {
+            managerItems: result.data,
+          },
+          () => {
+            let managerItem = result.data[0];
+
+            if (managerItem) {
+              let managerId = managerItem.id;
+              this.setState({ selectedManager: managerId }, () => {
+                this.handleFetchOutlet(managerId);
+                this.handleFetchTemplate(managerId);
+              });
+            }
+          }
+        );
+      });
+  };
+
+  handleBeforeManagerChange = async (e) => {
+    let target = e.target;
+    let value = target.value;
+
+    return new Promise((resolve) => resolve())
+      .then(() => this.handleManagerChange(value))
+      .then(() => setTimeout(() => this.handleFetchTemplateData(), 500));
+  };
+
+  handleManagerChange = (managerId) => {
+    new Promise((resolve) => resolve()).then(() => {
+      this.setState({ selectedManager: managerId }, () => {
+        this.handleFetchOutlet(managerId);
+        this.handleFetchTemplate(managerId);
+      });
+    });
+  };
+
+  handleFetchTemplate = (managerId) => {
+    fetchTemplatesByManagerApi(managerId)
+      .then((response) => response)
+      .then((result) => {
+        this.setState({ templateItems: result.data }, () => {
+          let templateItem = result.data[0];
+
+          this.setState({
+            selectedTemplate: templateItem ? templateItem.id : 0,
+          });
+        });
+      });
+  };
+
+  handleFetchOutlet = (managerId) => {
+    fetchOutletByManagerApi(managerId)
+      .then((response) => response)
+      .then((result) => {
+        this.setState(
+          {
+            outletItems: result.data,
+          },
+          () => {
+            let outletItem = result.data[0];
+
+            if (outletItem) {
+              let outletId = outletItem.id;
+              this.setState({ selectedOutlet: outletId }, () => {
+                this.handleFetchSupervisor(managerId, outletId);
+              });
+            }
+          }
+        );
+      });
+  };
+
+  handleFetchSupervisor = (managerId, outletId) => {
+    fetchSupervisorByManagerApi(managerId, outletId)
+      .then((response) => response)
+      .then((result) => {
+        this.setState({ supervisorItems: result.data.supervisor }, () => {
+          if (result.data.supervisor) {
+            let svItem = result.data.supervisor[0];
+
+            if (svItem) {
+              let supervisorId = svItem.id;
+              this.setState({ selectedSupervisor: supervisorId });
+            }
+          }
+        });
+      });
+  };
+
+  handleOutletChange = (e) => {
+    let target = e.target;
+    let value = target.value;
+
+    new Promise((resolve) => resolve())
+      .then(() => {
+        this.setState({ selectedOutlet: value });
+      })
+      .then(() => {
+        let { selectedOutlet, selectedManager } = this.state;
+
+        this.handleFetchSupervisor(selectedManager, selectedOutlet);
+      });
+  };
+
+  handleSupervisorChange = (e) => {
+    let target = e.target;
+    let value = target.value;
+
+    new Promise((resolve) => resolve()).then(() => {
+      this.setState({ selectedSupervisor: value });
+    });
+  };
 
   handlePagination = (page = 1) => {
     const { detailFitered, pageSize } = this.state;
@@ -122,7 +368,15 @@ class FormCreate extends Component {
 
   handleRemoveAllData = async () => {
     return new Promise((resolve) => resolve()).then(() => {
-      this.setState(initialState);
+      this.setState({
+        detailArrs: [],
+        detailItems: [],
+        detailFitered: [],
+        selectedItems: [],
+        units: [],
+        pageNumber: 1,
+        pageSize: 15,
+      });
     });
   };
 
@@ -178,20 +432,56 @@ class FormCreate extends Component {
   };
 
   render() {
-    const { detailFitered, detailArrs, selectedItems, pageNumber, pageSize } =
-      this.state;
+    const {
+      detailFitered,
+      detailArrs,
+      selectedItems,
+      pageNumber,
+      pageSize,
+      outletItems,
+      supervisorItems,
+      managerItems,
+      templateItems,
+      selectedOutlet,
+      selectedSupervisor,
+      selectedManager,
+      selectedTemplate,
+      items,
+      orderList,
+    } = this.state;
 
     let templateProps = {
+      handleBeforeTemplateChange: this.handleBeforeTemplateChange,
+      handleBeforeManagerChange: this.handleBeforeManagerChange,
+      handleFetchTemplatedata: this.handleFetchTemplateData,
+      handlePagination: this.handleTemplatePagination,
+      handleManagerChange: this.handleManagerChange,
       handleClick: this.handleClick,
+      managerItems,
+      templateItems,
+      selectedManager,
+      selectedTemplate,
       selectedItems,
       detailFitered,
       pageNumber,
+      items,
+      orderList,
     };
 
     let detailProps = {
+      handleBeforeManagerChange: this.handleBeforeManagerChange,
+      handleSupervisorChange: this.handleSupervisorChange,
       handleRemoveAllData: this.handleRemoveAllData,
+      handleManagerChange: this.handleManagerChange,
+      handleOutletChange: this.handleOutletChange,
       handleRemoveData: this.handleRemoveData,
       handlePagination: this.handlePagination,
+      managerItems,
+      outletItems,
+      supervisorItems,
+      selectedManager,
+      selectedOutlet,
+      selectedSupervisor,
       detailFitered,
       detailArrs,
       pageNumber,
@@ -205,7 +495,7 @@ class FormCreate extends Component {
             <h4 className="h4">Create Form</h4>
           </div>
 
-          <div className="template-edit-container card-container pt-3">
+          <div className="template-edit-container card-container">
             <div className="row">
               <TemplateTable {...templateProps} />
               <DetailTable {...detailProps} />
@@ -217,8 +507,29 @@ class FormCreate extends Component {
   }
 }
 
-const mapStateToProps = () => ({});
-const mapDispatchToProps = () => ({});
+const mapStateToProps = (state) => ({
+  auth: state.auth.data,
+  formDetails: state.form.data,
+  templatesDetails: state.template.data,
+  selected: state.formDetailsSelected.data,
+});
+const mapDispatchToProps = (dispatch) => ({
+  fetchTemplateViewData: (params) => {
+    return new Promise((resolve) => {
+      dispatch(fetchTemplateViewData(params)).then(() => resolve());
+    });
+  },
+  fetchFormDetailsSelectedData: (params) => {
+    return new Promise((resolve) => {
+      dispatch(fetchFormDetailsSelectedData(params)).then(() => resolve());
+    });
+  },
+  createFormDetail: (params) => {
+    return new Promise((resolve) => {
+      dispatch(createFormDetail(params)).then(() => resolve());
+    });
+  },
+});
 
 export default compose(
   withRouter,

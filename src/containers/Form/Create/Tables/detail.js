@@ -13,7 +13,13 @@ import PaginationSection from "../../../../sections/Pagination";
 import Loader from "../../../../components/Loader";
 
 // Helpers
-import { getEntity, DefaultItem, CustomItem } from "../../../../utils/helpers";
+import {
+  getEntity,
+  DefaultItem,
+  CustomItem,
+  isManagerial,
+  isAdministrator,
+} from "../../../../utils/helpers";
 
 const initialState = {
   isMounted: false,
@@ -149,10 +155,85 @@ class DetailTable extends Component {
         );
       }
 
+      let {
+        handleBeforeManagerChange,
+        handleOutletChange,
+        handleSupervisorChange,
+        selectedManager,
+        selectedOutlet,
+        selectedSupervisor,
+        managerItems,
+        outletItems,
+        supervisorItems,
+      } = this.props;
+
+      let managerOptions = (
+        <div className="col-4 pe-2">
+          <div>Manager : </div>
+          <select
+            value={selectedManager}
+            onChange={(e) => handleBeforeManagerChange(e)}
+          >
+            {managerItems.map((item) => {
+              return (
+                <option key={item.id} value={item.id}>
+                  {item.name}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+      );
+
+      let outletOptions = (
+        <div className={isAdministrator() ? `col-4 pe-2` : `col-6 pe-2`}>
+          <div>Outlet : </div>
+          <select
+            value={selectedOutlet}
+            onChange={(e) => handleOutletChange(e)}
+          >
+            {outletItems.map((item) => {
+              return (
+                <option key={item.id} value={item.id}>
+                  {item.name}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+      );
+
+      let supervisorOptions = (
+        <div className={isAdministrator() ? `col-4` : `col-6`}>
+          <div>Supervisor : </div>
+          <select
+            value={selectedSupervisor}
+            onChange={(e) => handleSupervisorChange(e)}
+          >
+            {supervisorItems &&
+              supervisorItems.map((item) => {
+                return (
+                  <option key={item.id} value={item.id}>
+                    {item.name}
+                  </option>
+                );
+              })}
+          </select>
+        </div>
+      );
+
       return (
-        <div className="template-edit-section col-6">
-          <div className="template-header-section">
-            <h6 className="h6">Create Form</h6>
+        <div className="template-edit-section form-create-section col-6">
+          <div className="template-upper-section">
+            <div className="template-header-section">
+              <h6 className="h6">Create Form</h6>
+            </div>
+
+            <div className="d-flex justify-content-start mb-3 forms-edit-containers">
+              {isAdministrator() && managerOptions}
+              {isManagerial() && outletOptions}
+              {isManagerial() && supervisorOptions}
+            </div>
           </div>
 
           <ContentSection />

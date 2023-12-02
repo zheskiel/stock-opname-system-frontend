@@ -46,7 +46,8 @@ main {
 @media (min-width: 768px) {
   .main-container {
     .main-wrapper {
-      width: calc(100% - 200px);
+      // width: calc(100% - 200px);
+      width: calc(100% - 50px);
     }
   }
 }

@@ -329,27 +329,21 @@ class TemplateTable extends Component {
       );
     };
 
-    const TemplateTable = () => {
-      if (!data || !isMounted) {
-        return (
-          <div className="template-edit-section col-6">
-            <Loader />
-          </div>
-        );
-      }
-
-      return (
-        <div className="template-edit-section col-6">
-          <div className="template-header-section">
-            <h6 className="h6">{data.title}'s Template</h6>
-          </div>
-
-          <ContentSection />
+    const TemplateTable = (
+      <>
+        <div className="template-header-section">
+          <h6 className="h6">{data.title}'s Template</h6>
         </div>
-      );
-    };
 
-    return <TemplateTable />;
+        <ContentSection />
+      </>
+    );
+
+    return (
+      <div className="template-edit-section col-6">
+        {!data || !isMounted ? <Loader /> : TemplateTable}
+      </div>
+    );
   }
 }
 

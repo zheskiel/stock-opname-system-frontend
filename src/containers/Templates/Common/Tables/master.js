@@ -272,7 +272,7 @@ class MasterTableCommon extends Component {
 
       return (
         <div className="template-edit-section col-6">
-          <div className="template-header-section">
+          <div className="template-header-section master-section">
             <h6 className="h6">Master Data</h6>
           </div>
 

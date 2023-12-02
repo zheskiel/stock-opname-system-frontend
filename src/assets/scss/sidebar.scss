@@ -14,13 +14,43 @@
   .sidebar {
     position: fixed;
     height: calc(100vh - 56px);
-    min-width: 200px;
-    max-width: 200px;
+    min-width: 50px;
+    max-width: 50px;
 
     background-color: #405189;
     border-color: #405189;
     overflow-y: auto;
     z-index: 10;
+
+    // margin-left: -11%;
+
+    &:hover {
+      min-width: 200px !important;
+      max-width: 200px !important;
+
+      .nav-item {
+        .accordion-item {
+          .accordion-button::after {
+            display: block !important;
+          }
+        }
+
+        .nav-item-content {
+          display: block !important;
+        }
+      }
+    }
+
+    .nav-item {
+      .accordion-item {
+        .accordion-button::after {
+          display: none;
+        }
+      }
+      .nav-item-content {
+        display: none;
+      }
+    }
   }
 }
 
