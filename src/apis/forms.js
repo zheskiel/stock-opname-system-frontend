@@ -9,6 +9,7 @@ import {
   OUTLETS_BY_MANAGER_URL,
   TEMPLATES_BY_MANAGER_URL,
   SUPERVISORS_BY_MANAGER_URL,
+  STAFFS_BY_SUPERVISOR_URL,
 } from "./constants";
 
 import axiosInstance from "../utils/axiosInstance";
@@ -36,6 +37,16 @@ export const fetchSupervisorByManagerApi = (managerId, outletId) => {
   let url = new URL(SUPERVISORS_BY_MANAGER_URL);
 
   return axiosInstance.post(url, { managerId, outletId });
+};
+
+export const fetchStaffsBySupervisorApi = (
+  supervisorId,
+  managerId,
+  outletId
+) => {
+  let url = new URL(STAFFS_BY_SUPERVISOR_URL);
+
+  return axiosInstance.post(url, { supervisorId, managerId, outletId });
 };
 
 export const fetchFormsApi = ({ managerId, supervisorId, role, page = 1 }) => {

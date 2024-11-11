@@ -15,10 +15,12 @@ import Loader from "../../../../components/Loader";
 // Helpers
 import {
   getEntity,
+  getUserRole,
   DefaultItem,
   CustomItem,
   isManagerial,
   isAdministrator,
+  isSupervisorial,
 } from "../../../../utils/helpers";
 
 const initialState = {
@@ -131,16 +133,24 @@ class DetailTable extends Component {
           <div className="template-create-utilities d-flex justify-content-between">
             {hasPagination(last_page)}
 
-            {detailArrs.length > 0 && (
-              <div className="btn-group unit-actions">
+            <div className="btn-group unit-actions">
+              <button
+                className="btn btn-primary"
+                onClick={(e) => this.props.handleSaveBtn(e)}
+                disabled={detailArrs.length < 1}
+              >
+                Save
+              </button>
+
+              {detailArrs.length > 0 && (
                 <button
-                  className="btn btn-danger"
+                  className="btn btn-danger ms-2"
                   onClick={() => this.props.handleRemoveAllData()}
                 >
                   X Remove All
                 </button>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       );
@@ -159,16 +169,34 @@ class DetailTable extends Component {
         handleBeforeManagerChange,
         handleOutletChange,
         handleSupervisorChange,
+        handleStaffChange,
         selectedManager,
         selectedOutlet,
+        selectedStaff,
         selectedSupervisor,
+        staffItems,
         managerItems,
         outletItems,
         supervisorItems,
       } = this.props;
 
+      let optionSize;
+      switch (getUserRole()) {
+        case "superadmin":
+        case "admin":
+          optionSize = "col-3 pe-2";
+          break;
+        case "manager":
+          optionSize = "col-4 pe-2";
+          break;
+        case "supervisor":
+        default:
+          optionSize = "col-6";
+          break;
+      }
+
       let managerOptions = (
-        <div className="col-4 pe-2">
+        <div className={optionSize}>
           <div>Manager : </div>
           <select
             value={selectedManager}
@@ -186,7 +214,7 @@ class DetailTable extends Component {
       );
 
       let outletOptions = (
-        <div className={isAdministrator() ? `col-4 pe-2` : `col-6 pe-2`}>
+        <div className={optionSize}>
           <div>Outlet : </div>
           <select
             value={selectedOutlet}
@@ -204,7 +232,7 @@ class DetailTable extends Component {
       );
 
       let supervisorOptions = (
-        <div className={isAdministrator() ? `col-4` : `col-6`}>
+        <div className={optionSize}>
           <div>Supervisor : </div>
           <select
             value={selectedSupervisor}
@@ -212,6 +240,22 @@ class DetailTable extends Component {
           >
             {supervisorItems &&
               supervisorItems.map((item) => {
+                return (
+                  <option key={item.id} value={item.id}>
+                    {item.name}
+                  </option>
+                );
+              })}
+          </select>
+        </div>
+      );
+
+      let staffOptions = (
+        <div className={optionSize}>
+          <div>Staff : </div>
+          <select value={selectedStaff} onChange={(e) => handleStaffChange(e)}>
+            {staffItems &&
+              staffItems.map((item) => {
                 return (
                   <option key={item.id} value={item.id}>
                     {item.name}
@@ -233,6 +277,7 @@ class DetailTable extends Component {
               {isAdministrator() && managerOptions}
               {isManagerial() && outletOptions}
               {isManagerial() && supervisorOptions}
+              {isSupervisorial() && staffOptions}
             </div>
           </div>
 

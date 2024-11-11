@@ -18,6 +18,7 @@ import {
   fetchOutletByManagerApi,
   fetchSupervisorByManagerApi,
   fetchTemplatesByManagerApi,
+  fetchStaffsBySupervisorApi,
 } from "../../../apis";
 
 // Actions
@@ -58,10 +59,12 @@ const initialState = {
   outletItems: [],
   supervisorItems: [],
   templateItems: [],
+  staffItems: [],
   selectedManager: undefined,
   selectedOutlet: undefined,
   selectedSupervisor: undefined,
   selectedTemplate: undefined,
+  selectedStaff: undefined,
 };
 
 let order = 0;
@@ -91,6 +94,8 @@ class FormCreate extends Component {
     this.handleBeforeManagerChange = this.handleBeforeManagerChange.bind(this);
     this.handleBeforeTemplateChange =
       this.handleBeforeTemplateChange.bind(this);
+
+    this.handleSaveBtn = this.handleSaveBtn.bind(this);
   }
 
   componentDidMount() {
@@ -151,6 +156,8 @@ class FormCreate extends Component {
         let { sort: sortState, order: orderState } = items[sort];
 
         const { fetchTemplateViewData } = this.props;
+
+        if (!selectedTemplate) return;
 
         let parameters = {
           sort: sortState,
@@ -232,21 +239,16 @@ class FormCreate extends Component {
     fetchOutletByManagerApi(managerId)
       .then((response) => response)
       .then((result) => {
-        this.setState(
-          {
-            outletItems: result.data,
-          },
-          () => {
-            let outletItem = result.data[0];
+        this.setState({ outletItems: result.data }, () => {
+          let outletItem = result.data[0];
 
-            if (outletItem) {
-              let outletId = outletItem.id;
-              this.setState({ selectedOutlet: outletId }, () => {
-                this.handleFetchSupervisor(managerId, outletId);
-              });
-            }
+          if (outletItem) {
+            let outletId = outletItem.id;
+            this.setState({ selectedOutlet: outletId }, () => {
+              this.handleFetchSupervisor(managerId, outletId);
+            });
           }
-        );
+        });
       });
   };
 
@@ -254,13 +256,40 @@ class FormCreate extends Component {
     fetchSupervisorByManagerApi(managerId, outletId)
       .then((response) => response)
       .then((result) => {
-        this.setState({ supervisorItems: result.data.supervisor }, () => {
-          if (result.data.supervisor) {
-            let svItem = result.data.supervisor[0];
+        this.setState(
+          {
+            supervisorItems: result.data.supervisor,
+            selectedStaff: undefined,
+            staffItems: [],
+          },
+          () => {
+            if (result.data.supervisor) {
+              let svItem = result.data.supervisor[0];
 
-            if (svItem) {
-              let supervisorId = svItem.id;
-              this.setState({ selectedSupervisor: supervisorId });
+              if (svItem) {
+                let supervisorId = svItem.id;
+                this.setState({ selectedSupervisor: supervisorId }, () => {
+                  this.handleFetchStaff(supervisorId, managerId, outletId);
+                });
+              }
+            }
+          }
+        );
+      });
+  };
+
+  handleFetchStaff = (supervisorId, managerId, outletId) => {
+    fetchStaffsBySupervisorApi(supervisorId, managerId, outletId)
+      .then((response) => response)
+      .then((result) => {
+        this.setState({ staffItems: result.data }, () => {
+          if (result.data) {
+            let staffItem = result.data[0];
+
+            if (staffItem) {
+              let staffId = staffItem.id;
+
+              this.setState({ selectedStaff: staffId });
             }
           }
         });
@@ -271,15 +300,13 @@ class FormCreate extends Component {
     let target = e.target;
     let value = target.value;
 
-    new Promise((resolve) => resolve())
-      .then(() => {
-        this.setState({ selectedOutlet: value });
-      })
-      .then(() => {
+    new Promise((resolve) => resolve()).then(() => {
+      this.setState({ selectedOutlet: value }, () => {
         let { selectedOutlet, selectedManager } = this.state;
 
         this.handleFetchSupervisor(selectedManager, selectedOutlet);
       });
+    });
   };
 
   handleSupervisorChange = (e) => {
@@ -287,7 +314,25 @@ class FormCreate extends Component {
     let value = target.value;
 
     new Promise((resolve) => resolve()).then(() => {
-      this.setState({ selectedSupervisor: value });
+      this.setState({ selectedSupervisor: value }, () => {
+        let { selectedSupervisor, selectedManager, selectedOutlet } =
+          this.state;
+
+        this.handleFetchStaff(
+          selectedSupervisor,
+          selectedManager,
+          selectedOutlet
+        );
+      });
+    });
+  };
+
+  handleStaffChange = (e) => {
+    let target = e.target;
+    let value = target.value;
+
+    new Promise((resolve) => resolve()).then(() => {
+      this.setState({ selectedStaff: value });
     });
   };
 
@@ -431,6 +476,28 @@ class FormCreate extends Component {
       });
   };
 
+  handleSaveBtn = (e) => {
+    e.preventDefault();
+
+    let {
+      selectedSupervisor,
+      selectedManager,
+      selectedOutlet,
+      selectedStaff,
+      selectedItems,
+    } = this.state;
+
+    let params = {
+      supervisor: selectedSupervisor,
+      manager: selectedManager,
+      outlet: selectedOutlet,
+      staff: selectedStaff,
+      items: selectedItems,
+    };
+
+    console.log("testing", params);
+  };
+
   render() {
     const {
       detailFitered,
@@ -438,10 +505,12 @@ class FormCreate extends Component {
       selectedItems,
       pageNumber,
       pageSize,
+      staffItems,
       outletItems,
       supervisorItems,
       managerItems,
       templateItems,
+      selectedStaff,
       selectedOutlet,
       selectedSupervisor,
       selectedManager,
@@ -473,15 +542,19 @@ class FormCreate extends Component {
       handleSupervisorChange: this.handleSupervisorChange,
       handleRemoveAllData: this.handleRemoveAllData,
       handleManagerChange: this.handleManagerChange,
+      handleStaffChange: this.handleStaffChange,
       handleOutletChange: this.handleOutletChange,
       handleRemoveData: this.handleRemoveData,
       handlePagination: this.handlePagination,
+      handleSaveBtn: this.handleSaveBtn,
       managerItems,
       outletItems,
+      staffItems,
       supervisorItems,
       selectedManager,
       selectedOutlet,
       selectedSupervisor,
+      selectedStaff,
       detailFitered,
       detailArrs,
       pageNumber,

@@ -1,6 +1,9 @@
 .template-header-section {
   &.master-section {
     min-height: 113px !important;
+    &.edit {
+      min-height: 35px !important;
+    }
   }
   .template-item {
     span {

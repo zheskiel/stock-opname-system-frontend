@@ -22,8 +22,23 @@ class SidebarSection extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      isHovered: false,
+      selected: undefined,
+    };
+
     this.handleLogout = this.handleLogout.bind(this);
+    this.handleMouseEnter = this.handleMouseEnter.bind(this);
+    this.handleMouseLeave = this.handleMouseLeave.bind(this);
   }
+
+  handleMouseEnter = (name) => {
+    this.setState({ isHovered: true, selected: name });
+  };
+
+  handleMouseLeave = () => {
+    this.setState({ isHovered: false, selected: undefined });
+  };
 
   handleLogout = async (e) => {
     e.preventDefault();
@@ -39,8 +54,8 @@ class SidebarSection extends Component {
   render() {
     let RouteFormatted = () => {
       return sideBarRoutes.map((route, index) => {
-        let RouteOption =
-          typeof route.children !== "undefined" ? RouteChildren : RouteDefault;
+        let hasChildren = typeof route.children !== "undefined";
+        let RouteOption = hasChildren ? RouteChildren : RouteDefault;
 
         return isEligible(route.name) ? (
           <RouteOption key={index} route={route} />
@@ -65,11 +80,19 @@ class SidebarSection extends Component {
     let RouteChildren = ({ route }) => {
       let items = route.children;
 
+      let { isHovered, selected } = this.state;
+
       return (
         <li className="nav-item accordion accordion-flush">
-          <div className="accordion-item">
+          <div
+            className="accordion-item"
+            onMouseEnter={() => this.handleMouseEnter(route.name)}
+            onMouseLeave={() => this.handleMouseLeave()}
+          >
             <a
-              className="nav-link d-flex align-items-center gap-2 accordion-button collapsed"
+              className={`nav-link d-flex align-items-center gap-2 accordion-button ${
+                isHovered && selected == route.name ? "" : "collapsed"
+              }`}
               data-bs-toggle="collapse"
               data-bs-target={`#${route.name}-collapse`}
               aria-controls={`${route.name}-collapse`}
@@ -82,7 +105,9 @@ class SidebarSection extends Component {
             {items && (
               <div
                 id={`${route.name}-collapse`}
-                className="accordion-collapse collapse"
+                className={`accordion-collapse collapse ${
+                  isHovered && selected == route.name ? "show" : ""
+                }`}
                 aria-labelledby="headingOne"
               >
                 <ul>

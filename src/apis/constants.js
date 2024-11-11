@@ -11,6 +11,7 @@ export const MANAGERS_URL = API_URL + "/forms/managers";
 export const OUTLETS_BY_MANAGER_URL = API_URL + "/forms/outlets";
 export const SUPERVISORS_BY_MANAGER_URL = API_URL + "/forms/supervisors";
 export const TEMPLATES_BY_MANAGER_URL = API_URL + "/forms/templates";
+export const STAFFS_BY_SUPERVISOR_URL = API_URL + "/forms/staffs";
 
 export const FORMS_URL = API_URL + "/forms";
 export const FORM_DETAILS_URL = API_URL + "/form/{0}/staff/{1}/details";

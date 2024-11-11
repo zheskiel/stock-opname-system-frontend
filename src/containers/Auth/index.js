@@ -209,9 +209,12 @@ class AuthContainer extends Component {
 }
 
 const mapStateToProps = (state) => {
+  const Auth = state.auth;
+  const { message, loading } = Auth;
+
   return {
-    message: state.auth.message,
-    loading: state.auth.loading,
+    message,
+    loading,
   };
 };
 

@@ -14,7 +14,7 @@ const PublicRouteState = ({
     <Route
       {...rest}
       render={(props) =>
-        isAuth && restricted ? (
+        isAuth ? (
           <Redirect to="/dashboard" />
         ) : (
           <Component {...props} {...rest} />
@@ -24,8 +24,10 @@ const PublicRouteState = ({
   );
 };
 
-const mapStateToProps = (state) => ({
-  isAuth: state.auth.isAuth,
-});
+const mapStateToProps = (state) => {
+  return {
+    isAuth: state.auth.isAuth,
+  };
+};
 
 export default compose(withRouter, connect(mapStateToProps))(PublicRouteState);

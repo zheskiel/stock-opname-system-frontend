@@ -22,6 +22,12 @@ export const isManagerial = () => {
   return isAdministrator() || role === "manager";
 };
 
+export const isSupervisorial = () => {
+  let role = getUserRole();
+
+  return isManagerial() || role === "supervisor";
+};
+
 export const isManager = () => {
   let role = getUserRole();
 

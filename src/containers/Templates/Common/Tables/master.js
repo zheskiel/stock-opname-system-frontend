@@ -270,9 +270,15 @@ class MasterTableCommon extends Component {
         );
       }
 
+      const isEdit = this.props.mode == "edit";
+
       return (
         <div className="template-edit-section col-6">
-          <div className="template-header-section master-section">
+          <div
+            className={`template-header-section master-section ${
+              isEdit ? "edit" : "create"
+            }`}
+          >
             <h6 className="h6">Master Data</h6>
           </div>
 
