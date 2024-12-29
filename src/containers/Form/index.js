@@ -123,6 +123,8 @@ class FormContainer extends Component {
 
     const { data } = details;
 
+    if (!data) return contentLoader;
+
     const ContentSection = () => {
       const formProps = {
         handleFetchData: this.handleFetchData,

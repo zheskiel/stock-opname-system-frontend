@@ -49,7 +49,7 @@ class HeaderSection extends Component {
         <nav className="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
           <div className="container-fluid" style={{ position: "relative" }}>
             <a className="navbar-brand" href="#">
-              Stock Opname
+              Stock
             </a>
 
             <button

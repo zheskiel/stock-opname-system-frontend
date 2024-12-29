@@ -17,7 +17,7 @@ import Loader from "../../../../components/Loader";
 
 // Actions
 import {
-  createFormDetail,
+  createFormDetails,
   fetchTemplateViewData,
   fetchFormDetailsSelectedData,
 } from "../../../../redux/actions";
@@ -45,7 +45,6 @@ class TemplateTable extends Component {
 
     this.state = initialState;
 
-    this.handleClick = this.handleClick.bind(this);
     this.handleFetchData = this.handleFetchData.bind(this);
     this.handlePagination = this.handlePagination.bind(this);
     this.handleFetchSelectedData = this.handleFetchSelectedData.bind(this);
@@ -54,31 +53,14 @@ class TemplateTable extends Component {
   componentDidMount() {
     new Promise((resolve) => resolve())
       .then(() => this.setState({ items: buildItemsObj(arrs) }))
+      .then(() => this.handleFetchData())
       .then(() => {
-        this.handleFetchData();
-        this.handleFetchSelectedData();
+        // this.handleFetchSelectedData()
       })
       .then(() => {
         setTimeout(() => this.setState({ isMounted: true }), 500);
       });
   }
-
-  handleClick = async (item, selectedUnit) => {
-    return new Promise((resolve) => resolve())
-      .then(() => {
-        const { createFormDetail, match } = this.props;
-        const { params } = match;
-
-        let parameters = {
-          ...params,
-          item,
-          selectedUnit,
-        };
-
-        createFormDetail(parameters);
-      })
-      .then(() => setTimeout(() => this.handleFetchSelectedData(), 250));
-  };
 
   handleFetchData = async (
     page = 1,
@@ -144,14 +126,14 @@ class TemplateTable extends Component {
 
   render() {
     const { isMounted } = this.state;
-    const { templatesDetails, selected } = this.props;
+    const { templatesDetails, selectedItems: selected } = this.props;
 
     const { total, current_page, per_page, last_page } = templatesDetails;
     const newProps = {
-      totalCount: total,
+      handlePagination: this.handlePagination,
       pageNumber: current_page,
       pageSize: per_page,
-      handlePagination: this.handlePagination,
+      totalCount: total,
     };
 
     const { data } = templatesDetails;
@@ -173,7 +155,7 @@ class TemplateTable extends Component {
           let selectedCount = 0;
 
           return (
-            <React.Fragment key={`inner-${arr.title}-${item.id}`}>
+            <React.Fragment key={`inner-${arr.title}-${item.product_id}`}>
               <td className="unit-actions unit-section">
                 {itemUnits.length > 0 &&
                   itemUnits.map((unit, index) => {
@@ -187,9 +169,7 @@ class TemplateTable extends Component {
                       );
                     });
 
-                    if (isSelected == true) {
-                      selectedCount += 1;
-                    }
+                    if (isSelected == true) selectedCount += 1;
 
                     let isDisabled = selected.some((target) => {
                       return (
@@ -214,7 +194,7 @@ class TemplateTable extends Component {
                       return (
                         <button
                           className="btn btn-info"
-                          onClick={() => this.handleClick(item, unit[0])}
+                          onClick={() => this.props.handleClick(item, unit[0])}
                         >
                           + Add
                         </button>
@@ -366,9 +346,9 @@ const mapDispatchToProps = (dispatch) => ({
       dispatch(fetchFormDetailsSelectedData(params)).then(() => resolve());
     });
   },
-  createFormDetail: (params) => {
+  createFormDetails: (params) => {
     return new Promise((resolve) => {
-      dispatch(createFormDetail(params)).then(() => resolve());
+      dispatch(createFormDetails(params)).then(() => resolve());
     });
   },
 });

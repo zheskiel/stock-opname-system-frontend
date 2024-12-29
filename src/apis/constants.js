@@ -14,6 +14,7 @@ export const TEMPLATES_BY_MANAGER_URL = API_URL + "/forms/templates";
 export const STAFFS_BY_SUPERVISOR_URL = API_URL + "/forms/staffs";
 
 export const FORMS_URL = API_URL + "/forms";
+
 export const FORM_DETAILS_URL = API_URL + "/form/{0}/staff/{1}/details";
 export const FORM_DETAILS_SELECTED_ALL_URL =
   API_URL + "/form/{0}/staff/{1}/all";
@@ -21,6 +22,11 @@ export const FORM_CREATE_DETAIL_URL = API_URL + `/form/{0}/{1}/create-detail`;
 export const FORM_REMOVE_DETAIL_URL = API_URL + `/form/{0}/{1}/remove-detail`;
 export const FORM_REMOVE_ALL_DETAIL_URL =
   API_URL + `/form/{0}/{1}/remove-all-detail`;
+
+export const FORM_NEW_CREATE_DETAIL_URL =
+  API_URL +
+  `/form/template/{0}/outlet/{1}/manager/{2}/supervisor/{3}/staff/{4}/create`;
+export const FORM_UPDATE_DETAIL_URL = API_URL + "/form/{0}/outlet/{1}";
 
 export const COMBINED_FORMS_URL = API_URL + "/form/{0}/outlet/{1}/combined";
 

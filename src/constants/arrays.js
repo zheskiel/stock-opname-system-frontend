@@ -12,7 +12,7 @@ const list = {
 };
 
 export const typeOneArrs = [
-  list.id,
+  // list.id,
   list.productId,
   list.productCode,
   list.productName,
@@ -43,7 +43,7 @@ export const typeFourArrs = [
   list.productId,
   list.productCode,
   list.productName,
-  list.tolerance,
+  // list.tolerance,
   list.units,
 ];
 
@@ -52,6 +52,6 @@ export const typeFiveArrs = [
   list.category,
   list.categoryType,
   list.subcategory,
-  list.tolerance,
+  // list.tolerance,
   list.units,
 ];

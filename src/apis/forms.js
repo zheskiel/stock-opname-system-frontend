@@ -5,6 +5,8 @@ import {
   FORM_CREATE_DETAIL_URL,
   FORM_REMOVE_DETAIL_URL,
   FORM_REMOVE_ALL_DETAIL_URL,
+  FORM_NEW_CREATE_DETAIL_URL,
+  FORM_UPDATE_DETAIL_URL,
   MANAGERS_URL,
   OUTLETS_BY_MANAGER_URL,
   TEMPLATES_BY_MANAGER_URL,
@@ -96,7 +98,45 @@ export const fetchFormDetailsAllSelectedApi = ({ managerId, staffId }) => {
   return axiosInstance.get(target);
 };
 
-export const createFormDetailApi = ({
+export const createNewFormDetailsApi = ({
+  template,
+  outlet,
+  manager,
+  supervisor,
+  staff,
+  items,
+}) => {
+  let args = [template, outlet, manager, supervisor, staff];
+  let targetUrl = formatUrl(FORM_NEW_CREATE_DETAIL_URL, args);
+  let url = new URL(targetUrl);
+
+  let parameters = {
+    items,
+    template_id: template,
+    outlet_id: outlet,
+    manager_id: manager,
+    supervisor_id: supervisor,
+    staff_id: staff,
+  };
+
+  return axiosInstance.post(url, parameters);
+};
+
+export const updateFormDetailsApi = ({ form_id, outlet_id, items }) => {
+  let args = [outlet_id, form_id];
+  let targetUrl = formatUrl(FORM_UPDATE_DETAIL_URL, args);
+  let url = new URL(targetUrl);
+
+  let parameters = {
+    items,
+    outlet_id,
+    form_id,
+  };
+
+  return axiosInstance.post(url, parameters);
+};
+
+export const createFormDetailsApi = ({
   managerId,
   staffId,
   item,

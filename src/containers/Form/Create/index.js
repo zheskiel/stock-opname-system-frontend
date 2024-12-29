@@ -25,7 +25,8 @@ import {
 import {
   fetchTemplateViewData,
   fetchFormDetailsSelectedData,
-  createFormDetail,
+  createFormDetails,
+  createNewFormDetails,
 } from "../../../redux/actions";
 
 // Array Data
@@ -352,7 +353,7 @@ class FormCreate extends Component {
     this.setState({ detailArrs: currentItems, pageNumber: page });
   };
 
-  handleClick = async (item, selectedUnit) => {
+  handleClick = async (item, selectedUnit, selectedUnitDetail) => {
     return new Promise((resolve) => resolve())
       .then(() => {
         let { detailItems, units } = this.state;
@@ -400,9 +401,14 @@ class FormCreate extends Component {
       .then(() => this.handlePagination())
       .then(() => {
         let { selectedItems } = this.state;
+
         let newData = {
+          product_id: item.product_id,
+          product_name: item.product_name,
           product_code: item.product_code,
           unit: selectedUnit,
+          unit_sku: selectedUnitDetail.sku,
+          unit_value: selectedUnitDetail.value,
         };
 
         let newItems = [...[newData], ...selectedItems];
@@ -480,6 +486,7 @@ class FormCreate extends Component {
     e.preventDefault();
 
     let {
+      selectedTemplate,
       selectedSupervisor,
       selectedManager,
       selectedOutlet,
@@ -487,15 +494,18 @@ class FormCreate extends Component {
       selectedItems,
     } = this.state;
 
+    let { createNewFormDetails } = this.props;
+
     let params = {
-      supervisor: selectedSupervisor,
-      manager: selectedManager,
-      outlet: selectedOutlet,
-      staff: selectedStaff,
+      template: parseInt(selectedTemplate),
+      supervisor: parseInt(selectedSupervisor),
+      manager: parseInt(selectedManager),
+      outlet: parseInt(selectedOutlet),
+      staff: parseInt(selectedStaff),
       items: selectedItems,
     };
 
-    console.log("testing", params);
+    createNewFormDetails(params);
   };
 
   render() {
@@ -597,9 +607,14 @@ const mapDispatchToProps = (dispatch) => ({
       dispatch(fetchFormDetailsSelectedData(params)).then(() => resolve());
     });
   },
-  createFormDetail: (params) => {
+  createFormDetails: (params) => {
     return new Promise((resolve) => {
-      dispatch(createFormDetail(params)).then(() => resolve());
+      dispatch(createFormDetails(params)).then(() => resolve());
+    });
+  },
+  createNewFormDetails: (params) => {
+    return new Promise((resolve) => {
+      dispatch(createNewFormDetails(params)).then(() => resolve());
     });
   },
 });

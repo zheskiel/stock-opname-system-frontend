@@ -72,11 +72,8 @@ class FormsContainer extends Component {
           let { auth } = this.props;
           let { user } = auth;
 
-          this.setState(
-            {
-              selectedManager: user.id,
-            },
-            () => this.handleFetchOutlet(user.id)
+          this.setState({ selectedManager: user.id }, () =>
+            this.handleFetchOutlet(user.id)
           );
         } else if (isSupervisor()) {
           this.handleFetchData();
@@ -109,7 +106,7 @@ class FormsContainer extends Component {
   };
 
   handleFetchOutlet = (managerId) => {
-    fetchOutletByManagerApi(managerId)
+    fetchOutletByManagerApi(parseInt(managerId))
       .then((response) => response)
       .then((result) => {
         this.setState(
@@ -163,12 +160,11 @@ class FormsContainer extends Component {
 
     new Promise((resolve) => resolve())
       .then(() => this.setState({ selectedOutlet: value }))
-      .then(() =>
-        this.handleFetchSupervisor(
-          this.state.selectedManager,
-          this.state.selectedOutlet
-        )
-      );
+      .then(() => {
+        let { selectedManager, selectedOutlet } = this.state;
+
+        this.handleFetchSupervisor(selectedManager, selectedOutlet);
+      });
   };
 
   handleSupervisorChange = (e) => {
@@ -176,7 +172,7 @@ class FormsContainer extends Component {
     let value = target.value;
 
     new Promise((resolve) => resolve())
-      .then(() => this.setState({ selectedSupervisor: value }))
+      .then(() => this.setState({ selectedSupervisor: parseInt(value) }))
       .then(() => this.handleFetchData());
   };
 
@@ -186,10 +182,7 @@ class FormsContainer extends Component {
     let { id, role, manager_id } = user;
 
     let extraParams;
-    let defaultParams = {
-      role,
-      page,
-    };
+    let defaultParams = { role, page };
 
     switch (role) {
       case isAdministrator():
@@ -218,8 +211,11 @@ class FormsContainer extends Component {
         break;
 
       default:
+        var { selectedSupervisor } = this.state;
+
         extraParams = {
           managerId: id,
+          supervisorId: selectedSupervisor,
         };
         break;
     }

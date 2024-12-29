@@ -128,7 +128,9 @@ class TemplateTable extends Component {
                       return (
                         <button
                           className="btn btn-info"
-                          onClick={() => this.props.handleClick(item, unit[0])}
+                          onClick={() =>
+                            this.props.handleClick(item, unit[0], unit[1])
+                          }
                         >
                           + Add
                         </button>

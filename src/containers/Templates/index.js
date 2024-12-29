@@ -101,20 +101,22 @@ class TemplatesContainer extends Component {
 
             return (
               <React.Fragment key={i}>
-                <h6>Outlet - {selectedOutlet.name}</h6>
+                <div className="accordion-wrapper">
+                  <h6>Outlet - {selectedOutlet.name}</h6>
 
-                <h2 className="accordion-header">
-                  <button
-                    className="accordion-button"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target={`#${`collapse-${svItem.slug}`}`}
-                    aria-expanded="true"
-                    aria-controls={`collapse-${svItem.slug}`}
-                  >
-                    {svItem.name}
-                  </button>
-                </h2>
+                  <h2 className="accordion-header">
+                    <button
+                      className="accordion-button"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target={`#${`collapse-${svItem.slug}`}`}
+                      aria-expanded="true"
+                      aria-controls={`collapse-${svItem.slug}`}
+                    >
+                      {svItem.name}
+                    </button>
+                  </h2>
+                </div>
 
                 <div
                   id={`collapse-${svItem.slug}`}
@@ -137,16 +139,16 @@ class TemplatesContainer extends Component {
 
         return (
           <React.Fragment key={index}>
-            <h3>{manager.name}</h3>
+            <div className="templates-detail">
+              <h3>{manager.name}</h3>
 
-            <div className="content-manager-section">
-              <div className="accordion mb-3">
-                <div className="accordion-item">
-                  {Object.values(newItems).map((items, x) => {
-                    let svItems = items;
-
-                    return <AccordionDoms key={x} svItems={svItems} />;
-                  })}
+              <div className="content-manager-section">
+                <div className="accordion mb-3">
+                  <div className="accordion-item">
+                    {Object.values(newItems).map((items, x) => (
+                      <AccordionDoms key={x} svItems={items} />
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -202,7 +204,7 @@ class TemplatesContainer extends Component {
                   buildLinkUrl(EditName, [item.id]);
 
                 return (
-                  <div className="col-sm-6 mb-3" key={item.id}>
+                  <div className="col-sm-6 mb-3 padd-null" key={item.id}>
                     <div className="card">
                       <div className="card-body">
                         <div>

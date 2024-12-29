@@ -12,49 +12,102 @@ import PaginationSection from "../../../../sections/Pagination";
 // Components
 import Loader from "../../../../components/Loader";
 
+// Actions
+import {
+  fetchFormDetailsData,
+  fetchFormDetailsSelectedData,
+  removeFormDetail,
+  removeAllFormDetail,
+} from "../../../../redux/actions";
+
 // Helpers
 import { getEntity, DefaultItem, CustomItem } from "../../../../utils/helpers";
 
-class DetailTable extends Component {
-  render() {
-    const {
-      handleRemoveAllData,
-      handlePagination,
-      handleSaveBtn,
-      pageNumber,
-      pageSize,
-      isMounted,
-      detailItems: items,
-    } = this.props;
+const initialState = {
+  isMounted: false,
+};
 
-    const last_page = Math.ceil(items.length / pageSize);
+class DetailTable extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = initialState;
+
+    this.handleFetchData = this.handleFetchData.bind(this);
+    this.handleRemoveData = this.handleRemoveData.bind(this);
+    this.handleRemoveAllData = this.handleRemoveAllData.bind(this);
+  }
+
+  componentDidMount() {
+    new Promise((resolve) => resolve())
+      .then(() => this.handleFetchData())
+      .then(() => {
+        setTimeout(() => this.setState({ isMounted: true }), 500);
+      });
+  }
+
+  handleRemoveAllData = async () => {
+    return new Promise((resolve) => resolve())
+      .then(() => {
+        const { removeAllFormDetail, match } = this.props;
+
+        let parameters = {
+          ...match.params,
+        };
+
+        removeAllFormDetail(parameters);
+      })
+      .then(() => {
+        const { fetchFormDetailsSelectedData, match } = this.props;
+
+        setTimeout(() => {
+          let parameters = {
+            ...match.params,
+          };
+
+          fetchFormDetailsSelectedData(parameters);
+        }, 250);
+      });
+  };
+
+  handleRemoveData = async (item) => {};
+
+  handleFetchData = async (page = 1) => {};
+
+  render() {
+    const { isMounted } = this.state;
+    const { details } = this.props;
+
+    const { total, current_page, per_page, last_page } = details;
     const newProps = {
-      handlePagination: handlePagination,
-      totalCount: items.length,
-      pageNumber,
-      pageSize,
+      totalCount: total,
+      pageNumber: current_page,
+      pageSize: per_page,
+      handlePagination: this.handleFetchData,
     };
 
     const hasPagination = (lastPage) => {
       return lastPage > 1 ? <PaginationSection {...newProps} /> : null;
     };
 
+    const { data } = details;
+
+    if (!data) return <></>;
+
+    const { items } = data;
+
     const dataItems =
       items &&
       Object.values(items).map((item) => {
         const ActionItem = ({ arr, item }) => {
           return (
-            <React.Fragment
-              key={`inner-${arr.title}-${item.product_id}-${item.product_code}`}
-            >
+            <React.Fragment key={`inner-${arr.title}-${item.id}`}>
               <td className="unit-actions unit-section">
                 <div className="unit-container">
                   <div className="unit-detail">
                     <button
                       className="btn btn-danger"
-                      onClick={() =>
-                        this.props.handleRemoveData(item, pageNumber)
-                      }
+                      onClick={() => this.handleRemoveData(item)}
                     >
                       X Remove
                     </button>
@@ -114,16 +167,8 @@ class DetailTable extends Component {
             {Object.keys(items).length > 0 && (
               <div className="btn-group unit-actions">
                 <button
-                  className="btn btn-primary"
-                  onClick={(e) => handleSaveBtn(e)}
-                  disabled={dataItems.length < 1}
-                >
-                  Save
-                </button>
-
-                <button
-                  className="btn btn-danger ms-2"
-                  onClick={() => handleRemoveAllData()}
+                  className="btn btn-danger"
+                  onClick={() => this.handleRemoveAllData()}
                 >
                   X Remove All
                 </button>
@@ -135,22 +180,26 @@ class DetailTable extends Component {
     };
 
     const DetailTable = () => {
+      if (!data || !isMounted) {
+        return (
+          <div className="template-edit-section col-6">
+            <Loader />
+          </div>
+        );
+      }
+
       return (
-        <>
+        <div className="template-edit-section col-6">
           <div className="template-header-section">
             <h6 className="h6">Form Details</h6>
           </div>
 
           <ContentSection />
-        </>
+        </div>
       );
     };
 
-    return (
-      <div className="template-edit-section col-6">
-        {!items || !isMounted ? <Loader /> : <DetailTable />}
-      </div>
-    );
+    return <DetailTable />;
   }
 }
 
@@ -158,7 +207,28 @@ const mapStateToProps = (state) => ({
   details: state.form.data,
 });
 
-const mapDispatchToProps = (dispatch) => ({});
+const mapDispatchToProps = (dispatch) => ({
+  fetchFormDetailsData: (params) => {
+    return new Promise((resolve) => {
+      dispatch(fetchFormDetailsData(params)).then(() => resolve());
+    });
+  },
+  fetchFormDetailsSelectedData: (params) => {
+    return new Promise((resolve) => {
+      dispatch(fetchFormDetailsSelectedData(params)).then(() => resolve());
+    });
+  },
+  removeFormDetail: (params) => {
+    return new Promise((resolve) => {
+      dispatch(removeFormDetail(params)).then(() => resolve());
+    });
+  },
+  removeAllFormDetail: (params) => {
+    return new Promise((resolve) => {
+      dispatch(removeAllFormDetail(params)).then(() => resolve());
+    });
+  },
+});
 
 export default compose(
   withRouter,

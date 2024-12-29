@@ -12,10 +12,18 @@ import {
   FETCH_FORM_DETAILS_SELECTED_REQUEST,
   FETCH_FORM_DETAILS_SELECTED_SUCCESS,
   FETCH_FORM_DETAILS_SELECTED_FAILED,
+  CREATE_NEW_FORM_DETAILS_REQUEST,
+  CREATE_NEW_FORM_DETAILS_SUCCESS,
+  CREATE_NEW_FORM_DETAILS_FAILED,
+  UPDATE_FORM_DETAILS_REQUEST,
+  UPDATE_FORM_DETAILS_SUCCESS,
+  UPDATE_FORM_DETAILS_FAILED,
 } from "./types";
 
 import {
-  createFormDetailApi,
+  createFormDetailsApi,
+  createNewFormDetailsApi,
+  updateFormDetailsApi,
   fetchFormDetailsApi,
   fetchFormDetailsAllSelectedApi,
   removeFormDetailApi,
@@ -24,20 +32,114 @@ import {
 
 import errorHandler from "../../utils/errHandler";
 
-// Create Form Detail
-export const createFormDetail =
+// Create New Form Detail
+export const createNewFormDetails =
   (params = {}) =>
   (dispatch) => {
-    dispatch(createFormDetailRequest());
+    dispatch(createNewFormDetailsRequest());
 
     return new Promise((resolve, reject) => {
-      createFormDetailApi(params)
+      createNewFormDetailsApi(params)
         .then((response) => response)
         .then((result) => {
           if (result.success === true) {
-            dispatch(createFormDetailSuccess(result));
+            dispatch(createNewFormDetailsSuccess(result));
           } else {
-            dispatch(createFormDetailFailed(result));
+            dispatch(createNewFormDetailsFailed(result));
+          }
+
+          resolve();
+        })
+        .catch((error) => {
+          console.log("error : ", error);
+
+          errorHandler(error);
+          reject(error);
+        });
+    });
+  };
+
+export const createNewFormDetailsRequest = () => {
+  return {
+    type: CREATE_NEW_FORM_DETAILS_REQUEST,
+  };
+};
+
+export const createNewFormDetailsSuccess = (result) => {
+  return {
+    type: CREATE_NEW_FORM_DETAILS_SUCCESS,
+    payload: result,
+  };
+};
+
+export const createNewFormDetailsFailed = (result) => {
+  return {
+    type: CREATE_NEW_FORM_DETAILS_FAILED,
+    payload: result,
+  };
+};
+
+// Update Form Detail
+export const updateFormDetails =
+  (params = {}) =>
+  (dispatch) => {
+    dispatch(updateFormDetailsRequest());
+
+    return new Promise((resolve, reject) => {
+      updateFormDetailsApi(params)
+        .then((response) => response)
+        .then((result) => {
+          if (result.success === true) {
+            dispatch(updateFormDetailsSuccess(result));
+          } else {
+            dispatch(updateFormDetailsFailed(result));
+          }
+
+          resolve();
+        })
+        .catch((error) => {
+          console.log("error : ", error);
+
+          errorHandler(error);
+          reject(error);
+        });
+    });
+  };
+
+export const updateFormDetailsRequest = () => {
+  return {
+    type: UPDATE_FORM_DETAILS_REQUEST,
+  };
+};
+
+export const updateFormDetailsSuccess = (result) => {
+  return {
+    type: UPDATE_FORM_DETAILS_SUCCESS,
+    payload: result,
+  };
+};
+
+export const updateFormDetailsFailed = (result) => {
+  return {
+    type: UPDATE_FORM_DETAILS_FAILED,
+    payload: result,
+  };
+};
+
+// Create Form Detail
+export const createFormDetails =
+  (params = {}) =>
+  (dispatch) => {
+    dispatch(createFormDetailsRequest());
+
+    return new Promise((resolve, reject) => {
+      createFormDetailsApi(params)
+        .then((response) => response)
+        .then((result) => {
+          if (result.success === true) {
+            dispatch(createFormDetailsSuccess(result));
+          } else {
+            dispatch(createFormDetailsFailed(result));
           }
 
           resolve(result);
@@ -51,20 +153,20 @@ export const createFormDetail =
     });
   };
 
-export const createFormDetailRequest = () => {
+export const createFormDetailsRequest = () => {
   return {
     type: CREATE_FORM_DETAIL_REQUEST,
   };
 };
 
-export const createFormDetailSuccess = (result) => {
+export const createFormDetailsSuccess = (result) => {
   return {
     type: CREATE_FORM_DETAIL_SUCCESS,
     payload: result,
   };
 };
 
-export const createFormDetailFailed = (result) => {
+export const createFormDetailsFailed = (result) => {
   return {
     type: CREATE_FORM_DETAIL_FAILED,
     payload: result,

@@ -13,7 +13,12 @@ import PaginationSection from "../../../../sections/Pagination";
 import Loader from "../../../../components/Loader";
 
 // Helpers
-import { getEntity, DefaultItem, CustomItem } from "../../../../utils/helpers";
+import {
+  getEntity,
+  DefaultItem,
+  CustomItem,
+  isAdministrator,
+} from "../../../../utils/helpers";
 
 // Styling
 import "../../../../assets/scss/template.scss";
@@ -54,35 +59,9 @@ class TemplateTable extends Component {
 
   componentDidMount() {
     new Promise((resolve) => resolve())
-      .then(() => {
-        const { auth } = this.props;
-        const { user } = auth;
-        const { role } = user;
-
-        if (role == "superadmin" || role == "admin") {
-          fetchManagersApi()
-            .then((response) => response)
-            .then((result) => {
-              this.setState({ managerItems: result.data }, () => {
-                let manager = result.data[0];
-
-                if (manager) {
-                  fetchOutletByManagerApi(manager)
-                    .then((response) => response)
-                    .then((result) => {
-                      this.setState({ outletItems: result.data });
-                    });
-                }
-              });
-            });
-        } else {
-          fetchOutletsApi()
-            .then((response) => response)
-            .then((result) => {
-              this.setState({ outletItems: result.data });
-            });
-        }
-      })
+      .then(() =>
+        isAdministrator() ? this.fetchManager() : this.fetchOutlet()
+      )
       .then(() => {
         let { selectedOutlet } = this.state;
         let params = {
@@ -107,6 +86,32 @@ class TemplateTable extends Component {
         setTimeout(() => this.setState({ isMounted: true }), 500);
       });
   }
+
+  fetchManager = async () => {
+    return fetchManagersApi()
+      .then((response) => response)
+      .then((result) => {
+        this.setState({ managerItems: result.data }, () => {
+          let managerData = result.data[0];
+
+          if (managerData) {
+            fetchOutletByManagerApi(managerData)
+              .then((response) => response)
+              .then((result) => {
+                this.setState({ outletItems: result.data });
+              });
+          }
+        });
+      });
+  };
+
+  fetchOutlet = () => {
+    fetchOutletsApi()
+      .then((response) => response)
+      .then((result) => {
+        this.setState({ outletItems: result.data });
+      });
+  };
 
   handleSaveBtn = (e) => {
     e.preventDefault();

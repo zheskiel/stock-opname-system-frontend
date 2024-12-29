@@ -2,6 +2,9 @@ import {
   CREATE_FORM_DETAIL_REQUEST,
   CREATE_FORM_DETAIL_SUCCESS,
   CREATE_FORM_DETAIL_FAILED,
+  UPDATE_FORM_DETAILS_REQUEST,
+  UPDATE_FORM_DETAILS_SUCCESS,
+  UPDATE_FORM_DETAILS_FAILED,
   REMOVE_FORM_DETAIL_REQUEST,
   REMOVE_FORM_DETAIL_SUCCESS,
   REMOVE_FORM_DETAIL_FAILED,
@@ -23,7 +26,7 @@ const FormDetails = (state = initialState, action) => {
     case REMOVE_FORM_DETAIL_SUCCESS:
       var { success, message, data } = action.payload;
 
-      let newData = Object.assign({}, data.data);
+      var newData = Object.assign({}, data.data);
       let newDetails = Object.assign({}, data.data.items);
       let newStaff = Object.assign({}, data.data.staff);
 
@@ -51,6 +54,27 @@ const FormDetails = (state = initialState, action) => {
       var newState = {
         success,
         message,
+        data: dataParams,
+      };
+
+      return { ...state, ...newState };
+
+    case UPDATE_FORM_DETAILS_SUCCESS:
+      var { success, data } = action.payload;
+
+      var newData = Object.assign([], data);
+
+      var dataParams = {
+        ...state.data,
+        data: {
+          ...state.data.data,
+          items: transformData(newData),
+        },
+      };
+
+      var newState = {
+        success,
+        message: "Updated",
         data: dataParams,
       };
 
@@ -84,11 +108,13 @@ const FormDetails = (state = initialState, action) => {
       return { ...state, ...newState };
 
     case CREATE_FORM_DETAIL_REQUEST:
+    case UPDATE_FORM_DETAILS_REQUEST:
     case REMOVE_FORM_DETAIL_REQUEST:
     case FETCH_FORM_DETAILS_REQUEST:
       return { ...state };
 
     case CREATE_FORM_DETAIL_FAILED:
+    case UPDATE_FORM_DETAILS_FAILED:
     case REMOVE_FORM_DETAIL_FAILED:
     case FETCH_FORM_DETAILS_FAILED:
       var { success, message } = action.payload;
@@ -103,6 +129,34 @@ const FormDetails = (state = initialState, action) => {
     default:
       return state;
   }
+};
+
+const transformData = (data) => {
+  const map = new Map();
+
+  data.forEach((item) => {
+    const key = `${item.product_id}_${item.product_code}`;
+
+    const unitData = {
+      unit: item.unit,
+      unit_sku: item.unit_sku,
+      unit_value: item.unit_value,
+    };
+
+    if (!map.has(key)) {
+      map.set(key, {
+        product_code: item.product_code,
+        product_id: item.product_id,
+        product_name: item.product_name,
+        unit: item.unit,
+        units: [unitData],
+      });
+    } else {
+      map.get(key).units.push(unitData);
+    }
+  });
+
+  return Array.from(map.values());
 };
 
 export default FormDetails;
