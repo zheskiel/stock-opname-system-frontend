@@ -5,7 +5,6 @@ import {
   REMOVE_TEMPLATE_DETAIL_REQUEST,
   REMOVE_TEMPLATE_DETAIL_SUCCESS,
   REMOVE_TEMPLATE_DETAIL_FAILED,
-  REMOVE_ALL_TEMPLATE_DETAIL,
   FETCH_TEMPLATE_VIEW_REQUEST,
   FETCH_TEMPLATE_VIEW_SUCCESS,
   FETCH_TEMPLATE_VIEW_FAILED,
@@ -18,7 +17,6 @@ import {
 import {
   createTemplateDetailApi,
   removeTemplateDetailApi,
-  removeAllTemplateDetailApi,
   fetchTemplateViewApi,
   fetchTemplateAllSelectedApi,
 } from "../../apis";
@@ -66,29 +64,6 @@ export const createTemplateDetailFailed = (result) => {
   return {
     type: CREATE_TEMPLATE_DETAIL_FAILED,
     payload: result,
-  };
-};
-
-export const removeAllTemplateDetail = (params) => (dispatch) => {
-  return new Promise((resolve, reject) => {
-    removeAllTemplateDetailApi(params)
-      .then((response) => response)
-      .then((result) => {
-        dispatch(removeAllTemplateDetailSuccess());
-        resolve(result);
-      })
-      .catch((error) => {
-        console.log("error : ", error);
-
-        errorHandler(error);
-        reject(error);
-      });
-  });
-};
-
-export const removeAllTemplateDetailSuccess = () => {
-  return {
-    type: REMOVE_ALL_TEMPLATE_DETAIL,
   };
 };
 

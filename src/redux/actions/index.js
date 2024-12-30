@@ -10,6 +10,7 @@ export * from "./templates";
 export * from "./viewMode";
 export * from "./reports";
 export * from "./stockPosition";
+export * from "./formSelected";
 export * from "./waste";
 
 export * from "./testingOutlet";

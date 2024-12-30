@@ -2,10 +2,6 @@ import {
   CREATE_FORM_DETAIL_REQUEST,
   CREATE_FORM_DETAIL_SUCCESS,
   CREATE_FORM_DETAIL_FAILED,
-  REMOVE_FORM_DETAIL_REQUEST,
-  REMOVE_FORM_DETAIL_SUCCESS,
-  REMOVE_FORM_DETAIL_FAILED,
-  REMOVE_ALL_FORM_DETAIL,
   FETCH_FORM_DETAILS_REQUEST,
   FETCH_FORM_DETAILS_SUCCESS,
   FETCH_FORM_DETAILS_FAILED,
@@ -21,13 +17,10 @@ import {
 } from "./types";
 
 import {
-  createFormDetailsApi,
   createNewFormDetailsApi,
   updateFormDetailsApi,
   fetchFormDetailsApi,
   fetchFormDetailsAllSelectedApi,
-  removeFormDetailApi,
-  removeAllFormDetailApi,
 } from "../../apis";
 
 import errorHandler from "../../utils/errHandler";
@@ -169,76 +162,6 @@ export const createFormDetailsSuccess = (result) => {
 export const createFormDetailsFailed = (result) => {
   return {
     type: CREATE_FORM_DETAIL_FAILED,
-    payload: result,
-  };
-};
-
-export const removeAllFormDetail = (params) => (dispatch) => {
-  return new Promise((resolve, reject) => {
-    removeAllFormDetailApi(params)
-      .then((response) => response)
-      .then((result) => {
-        dispatch(removeAllFormDetailSuccess());
-        resolve(result);
-      })
-      .catch((error) => {
-        console.log("error : ", error);
-
-        errorHandler(error);
-        reject(error);
-      });
-  });
-};
-
-export const removeAllFormDetailSuccess = () => {
-  return {
-    type: REMOVE_ALL_FORM_DETAIL,
-  };
-};
-
-// Remove Form Detail
-export const removeFormDetail =
-  (params = {}) =>
-  (dispatch) => {
-    dispatch(removeFormDetailRequest());
-
-    return new Promise((resolve, reject) => {
-      removeFormDetailApi(params)
-        .then((response) => response)
-        .then((result) => {
-          if (result.success === true) {
-            dispatch(removeFormDetailSuccess(result));
-          } else {
-            dispatch(removeFormDetailFailed(result));
-          }
-
-          resolve(result);
-        })
-        .catch((error) => {
-          console.log("error : ", error);
-
-          errorHandler(error);
-          reject(error);
-        });
-    });
-  };
-
-export const removeFormDetailRequest = () => {
-  return {
-    type: REMOVE_FORM_DETAIL_REQUEST,
-  };
-};
-
-export const removeFormDetailSuccess = (result) => {
-  return {
-    type: REMOVE_FORM_DETAIL_SUCCESS,
-    payload: result,
-  };
-};
-
-export const removeFormDetailFailed = (result) => {
-  return {
-    type: REMOVE_FORM_DETAIL_FAILED,
     payload: result,
   };
 };

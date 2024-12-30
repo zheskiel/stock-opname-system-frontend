@@ -408,31 +408,31 @@ class TemplateTable extends Component {
       </div>
     );
 
-    const TemplateTable = (
-      <div className="template-edit-section col-6">
-        <div className="template-header-section">
-          <div className="pb-2">
-            <div className="d-flex justify-content-between align-items-center flex-grow-1">
-              {isAdmin && managerOptions}
-              {outletOptions}
-              {templateOptions}
+    const TemplateTable = () => {
+      return (
+        <>
+          <div className="template-header-section">
+            <div className="pb-2">
+              <div className="d-flex justify-content-between align-items-center flex-grow-1">
+                {isAdmin && managerOptions}
+                {outletOptions}
+                {templateOptions}
+              </div>
+
+              <div>{titleOption}</div>
             </div>
-
-            <div>{titleOption}</div>
           </div>
-        </div>
 
-        <ContentSection />
-      </div>
-    );
+          <ContentSection />
+        </>
+      );
+    };
 
-    const LoaderItem = (
+    return (
       <div className="template-edit-section col-6">
-        <Loader />
+        {!isMounted ? <Loader /> : <TemplateTable />}
       </div>
     );
-
-    return !isMounted ? LoaderItem : TemplateTable;
   }
 }
 

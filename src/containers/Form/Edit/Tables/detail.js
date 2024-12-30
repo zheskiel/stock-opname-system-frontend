@@ -148,7 +148,7 @@ class DetailTable extends Component {
 
     return (
       <div className="template-edit-section col-6">
-        {!items || !isMounted ? <Loader /> : <DetailTable />}
+        {!items && !isMounted ? <Loader /> : <DetailTable />}
       </div>
     );
   }

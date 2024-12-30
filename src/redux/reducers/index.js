@@ -13,6 +13,7 @@ import finalForm from "./finalForm";
 import compareWaste from "./waste";
 import combinedForms from "./combined";
 import stockPosition from "./stockPosition";
+import formSelected from "./formSelected";
 import templateSelected from "./templateSelected";
 import formDetailsSelected from "./formDetailsSelected";
 
@@ -31,6 +32,7 @@ const rootReducer = combineReducers({
   template,
   templates,
   finalForm,
+  formSelected,
   templateSelected,
   combinedForms,
   stockPosition,

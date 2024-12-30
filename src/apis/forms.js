@@ -3,8 +3,6 @@ import {
   FORM_DETAILS_URL,
   FORM_DETAILS_SELECTED_ALL_URL,
   FORM_CREATE_DETAIL_URL,
-  FORM_REMOVE_DETAIL_URL,
-  FORM_REMOVE_ALL_DETAIL_URL,
   FORM_NEW_CREATE_DETAIL_URL,
   FORM_UPDATE_DETAIL_URL,
   MANAGERS_URL,
@@ -132,61 +130,6 @@ export const updateFormDetailsApi = ({ form_id, outlet_id, items }) => {
     outlet_id,
     form_id,
   };
-
-  return axiosInstance.post(url, parameters);
-};
-
-export const createFormDetailsApi = ({
-  managerId,
-  staffId,
-  item,
-  selectedUnit,
-}) => {
-  let args = [managerId, staffId];
-  let targetUrl = formatUrl(FORM_CREATE_DETAIL_URL, args);
-  let url = new URL(targetUrl);
-
-  let parameters = {
-    ...item,
-    selected_unit: selectedUnit,
-    manager_id: managerId,
-    staff_id: staffId,
-  };
-
-  return axiosInstance.post(url, parameters);
-};
-
-export const removeFormDetailApi = ({
-  currentPage,
-  managerId,
-  staffId,
-  productId,
-  itemId,
-}) => {
-  let parameters = {
-    current_page: currentPage,
-    product_id: productId,
-    manager_id: managerId,
-    staff_id: staffId,
-    item_id: itemId,
-  };
-
-  let args = [managerId, staffId, productId, itemId];
-  let targetUrl = formatUrl(FORM_REMOVE_DETAIL_URL, args);
-  let url = new URL(targetUrl);
-
-  return axiosInstance.post(url, parameters);
-};
-
-export const removeAllFormDetailApi = ({ managerId, staffId }) => {
-  let parameters = {
-    manager_id: managerId,
-    staff_id: staffId,
-  };
-
-  let args = [managerId, staffId];
-  let targetUrl = formatUrl(FORM_REMOVE_ALL_DETAIL_URL, args);
-  let url = new URL(targetUrl);
 
   return axiosInstance.post(url, parameters);
 };

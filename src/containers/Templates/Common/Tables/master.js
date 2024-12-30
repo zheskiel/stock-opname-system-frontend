@@ -57,7 +57,7 @@ class MasterTableCommon extends Component {
 
         // Only Execute if edit mode
         if (this.props.mode == "edit") {
-          this.handleFetchSelectedData();
+          // this.handleFetchSelectedData();
         }
       })
       .then(() => {
@@ -114,8 +114,6 @@ class MasterTableCommon extends Component {
         };
 
         fetchMasterData(params);
-
-        // window.scrollTo(0, 0);
       });
   };
 
@@ -144,8 +142,10 @@ class MasterTableCommon extends Component {
     const { master, pageNumber, mode } = this.props;
 
     // Only Execute if edit mode
-    const selected =
-      mode == "edit" ? this.props.selected : this.props.selectedItems;
+    // const selected =
+    //   mode == "edit" ? this.props.selected : this.props.selectedItems;
+
+    const selected = this.props.selectedItems;
 
     const { total, current_page, per_page, last_page } = master;
     const newProps = {
@@ -166,13 +166,13 @@ class MasterTableCommon extends Component {
       Object.values(masterItems).map((item) => {
         const ActionItem = ({ item }) => {
           let isSelected = selected.includes(item.product_code);
-          let { mode } = this.props;
+          // let { mode } = this.props;
 
           // Only Execute if edit mode
-          let actionBtn =
-            mode == "edit"
-              ? () => this.handleClick(item)
-              : () => this.props.handleClick(item, pageNumber);
+          let actionBtn = () => this.props.handleClick(item, pageNumber);
+          // mode == "edit"
+          //   ? () => this.handleClick(item)
+          //   : () => this.props.handleClick(item, pageNumber);
 
           return (
             <td className="unit-actions">

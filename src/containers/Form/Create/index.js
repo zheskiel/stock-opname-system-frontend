@@ -27,6 +27,7 @@ import {
   fetchFormDetailsSelectedData,
   createFormDetails,
   createNewFormDetails,
+  resetFormSelected,
 } from "../../../redux/actions";
 
 // Array Data
@@ -103,25 +104,35 @@ class FormCreate extends Component {
     new Promise((resolve) => resolve())
       .then(() => this.setState({ items: buildItemsObj(arrs) }))
       .then(() => {
-        const { auth } = this.props;
+        const { auth, formSelected } = this.props;
         const { user } = auth;
 
+        const { selectedManager } = formSelected;
+
         if (isAdministrator()) {
-          this.handleFetchManager();
+          this.handleFetchManager(selectedManager);
         } else if (isManager()) {
-          this.setState({ selectedManager: user.id }, () => {
-            this.handleFetchOutlet(user.id);
-            this.handleFetchTemplate(user.id);
+          var manager = selectedManager ?? user.id;
+
+          this.setState({ selectedManager: manager }, () => {
+            this.handleFetchOutlet(manager);
+            this.handleFetchTemplate(manager);
           });
         } else if (isSupervisor()) {
-          this.setState({ selectedManager: user.manager_id }, () => {
-            this.handleFetchOutlet(user.manager_id);
-            this.handleFetchTemplate(user.manager_id);
+          var manager = selectedManager ?? user.manager_id;
+
+          this.setState({ selectedManager: manager }, () => {
+            this.handleFetchOutlet(manager);
+            this.handleFetchTemplate(manager);
           });
         }
       })
       .then(() => this.handlePagination())
       .then(() => setTimeout(() => this.handleFetchTemplateData(), 1000));
+  }
+
+  componentWillUnmount() {
+    this.props.resetFormSelected();
   }
 
   handleBeforeTemplateChange = async (e) => {
@@ -133,6 +144,7 @@ class FormCreate extends Component {
       .then(() => this.handleRemoveAllData())
       .then(() => this.handleFetchTemplateData());
   };
+
   handleFetchTemplateData = async (
     page = 1,
     sort = "id",
@@ -168,8 +180,6 @@ class FormCreate extends Component {
         };
 
         fetchTemplateViewData(parameters);
-
-        // window.scrollTo(0, 0);
       });
   };
 
@@ -181,26 +191,28 @@ class FormCreate extends Component {
     });
   };
 
-  handleFetchManager = () => {
+  handleFetchManager = (managerId = null) => {
+    const setManager = (manager) => {
+      this.setState({ selectedManager: manager }, () => {
+        this.handleFetchOutlet(manager);
+        this.handleFetchTemplate(manager);
+      });
+    };
+
+    const processManager = (result) => {
+      if (managerId == null) {
+        let managerItem = result.data[0];
+
+        if (managerItem) setManager(managerItem.id);
+      } else {
+        setManager(managerId);
+      }
+    };
+
     fetchManagersApi()
       .then((response) => response)
       .then((result) => {
-        this.setState(
-          {
-            managerItems: result.data,
-          },
-          () => {
-            let managerItem = result.data[0];
-
-            if (managerItem) {
-              let managerId = managerItem.id;
-              this.setState({ selectedManager: managerId }, () => {
-                this.handleFetchOutlet(managerId);
-                this.handleFetchTemplate(managerId);
-              });
-            }
-          }
-        );
+        this.setState({ managerItems: result.data }, processManager(result));
       });
   };
 
@@ -237,23 +249,46 @@ class FormCreate extends Component {
   };
 
   handleFetchOutlet = (managerId) => {
+    const setOutlet = (result) => {
+      let outletItem = result.data[0];
+
+      if (outletItem) {
+        const { formSelected } = this.props;
+        const { selectedOutlet } = formSelected;
+
+        let outletId = selectedOutlet ?? outletItem.id;
+
+        this.setState({ selectedOutlet: outletId }, () => {
+          this.handleFetchSupervisor(managerId, outletId);
+        });
+      }
+    };
+
     fetchOutletByManagerApi(managerId)
       .then((response) => response)
       .then((result) => {
-        this.setState({ outletItems: result.data }, () => {
-          let outletItem = result.data[0];
-
-          if (outletItem) {
-            let outletId = outletItem.id;
-            this.setState({ selectedOutlet: outletId }, () => {
-              this.handleFetchSupervisor(managerId, outletId);
-            });
-          }
-        });
+        this.setState({ outletItems: result.data }, setOutlet(result));
       });
   };
 
   handleFetchSupervisor = (managerId, outletId) => {
+    const setSupervisor = (result) => {
+      if (result.data.supervisor) {
+        let svItem = result.data.supervisor[0];
+
+        if (svItem) {
+          const { formSelected } = this.props;
+          const { selectedSupervisor } = formSelected;
+
+          let supervisorId = selectedSupervisor ?? svItem.id;
+
+          this.setState({ selectedSupervisor: supervisorId }, () => {
+            this.handleFetchStaff(supervisorId, managerId, outletId);
+          });
+        }
+      }
+    };
+
     fetchSupervisorByManagerApi(managerId, outletId)
       .then((response) => response)
       .then((result) => {
@@ -263,37 +298,31 @@ class FormCreate extends Component {
             selectedStaff: undefined,
             staffItems: [],
           },
-          () => {
-            if (result.data.supervisor) {
-              let svItem = result.data.supervisor[0];
-
-              if (svItem) {
-                let supervisorId = svItem.id;
-                this.setState({ selectedSupervisor: supervisorId }, () => {
-                  this.handleFetchStaff(supervisorId, managerId, outletId);
-                });
-              }
-            }
-          }
+          setSupervisor(result)
         );
       });
   };
 
   handleFetchStaff = (supervisorId, managerId, outletId) => {
+    const setStaff = (result) => {
+      if (result.data) {
+        let staffItem = result.data[0];
+
+        if (staffItem) {
+          const { formSelected } = this.props;
+          const { selectedStaff } = formSelected;
+
+          let staffId = selectedStaff ?? staffItem.id;
+
+          this.setState({ selectedStaff: staffId });
+        }
+      }
+    };
+
     fetchStaffsBySupervisorApi(supervisorId, managerId, outletId)
       .then((response) => response)
       .then((result) => {
-        this.setState({ staffItems: result.data }, () => {
-          if (result.data) {
-            let staffItem = result.data[0];
-
-            if (staffItem) {
-              let staffId = staffItem.id;
-
-              this.setState({ selectedStaff: staffId });
-            }
-          }
-        });
+        this.setState({ staffItems: result.data }, setStaff(result));
       });
   };
 
@@ -505,7 +534,11 @@ class FormCreate extends Component {
       items: selectedItems,
     };
 
-    createNewFormDetails(params);
+    createNewFormDetails(params)
+      .then((response) => response)
+      .then(() => {
+        this.props.history.push("/forms");
+      });
   };
 
   render() {
@@ -595,6 +628,7 @@ const mapStateToProps = (state) => ({
   formDetails: state.form.data,
   templatesDetails: state.template.data,
   selected: state.formDetailsSelected.data,
+  formSelected: state.formSelected?.data,
 });
 const mapDispatchToProps = (dispatch) => ({
   fetchTemplateViewData: (params) => {
@@ -616,6 +650,9 @@ const mapDispatchToProps = (dispatch) => ({
     return new Promise((resolve) => {
       dispatch(createNewFormDetails(params)).then(() => resolve());
     });
+  },
+  resetFormSelected: () => {
+    dispatch(resetFormSelected());
   },
 });
 

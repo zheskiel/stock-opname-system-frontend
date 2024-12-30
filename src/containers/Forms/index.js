@@ -22,7 +22,7 @@ import {
 } from "../../apis";
 
 // Actions
-import { fetchFormsData } from "../../redux/actions";
+import { fetchFormsData, setFormSelected } from "../../redux/actions";
 
 // Helpers
 import {
@@ -223,22 +223,26 @@ class FormsContainer extends Component {
     let params = { ...defaultParams, ...extraParams };
 
     fetchFormsData(params);
-
-    // window.scrollTo(0, 0);
   };
 
-  handleFormCreateByStaff = (e) => {
+  handleFormCreateByStaff = (e, selectedStaff) => {
     e.preventDefault();
 
     let { selectedManager, selectedOutlet, selectedSupervisor } = this.state;
+    let { setFormSelected } = this.props;
 
     let params = {
       selectedManager,
       selectedOutlet,
       selectedSupervisor,
+      selectedStaff,
     };
 
-    console.log("params : ", params);
+    new Promise((resolve) => resolve())
+      .then(() => setFormSelected(params))
+      .then(() => {
+        this.props.history.push("/form/create");
+      });
   };
 
   render() {
@@ -317,7 +321,7 @@ class FormsContainer extends Component {
                                   <button
                                     className="btn btn-info ms-2"
                                     onClick={(e) =>
-                                      this.handleFormCreateByStaff(e)
+                                      this.handleFormCreateByStaff(e, item.id)
                                     }
                                   >
                                     Create
@@ -418,12 +422,10 @@ class FormsContainer extends Component {
 }
 
 const mapStateToProps = (state) => {
-  let items = {
+  return {
     auth: state.auth.data,
     staffData: state.forms.data,
   };
-
-  return items;
 };
 
 const mapDispatchToProps = (dispatch) => ({
@@ -431,6 +433,9 @@ const mapDispatchToProps = (dispatch) => ({
     return new Promise((resolve) => {
       dispatch(fetchFormsData(params)).then(() => resolve());
     });
+  },
+  setFormSelected: (params) => {
+    dispatch(setFormSelected(params));
   },
 });
 

@@ -4,8 +4,8 @@ import {
   TEMPLATE_SELECTED_ALL_URL,
   TEMPLATE_CREATE_DETAIL_URL,
   TEMPLATE_REMOVE_DETAIL_URL,
-  TEMPLATE_REMOVE_ALL_DETAIL_URL,
   TEMPLATE_CREATE_BY_OUTLET_URL,
+  TEMPLATE_UPDATE_BY_OUTLET_URL,
 } from "./constants";
 
 import axiosInstance from "../utils/axiosInstance";
@@ -55,6 +55,19 @@ export const fetchTemplateAllSelectedApi = ({ templateId }) => {
   let target = buildUrl(url, parameters);
 
   return axiosInstance.get(target);
+};
+
+export const updateTemplateForOutletApi = ({ id, items }) => {
+  let args = [id];
+  let targetUrl = formatUrl(TEMPLATE_UPDATE_BY_OUTLET_URL, args);
+
+  let url = new URL(targetUrl);
+
+  let parameters = {
+    items,
+  };
+
+  return axiosInstance.post(url, parameters);
 };
 
 export const createTemplateForOutletApi = ({
@@ -111,18 +124,6 @@ export const removeTemplateDetailApi = ({
 
   let args = [templateId];
   let targetUrl = formatUrl(TEMPLATE_REMOVE_DETAIL_URL, args);
-  let url = new URL(targetUrl);
-
-  return axiosInstance.post(url, parameters);
-};
-
-export const removeAllTemplateDetailApi = ({ templateId }) => {
-  let parameters = {
-    template_id: templateId,
-  };
-
-  let args = [templateId];
-  let targetUrl = formatUrl(TEMPLATE_REMOVE_ALL_DETAIL_URL, args);
   let url = new URL(targetUrl);
 
   return axiosInstance.post(url, parameters);

@@ -82,10 +82,6 @@ table {
       }
     }
     .unit-container {
-      // &:not(:last-child) {
-      //   border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-      // }
-
       display: flex;
 
       .unit-detail {
@@ -102,6 +98,13 @@ table {
 }
 .unit-actions {
   text-align: center;
+
+  &:hover {
+    button:disabled {
+      cursor: not-allowed;
+      pointer-events: fill;
+    }
+  }
 
   .unit-added {
     &:hover {

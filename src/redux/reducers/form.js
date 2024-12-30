@@ -5,9 +5,6 @@ import {
   UPDATE_FORM_DETAILS_REQUEST,
   UPDATE_FORM_DETAILS_SUCCESS,
   UPDATE_FORM_DETAILS_FAILED,
-  REMOVE_FORM_DETAIL_REQUEST,
-  REMOVE_FORM_DETAIL_SUCCESS,
-  REMOVE_FORM_DETAIL_FAILED,
   REMOVE_ALL_FORM_DETAIL,
   FETCH_FORM_DETAILS_REQUEST,
   FETCH_FORM_DETAILS_SUCCESS,
@@ -23,7 +20,6 @@ const initialState = {
 const FormDetails = (state = initialState, action) => {
   switch (action.type) {
     case CREATE_FORM_DETAIL_SUCCESS:
-    case REMOVE_FORM_DETAIL_SUCCESS:
       var { success, message, data } = action.payload;
 
       var newData = Object.assign({}, data.data);
@@ -109,13 +105,13 @@ const FormDetails = (state = initialState, action) => {
 
     case CREATE_FORM_DETAIL_REQUEST:
     case UPDATE_FORM_DETAILS_REQUEST:
-    case REMOVE_FORM_DETAIL_REQUEST:
+
     case FETCH_FORM_DETAILS_REQUEST:
       return { ...state };
 
     case CREATE_FORM_DETAIL_FAILED:
     case UPDATE_FORM_DETAILS_FAILED:
-    case REMOVE_FORM_DETAIL_FAILED:
+
     case FETCH_FORM_DETAILS_FAILED:
       var { success, message } = action.payload;
 

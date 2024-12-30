@@ -225,7 +225,11 @@ class FormEdit extends Component {
       items: selectedItems,
     };
 
-    updateFormDetails(params);
+    updateFormDetails(params)
+      .then((response) => response)
+      .then(() => {
+        this.props.history.push("/forms");
+      });
   };
 
   render() {
