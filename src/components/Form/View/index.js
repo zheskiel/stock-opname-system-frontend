@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { compose } from "redux";
 
 import ViewDesktop from "./ViewDesktop";
-import ViewMobile from "./ViewMobile";
+import ViewMobile from "./ViewMobile2";
 
 class FormView extends Component {
   render() {
