@@ -1,6 +1,6 @@
 // export const API_URL = "http://stockopname:8888/api/v1";
 // export const API_URL = "http://127.0.0.1:8000/api/v1";
-export const API_URL = "http://178.128.121.143/api/v1";
+export const API_URL = "https://zheskiel.xyz/api/v1";
 
 // export const LOGIN_URL = API_URL + "/login";
 export const LOGOUT_URL = API_URL + "/logout";
