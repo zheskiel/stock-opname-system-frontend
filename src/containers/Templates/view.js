@@ -23,13 +23,7 @@ import PaginationSection from "../../sections/Pagination";
 import { fetchTemplateViewData } from "../../redux/actions";
 
 // Helpers
-import {
-  formatUrl,
-  buildLinkUrl,
-  buildItemsObj,
-  fetchUrlByName,
-  checkUrlIsEligible,
-} from "../../utils/helpers";
+import { buildLinkUrl, buildItemsObj } from "../../utils/helpers";
 
 // Styling
 import "../../assets/scss/templates.scss";
@@ -79,6 +73,7 @@ class TemplatesViewContainer extends Component {
               sort,
               order,
               isDesc,
+              withLimit: 1,
             },
           },
         });
@@ -95,12 +90,11 @@ class TemplatesViewContainer extends Component {
           sort: sortState,
           order: orderState,
           templateId: id,
+          withLimit: 1,
           page: page,
         };
 
         fetchTemplateViewData(parameters);
-
-        // window.scrollTo(0, 0);
       });
   };
 

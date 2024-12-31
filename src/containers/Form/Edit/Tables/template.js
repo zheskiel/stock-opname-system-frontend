@@ -93,6 +93,7 @@ class TemplateTable extends Component {
         const { templateId } = params;
 
         let parameters = {
+          withLimit: 1,
           sort: sortState,
           order: orderState,
           templateId,

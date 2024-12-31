@@ -28,6 +28,7 @@ const initialState = {
   isMounted: false,
   templateArrs: [],
   templateItems: [],
+  totalItems: 0,
   selectedItems: [],
   pageNumber: 1,
   pageSize: 15,
@@ -78,6 +79,7 @@ class TemplateEdit extends Component {
         const { id } = params;
 
         let parameters = {
+          withLimit: 0,
           templateId: id,
           page: page,
         };
@@ -88,7 +90,10 @@ class TemplateEdit extends Component {
         let { details } = this.props;
         let { data } = details;
 
-        this.setState({ templateItems: data?.details });
+        this.setState({
+          templateItems: data.details,
+          totalItems: details.total,
+        });
       });
   };
 
@@ -167,7 +172,14 @@ class TemplateEdit extends Component {
   };
 
   render() {
-    const { isMounted, templateItems, selectedItems } = this.state;
+    const {
+      isMounted,
+      totalItems,
+      templateArrs,
+      selectedItems,
+      pageNumber,
+      pageSize,
+    } = this.state;
 
     const { details } = this.props;
     const { data: templateDetail } = details;
@@ -182,9 +194,12 @@ class TemplateEdit extends Component {
       handleRemoveData: this.handleRemoveData,
       handlePagination: this.handlePagination,
       handleSaveBtn: this.handleSaveBtn,
-      templateItems,
+      templateArrs,
       templateDetail,
+      totalItems,
       isMounted,
+      pageNumber,
+      pageSize,
     };
 
     return (

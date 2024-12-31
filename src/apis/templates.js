@@ -29,8 +29,10 @@ export const fetchTemplateViewApi = ({
   page = 1,
   sort = "id",
   order = "desc",
+  withLimit = 0,
 }) => {
   let parameters = {
+    withLimit,
     sort,
     order,
     page,

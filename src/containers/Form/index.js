@@ -85,12 +85,11 @@ class FormContainer extends Component {
           ...match.params,
           sort: sortState,
           order: orderState,
+          withLimit: 1,
           page,
         };
 
         fetchFormDetailsData(params);
-
-        // window.scrollTo(0, 0);
       });
   };
 

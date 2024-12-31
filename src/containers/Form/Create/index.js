@@ -28,6 +28,7 @@ import {
   createFormDetails,
   createNewFormDetails,
   resetFormSelected,
+  resetTemplateViewData,
 } from "../../../redux/actions";
 
 // Array Data
@@ -164,8 +165,11 @@ class FormCreate extends Component {
           },
         });
       })
-      .then(() => {
+      .then(async () => {
         let { items, selectedTemplate } = this.state;
+
+        if (!items) return;
+
         let { sort: sortState, order: orderState } = items[sort];
 
         const { fetchTemplateViewData } = this.props;
@@ -176,10 +180,11 @@ class FormCreate extends Component {
           sort: sortState,
           order: orderState,
           templateId: selectedTemplate ?? undefined,
+          withLimit: 1,
           page,
         };
 
-        fetchTemplateViewData(parameters);
+        await fetchTemplateViewData(parameters);
       });
   };
 
@@ -238,6 +243,12 @@ class FormCreate extends Component {
     fetchTemplatesByManagerApi(managerId)
       .then((response) => response)
       .then((result) => {
+        if (!(result.data.length > 1)) {
+          new Promise((resolve) => resolve())
+            .then(() => this.props.resetTemplateViewData())
+            .then(() => this.handleRemoveAllData());
+        }
+
         this.setState({ templateItems: result.data }, () => {
           let templateItem = result.data[0];
 
@@ -653,6 +664,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   resetFormSelected: () => {
     dispatch(resetFormSelected());
+  },
+  resetTemplateViewData: () => {
+    dispatch(resetTemplateViewData());
   },
 });
 

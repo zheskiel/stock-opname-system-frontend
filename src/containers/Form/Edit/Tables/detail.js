@@ -24,16 +24,19 @@ class DetailTable extends Component {
       pageNumber,
       pageSize,
       isMounted,
-      detailItems: items,
+      totalItems,
+      detailArrs: items,
     } = this.props;
 
-    const last_page = Math.ceil(items.length / pageSize);
+    const last_page = Math.ceil(totalItems / pageSize);
     const newProps = {
-      handlePagination: handlePagination,
-      totalCount: items.length,
+      handlePagination,
+      totalCount: totalItems,
       pageNumber,
       pageSize,
     };
+
+    console.log("newProps : ", newProps);
 
     const hasPagination = (lastPage) => {
       return lastPage > 1 ? <PaginationSection {...newProps} /> : null;

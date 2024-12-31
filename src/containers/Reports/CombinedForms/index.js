@@ -63,8 +63,6 @@ class CombinedFormsContainer extends Component {
     };
 
     await fetchCombinedFormsData(parameters);
-
-    // window.scrollTo(0, 0);
   };
 
   handleClick = (e) => {
@@ -176,7 +174,7 @@ class CombinedFormsContainer extends Component {
 
           <div className="col-6 pt-2 ps-2">
             <div className="section-container">
-              <h6>Notes dari Staff</h6>
+              <h6>Staff's Note</h6>
               <div className="note-section">{noteItems}</div>
             </div>
           </div>

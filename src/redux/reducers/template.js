@@ -10,6 +10,7 @@ import {
   FETCH_TEMPLATE_VIEW_SUCCESS,
   FETCH_TEMPLATE_VIEW_FAILED,
   RESET_TEMPLATE_SELECTED,
+  RESET_TEMPLATE_VIEW,
 } from "../actions/types";
 
 const initialState = {
@@ -93,6 +94,7 @@ const TemplateDetails = (state = initialState, action) => {
       return { ...state, ...newState };
 
     case RESET_TEMPLATE_SELECTED:
+    case RESET_TEMPLATE_VIEW:
       return initialState;
 
     default:

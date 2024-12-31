@@ -270,7 +270,7 @@ class DetailTable extends Component {
         <div className="template-edit-section form-create-section col-6">
           <div className="template-upper-section">
             <div className="template-header-section">
-              <h6 className="h6">Create Form</h6>
+              <h6 className="h6">Form</h6>
             </div>
 
             <div className="d-flex justify-content-start mb-3 forms-edit-containers">

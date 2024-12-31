@@ -12,6 +12,7 @@ import {
   FETCH_TEMPLATE_SELECTED_SUCCESS,
   FETCH_TEMPLATE_SELECTED_FAILED,
   RESET_TEMPLATE_SELECTED,
+  RESET_TEMPLATE_VIEW,
 } from "./types";
 
 import {
@@ -156,6 +157,12 @@ export const fetchTemplateViewDataFailed = (result) => {
   return {
     type: FETCH_TEMPLATE_VIEW_FAILED,
     payload: result,
+  };
+};
+
+export const resetTemplateViewData = () => {
+  return {
+    type: RESET_TEMPLATE_VIEW,
   };
 };
 

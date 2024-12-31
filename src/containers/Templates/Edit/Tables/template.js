@@ -29,15 +29,16 @@ class TemplateTable extends Component {
       pageNumber,
       pageSize,
       isMounted,
-      templateItems: items,
+      totalItems,
+      templateArrs: items,
       templateDetail,
     } = this.props;
 
-    const last_page = Math.ceil(items?.length / pageSize);
+    const last_page = Math.ceil(totalItems / pageSize);
 
     const newProps = {
       handlePagination,
-      totalCount: items?.length,
+      totalCount: totalItems,
       pageNumber,
       pageSize,
     };

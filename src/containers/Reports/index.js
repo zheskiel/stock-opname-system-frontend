@@ -481,7 +481,7 @@ class ReportContainer extends Component {
           })}
 
           <div className="report-container notes-container">
-            <h5>Notes ke Manager</h5>
+            <h5>Notes to Manager</h5>
 
             <div className="report-wrapper">
               <textarea
@@ -509,7 +509,13 @@ class ReportContainer extends Component {
 
           <Progress active={`report`} />
 
-          {!isMounted ? <Loader /> : ContentSection}
+          {!isMounted ? (
+            <Loader />
+          ) : (
+            <div className="d-flex justify-content-center align-items-center maintainance-box">
+              <p>Coming Soon...</p>
+            </div>
+          )}
         </MainSection>
       </LayoutContainer>
     );

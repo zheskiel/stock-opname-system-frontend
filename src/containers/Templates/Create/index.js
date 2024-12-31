@@ -43,7 +43,6 @@ class TemplateCreate extends Component {
 
     let start = page > 0 ? (page - 1) * pageSize : 0;
     let end = start + pageSize;
-
     let currentItems = templateItems.slice(start, end);
 
     // Check current page

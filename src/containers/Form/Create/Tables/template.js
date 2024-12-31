@@ -56,25 +56,9 @@ class TemplateTable extends Component {
 
     const { data } = templatesDetails;
 
-    const LoaderDom = () => {
-      return (
-        <div className="template-edit-section col-6">
-          <Loader />
-        </div>
-      );
-    };
-
     const hasPagination = (lastPage) => {
       return lastPage > 1 ? <PaginationSection {...newProps} /> : null;
     };
-
-    // if (!data) return <LoaderDom />;
-
-    if (!isMounted) {
-      return <LoaderDom />;
-    }
-
-    // if (!data) return <></>;
 
     const templateItems = data?.details;
 
@@ -285,10 +269,10 @@ class TemplateTable extends Component {
       );
 
       return (
-        <div className="template-edit-section form-create-section col-6">
+        <>
           <div className="template-upper-section">
             <div className="template-header-section">
-              <h6 className="h6">{data?.title}'s Template</h6>
+              <h6 className="h6">Template</h6>
             </div>
 
             <div className="d-flex justify-content-start mb-3">
@@ -298,11 +282,15 @@ class TemplateTable extends Component {
           </div>
 
           <ContentSection />
-        </div>
+        </>
       );
     };
 
-    return <TemplateTable />;
+    return (
+      <div className="template-edit-section form-create-section col-6">
+        {!isMounted ? <Loader /> : <TemplateTable />}
+      </div>
+    );
   }
 }
 

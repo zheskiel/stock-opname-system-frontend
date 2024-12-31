@@ -27,6 +27,7 @@ const initialState = {
   templateItems: [],
   unitItems: [],
   detailItems: [],
+  totalItems: 0,
   selectedItems: [],
   pageNumber: 1,
   pageSize: 15,
@@ -58,16 +59,25 @@ class FormEdit extends Component {
 
   handleFetchData = async (page = 1) => {
     return new Promise((resolve) => resolve())
-      .then(() => {
+      .then(async () => {
         let { fetchFormDetailsData, match } = this.props;
         let params = {
           ...match.params,
           page,
+          withLimit: 0,
         };
 
-        fetchFormDetailsData(params);
+        await fetchFormDetailsData(params);
       })
-      .then(() => this.setState({ detailItems: this.props.details.data.items }))
+      .then(() => {
+        let { details } = this.props;
+        let { data } = details;
+
+        this.setState({
+          detailItems: data.items,
+          totalItems: details.total,
+        });
+      })
       .then(() => this.handleFetchSelectedData());
   };
 
@@ -235,9 +245,9 @@ class FormEdit extends Component {
   render() {
     const {
       isMounted,
-      selectedItems,
-      detailItems,
+      totalItems,
       detailArrs,
+      selectedItems,
       pageNumber,
       pageSize,
     } = this.state;
@@ -255,8 +265,8 @@ class FormEdit extends Component {
       handleRemoveData: this.handleRemoveData,
       handlePagination: this.handlePagination,
       handleSaveBtn: this.handleSaveBtn,
-      detailItems,
       detailArrs,
+      totalItems,
       pageNumber,
       pageSize,
       isMounted,
