@@ -27,6 +27,8 @@ import { ToastContainer } from "react-toastify";
 
 import Tracker from "./components/Tracker";
 
+const AppEnv = process.env.REACT_APP_ENV;
+
 const FallBack = () => {
   return (
     <LayoutContainer>
@@ -35,6 +37,30 @@ const FallBack = () => {
       </MainSection>
     </LayoutContainer>
   );
+};
+
+const AppRender = () => {
+  const AppElem = () => {
+    return (
+      <Suspense fallback={<FallBack />}>
+        <App />
+      </Suspense>
+    );
+  };
+
+  if (AppEnv == "production") {
+    return (
+      <>
+        <TitleUpdater />
+
+        <Tracker>
+          <AppElem />
+        </Tracker>
+      </>
+    );
+  }
+
+  return <AppElem />;
 };
 
 ReactDOM.render(
@@ -56,20 +82,12 @@ ReactDOM.render(
       />
 
       <Router history={history}>
-        <TitleUpdater />
-
-        <Tracker>
-          <Suspense fallback={<FallBack />}>
-            <App />
-          </Suspense>
-        </Tracker>
+        <AppRender />
       </Router>
     </PersistGate>
   </Provider>,
   document.getElementById("app")
 );
-
-const AppEnv = process.env.REACT_APP_ENV;
 
 if (AppEnv != "production") {
   // reportWebVitals(console.log);
