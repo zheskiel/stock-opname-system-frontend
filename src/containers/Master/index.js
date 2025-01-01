@@ -77,7 +77,7 @@ class MasterContainer extends Component {
           },
         });
       })
-      .then(() => {
+      .then(async () => {
         let { items } = this.state;
         let { sort: sortState, order: orderState } = items[sort];
 
@@ -89,10 +89,9 @@ class MasterContainer extends Component {
           page,
         };
 
-        fetchMasterData(params);
-
-        window.scrollTo(0, 0);
-      });
+        await fetchMasterData(params);
+      })
+      .then(() => window.scrollTo(0, 0));
   };
 
   handlePagination = async (page) => {
@@ -110,10 +109,10 @@ class MasterContainer extends Component {
 
     const { total, current_page, per_page, last_page } = data;
     const newProps = {
-      totalCount: total,
+      handlePagination: this.handlePagination,
       pageNumber: current_page,
       pageSize: per_page,
-      handlePagination: this.handlePagination,
+      totalCount: total,
     };
 
     const hasPagination = (lastPage) => {
