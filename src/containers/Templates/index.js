@@ -20,10 +20,10 @@ import { fetchTemplatesData, resetTemplatesData } from "../../redux/actions";
 
 // Helpers
 import {
-  checkUrlIsEligible,
-  buildLinkUrl,
-  getUserRole,
+  isAdministrator,
   isManagerial,
+  buildLinkUrl,
+  CreateTemplateButton,
 } from "../../utils/helpers";
 
 // Styling
@@ -68,8 +68,6 @@ class TemplatesContainer extends Component {
     };
 
     fetchTemplatesData(params);
-
-    // window.scrollTo(0, 0);
   };
 
   render() {
@@ -134,27 +132,34 @@ class TemplatesContainer extends Component {
     };
 
     const ContentPerManager = () => {
-      return Object.values(listItems).map((listItem, index) => {
-        const { manager, newItems } = listItem;
+      return listItems.length > 0 ? (
+        Object.values(listItems).map((listItem, index) => {
+          const { manager, newItems } = listItem;
 
-        return (
-          <React.Fragment key={index}>
-            <div className="templates-detail">
-              <h3>{manager.name}</h3>
+          return (
+            <React.Fragment key={index}>
+              <div className="templates-detail">
+                <h3>{manager.name}</h3>
 
-              <div className="content-manager-section">
-                <div className="accordion mb-3">
-                  <div className="accordion-item">
-                    {Object.values(newItems).map((items, x) => (
-                      <AccordionDoms key={x} svItems={items} />
-                    ))}
+                <div className="content-manager-section">
+                  <div className="accordion mb-3">
+                    <div className="accordion-item">
+                      {Object.values(newItems).map((items, x) => (
+                        <AccordionDoms key={x} svItems={items} />
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </React.Fragment>
-        );
-      });
+            </React.Fragment>
+          );
+        })
+      ) : (
+        <div className="d-flex flex-column justify-content-center align-items-center text-center">
+          <p>No Templates Created</p>
+          <CreateTemplateButton />
+        </div>
+      );
     };
 
     const ContentDefault = () => {
@@ -270,7 +275,7 @@ class TemplatesContainer extends Component {
           </div>
         );
 
-      const isAdmin = user.role === "superadmin" || user.role === "admin";
+      const isAdmin = isAdministrator();
 
       return (
         <div className="templates-container card-container">
@@ -279,23 +284,13 @@ class TemplatesContainer extends Component {
       );
     };
 
-    let { linkParams, eligible } = buildLinkUrl("template.create");
-
     return (
       <LayoutContainer>
         <MainSection>
           <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h4 className="h4">Templates</h4>
 
-            {eligible && (
-              <div className="btn-toolbar mb-2 mb-md-0">
-                <div className="btn-group">
-                  <Link className="btn btn-sm btn-info" href={linkParams.url}>
-                    Create
-                  </Link>
-                </div>
-              </div>
-            )}
+            <CreateTemplateButton />
           </div>
 
           <ContentSection />

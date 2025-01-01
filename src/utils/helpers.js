@@ -2,6 +2,9 @@ import React from "react";
 import dayjs from "dayjs";
 import store from "../store";
 
+// Components
+import Link from "../components/Link";
+
 import { PrivateRoutes } from "../routes";
 
 export const getUserRole = () => {
@@ -398,4 +401,22 @@ export const buildUrl = (url, parameters) => {
   url.search = params.toString();
 
   return url.toString();
+};
+
+export const CreateTemplateButton = () => {
+  let { linkParams, eligible } = buildLinkUrl("template.create");
+
+  return (
+    <>
+      {eligible && (
+        <div className="btn-toolbar mb-2 mb-md-0">
+          <div className="btn-group">
+            <Link className="btn btn-sm btn-info" href={linkParams.url}>
+              Create
+            </Link>
+          </div>
+        </div>
+      )}
+    </>
+  );
 };

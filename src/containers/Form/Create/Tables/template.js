@@ -21,6 +21,7 @@ import {
   DefaultItem,
   CustomItem,
   isAdministrator,
+  CreateTemplateButton,
 } from "../../../../utils/helpers";
 
 const initialState = {
@@ -35,7 +36,7 @@ class TemplateTable extends Component {
   }
 
   componentDidMount() {
-    setTimeout(() => this.setState({ isMounted: true }), 500);
+    setTimeout(() => this.setState({ isMounted: true }), 1000);
   }
 
   render() {
@@ -177,6 +178,23 @@ class TemplateTable extends Component {
       });
 
     const ContentSection = () => {
+      const RenderSection = () => {
+        if (templateItems && templateItems.length > 0) {
+          return <>{templateDataItems}</>;
+        }
+
+        return (
+          <tr>
+            <td colSpan={5}>
+              <div className="d-flex flex-column justify-content-center align-items-center text-center">
+                <p>No Templates Created</p>
+
+                <CreateTemplateButton />
+              </div>
+            </td>
+          </tr>
+        );
+      };
       return (
         <div className="table-responsive small">
           <div className="table-container">
@@ -220,7 +238,9 @@ class TemplateTable extends Component {
                 </tr>
               </thead>
 
-              <tbody>{templateDataItems}</tbody>
+              <tbody>
+                <RenderSection />
+              </tbody>
             </table>
           </div>
 
@@ -300,7 +320,7 @@ const mapStateToProps = (state) => ({
   templatesDetails: state.template.data,
   selected: state.formDetailsSelected.data,
 });
-const mapDispatchToProps = (dispatch) => ({});
+const mapDispatchToProps = () => ({});
 
 export default compose(
   withRouter,

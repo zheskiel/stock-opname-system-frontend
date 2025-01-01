@@ -129,7 +129,7 @@ class FormCreate extends Component {
         }
       })
       .then(() => this.handlePagination())
-      .then(() => setTimeout(() => this.handleFetchTemplateData(), 1000));
+      .then(() => setTimeout(() => this.handleFetchTemplateData(), 500));
   }
 
   componentWillUnmount() {
