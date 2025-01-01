@@ -22,7 +22,7 @@ const myEventsList = [
     title: "Today",
     start: new Date(new Date().setHours(new Date().getHours() - 3)),
     end: new Date(new Date().setHours(new Date().getHours() + 3)),
-    custom: "testing 14",
+    custom: "Today",
   },
   {
     title: "Testing 24",
