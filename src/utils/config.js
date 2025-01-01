@@ -33,7 +33,7 @@ export const sideBarRoutes = [
       {
         url: "report",
         name: "report",
-        content: "Report",
+        content: "Daily Report",
       },
     ],
   },

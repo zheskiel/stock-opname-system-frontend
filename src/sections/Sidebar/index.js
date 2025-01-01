@@ -33,11 +33,11 @@ class SidebarSection extends Component {
   }
 
   handleMouseEnter = (name) => {
-    this.setState({ isHovered: true, selected: name });
+    this.setState({ selected: name });
   };
 
   handleMouseLeave = () => {
-    this.setState({ isHovered: false, selected: undefined });
+    this.setState({ selected: undefined });
   };
 
   handleLogout = async (e) => {
@@ -151,7 +151,7 @@ class SidebarSection extends Component {
             <hr className="my-3" />
 
             <ul className="nav flex-column mb-auto">
-              <li className="nav-item">
+              {/* <li className="nav-item">
                 <a
                   className="nav-link d-flex align-items-center gap-2"
                   href="#"
@@ -161,7 +161,7 @@ class SidebarSection extends Component {
                   </div>
                   <div className="nav-item-content">Settings</div>
                 </a>
-              </li>
+              </li> */}
               <li className="nav-item">
                 <a
                   className="nav-link d-flex align-items-center gap-2"
