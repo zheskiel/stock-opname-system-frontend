@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import store, { persistor } from "./store";
 import { Router } from "react-router-dom";
+
 // import reportWebVitals from "./utils/reportWebVital";
 import history from "./utils/history";
 import App from "./App";
@@ -17,11 +18,14 @@ import MainSection from "./sections/Main";
 import LayoutContainer from "./containers/Layout";
 
 // Components
+import TitleUpdater from "./components/Tracker/title.js";
 import Loader from "./components/Loader";
 
 // Plugins
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+
+import Tracker from "./components/Tracker";
 
 const FallBack = () => {
   return (
@@ -52,9 +56,13 @@ ReactDOM.render(
       />
 
       <Router history={history}>
-        <Suspense fallback={<FallBack />}>
-          <App />
-        </Suspense>
+        <TitleUpdater />
+
+        <Tracker>
+          <Suspense fallback={<FallBack />}>
+            <App />
+          </Suspense>
+        </Tracker>
       </Router>
     </PersistGate>
   </Provider>,

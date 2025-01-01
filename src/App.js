@@ -8,9 +8,19 @@ import { compose } from "redux";
 import { PublicRoutes, PrivateRoutes } from "./routes";
 import { PublicRouteState, PrivateRouteState } from "./routes/states";
 
+// Tracking GA
+import { initGA } from "./analytics";
+
+// Styles
 import "./assets/scss/app.scss";
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+
+    initGA(); // Initialize Google Analytics
+  }
+
   render() {
     return (
       <Switch>
