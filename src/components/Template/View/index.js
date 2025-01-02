@@ -14,7 +14,7 @@ class TemplateView extends Component {
 
     const { details: items } = data;
 
-    const params = {
+    let params = {
       ...this.props,
       items,
     };

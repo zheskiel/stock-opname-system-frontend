@@ -11,9 +11,6 @@ import ViewMobile from "./ViewMobile";
 class MasterView extends Component {
   render() {
     const { master, mode } = this.props;
-
-    if (!master) return <></>;
-
     const { data: items } = master;
 
     let params = {

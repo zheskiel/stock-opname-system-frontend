@@ -52,9 +52,11 @@ class DesktopView extends Component {
           {items && items.length > 0 ? (
             dataItems
           ) : (
-            <td className="text-center p-4" colSpan={arrs.length}>
-              No Items
-            </td>
+            <tr>
+              <td className="text-center p-4" colSpan={arrs.length}>
+                No Items
+              </td>
+            </tr>
           )}
         </tbody>
       </table>
