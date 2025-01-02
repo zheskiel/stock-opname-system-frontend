@@ -1,21 +1,22 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import DesktopView from "../../../components/Template/View/ViewDesktop";
-import { buildDesktopDataItems } from "../../../utils/helpers";
+
+import ViewDesktop from "../../../src/components/Master/ViewDesktop";
+import { buildDesktopDataItems } from "../../../src/utils/helpers";
 
 // Mock the helper function
-jest.mock("../../../utils/helpers", () => ({
+jest.mock("../../../src/utils/helpers", () => ({
   buildDesktopDataItems: jest.fn(),
 }));
 
-describe("DesktopView Component", () => {
+describe("ViewDesktop Component", () => {
   const mockHandleFetchData = jest.fn();
 
   const defaultProps = {
-    items: [{ id: 1, name: "Item 1" }],
+    items: {},
     arrs: [
-      { key: "name", title: "Name", width: "50%" },
-      { key: "price", title: "Price", width: "50%" },
+      { key: "name", title: "Name", width: "20%" },
+      { key: "price", title: "Price", width: "20%" },
     ],
     keyItems: {
       name: { sort: "name", isDesc: false },
@@ -42,7 +43,7 @@ describe("DesktopView Component", () => {
   });
 
   test("renders table headers and data items correctly", () => {
-    render(<DesktopView {...defaultProps} />);
+    render(<ViewDesktop {...defaultProps} />);
 
     expect(screen.getByText("Name")).toBeInTheDocument();
     expect(screen.getByText("Price")).toBeInTheDocument();
@@ -50,14 +51,8 @@ describe("DesktopView Component", () => {
     expect(screen.getByText("$10")).toBeInTheDocument();
   });
 
-  test("displays 'No Items' when items are empty", () => {
-    render(<DesktopView {...defaultProps} items={[]} />);
-
-    expect(screen.getByText("No Items")).toBeInTheDocument();
-  });
-
   test("calls handleFetchData when a header is clicked", () => {
-    render(<DesktopView {...defaultProps} />);
+    render(<ViewDesktop {...defaultProps} />);
 
     const nameHeader = screen.getByText("Name");
     fireEvent.click(nameHeader);
@@ -69,5 +64,12 @@ describe("DesktopView Component", () => {
       "desc", // new order
       true // new isDesc
     );
+  });
+
+  test("renders up and down arrows based on sort order", () => {
+    render(<ViewDesktop {...defaultProps} />);
+
+    expect(screen.getByText("Name").querySelector("svg")).toBeInTheDocument(); // Up arrow for 'name'
+    expect(screen.getByText("Price").querySelector("svg")).toBeInTheDocument(); // Down arrow for 'price'
   });
 });

@@ -1,6 +1,6 @@
 import { screen, render } from "@testing-library/react";
 
-import Target from "../testing";
+import Target from "../src/testing";
 
 it("should render correctly", () => {
   render(<Target />);

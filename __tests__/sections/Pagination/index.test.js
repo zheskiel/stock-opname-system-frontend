@@ -1,11 +1,11 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import PaginationSection from "../../../sections/Pagination";
+import PaginationSection from "../../../src/sections/Pagination";
 
-import { calculatePagination } from "../../../utils/helpers";
+import { calculatePagination } from "../../../src/utils/helpers";
 
 // Mock the helper function
-jest.mock("../../../utils/helpers", () => ({
+jest.mock("../../../src/utils/helpers", () => ({
   calculatePagination: jest.fn(),
 }));
 

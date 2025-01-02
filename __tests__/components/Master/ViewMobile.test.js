@@ -1,14 +1,15 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import ViewMobile from "../../../components/Master/ViewMobile";
+import ViewMobile from "../../../src/components/Master/ViewMobile";
+
 import {
   getEntity,
   DefaultMobileItem as DefaultItem,
   CustomMobileItem as CustomItem,
-} from "../../../utils/helpers";
+} from "../../../src/utils/helpers";
 
 // Mock the helper functions
-jest.mock("../../../utils/helpers", () => ({
+jest.mock("../../../src/utils/helpers", () => ({
   getEntity: jest.fn(),
   DefaultMobileItem: jest.fn(() => <div>Default Item</div>),
   CustomMobileItem: jest.fn(() => <div>Custom Item</div>),

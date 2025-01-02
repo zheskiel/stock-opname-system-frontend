@@ -1,14 +1,15 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import MobileView from "../../../components/Template/View/ViewMobile";
+import MobileView from "../../../src/components/Template/View/ViewMobile";
+
 import {
   getEntity,
   DefaultMobileItem as DefaultItem,
   CustomMobileItem as CustomItem,
-} from "../../../utils/helpers";
+} from "../../../src/utils/helpers";
 
 // Mock the helper functions
-jest.mock("../../../utils/helpers", () => ({
+jest.mock("../../../src/utils/helpers", () => ({
   getEntity: jest.fn(),
   DefaultMobileItem: jest.fn(() => <div>Default Item</div>),
   CustomMobileItem: jest.fn(() => <div>Custom Item</div>),
