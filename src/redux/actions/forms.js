@@ -32,20 +32,20 @@ export const fetchFormsData = (params) => (dispatch) => {
   });
 };
 
-export const fetchFormsDataRequest = () => {
+const fetchFormsDataRequest = () => {
   return {
     type: FETCH_FORMS_REQUEST,
   };
 };
 
-export const fetchFormsDataSuccess = (result) => {
+const fetchFormsDataSuccess = (result) => {
   return {
     type: FETCH_FORMS_SUCCESS,
     payload: result,
   };
 };
 
-export const fetchFormsDataFailed = (result) => {
+const fetchFormsDataFailed = (result) => {
   return {
     type: FETCH_FORMS_FAILED,
     payload: result,

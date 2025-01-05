@@ -38,20 +38,20 @@ export const createStockPosition = (param) => (dispatch) => {
   });
 };
 
-export const createStockPositionRequest = () => {
+const createStockPositionRequest = () => {
   return {
     type: CREATE_STOCK_POSITION_REQUEST,
   };
 };
 
-export const createStockPositionSuccess = (result) => {
+const createStockPositionSuccess = (result) => {
   return {
     type: CREATE_STOCK_POSITION_SUCCESS,
     payload: result,
   };
 };
 
-export const createStockPositionFailed = (result) => {
+const createStockPositionFailed = (result) => {
   return {
     type: CREATE_STOCK_POSITION_FAILED,
     payload: result,
@@ -83,20 +83,20 @@ export const fetchStockPosition = (param) => (dispatch) => {
   });
 };
 
-export const fetchStockPositionRequest = () => {
+const fetchStockPositionRequest = () => {
   return {
     type: FETCH_STOCK_POSITION_REQUEST,
   };
 };
 
-export const fetchStockPositionSuccess = (result) => {
+const fetchStockPositionSuccess = (result) => {
   return {
     type: FETCH_STOCK_POSITION_SUCCESS,
     payload: result,
   };
 };
 
-export const fetchStockPositionFailed = (result) => {
+const fetchStockPositionFailed = (result) => {
   return {
     type: FETCH_STOCK_POSITION_FAILED,
     payload: result,

@@ -50,18 +50,18 @@ export const createTemplateDetail =
         });
     });
   };
-export const createTemplateDetailRequest = () => {
+const createTemplateDetailRequest = () => {
   return {
     type: CREATE_TEMPLATE_DETAIL_REQUEST,
   };
 };
-export const createTemplateDetailSuccess = (result) => {
+const createTemplateDetailSuccess = (result) => {
   return {
     type: CREATE_TEMPLATE_DETAIL_SUCCESS,
     payload: result,
   };
 };
-export const createTemplateDetailFailed = (result) => {
+const createTemplateDetailFailed = (result) => {
   return {
     type: CREATE_TEMPLATE_DETAIL_FAILED,
     payload: result,
@@ -94,18 +94,21 @@ export const removeTemplateDetail =
         });
     });
   };
-export const removeTemplateDetailRequest = () => {
+
+const removeTemplateDetailRequest = () => {
   return {
     type: REMOVE_TEMPLATE_DETAIL_REQUEST,
   };
 };
-export const removeTemplateDetailSuccess = (result) => {
+
+const removeTemplateDetailSuccess = (result) => {
   return {
     type: REMOVE_TEMPLATE_DETAIL_SUCCESS,
     payload: result,
   };
 };
-export const removeTemplateDetailFailed = (result) => {
+
+const removeTemplateDetailFailed = (result) => {
   return {
     type: REMOVE_TEMPLATE_DETAIL_FAILED,
     payload: result,
@@ -140,20 +143,20 @@ export const fetchTemplateViewData =
     });
   };
 
-export const fetchTemplateViewDataRequest = () => {
+const fetchTemplateViewDataRequest = () => {
   return {
     type: FETCH_TEMPLATE_VIEW_REQUEST,
   };
 };
 
-export const fetchTemplateViewDataSuccess = (result) => {
+const fetchTemplateViewDataSuccess = (result) => {
   return {
     type: FETCH_TEMPLATE_VIEW_SUCCESS,
     payload: result,
   };
 };
 
-export const fetchTemplateViewDataFailed = (result) => {
+const fetchTemplateViewDataFailed = (result) => {
   return {
     type: FETCH_TEMPLATE_VIEW_FAILED,
     payload: result,
@@ -200,20 +203,20 @@ export const fetchTemplateSelectedData =
     });
   };
 
-export const fetchTemplateSelectedDataRequest = () => {
+const fetchTemplateSelectedDataRequest = () => {
   return {
     type: FETCH_TEMPLATE_SELECTED_REQUEST,
   };
 };
 
-export const fetchTemplateSelectedDataSuccess = (result) => {
+const fetchTemplateSelectedDataSuccess = (result) => {
   return {
     type: FETCH_TEMPLATE_SELECTED_SUCCESS,
     payload: result,
   };
 };
 
-export const fetchTemplateSelectedDataFailed = (result) => {
+const fetchTemplateSelectedDataFailed = (result) => {
   return {
     type: FETCH_TEMPLATE_SELECTED_FAILED,
     payload: result,

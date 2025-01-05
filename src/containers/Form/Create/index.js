@@ -143,7 +143,7 @@ class FormCreate extends Component {
     return new Promise((resolve) => resolve())
       .then(() => this.setState({ selectedTemplate: value }))
       .then(() => this.handleRemoveAllData())
-      .then(() => this.handleFetchTemplateData());
+      .then(async () => await this.handleFetchTemplateData());
   };
 
   handleFetchTemplateData = async (

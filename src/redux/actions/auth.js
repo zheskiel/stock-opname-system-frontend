@@ -29,20 +29,20 @@ export const AuthLogin = (email, password, type) => async (dispatch) => {
     });
 };
 
-export const AuthLoginRequest = () => {
+const AuthLoginRequest = () => {
   return {
     type: LOGIN_REQUEST,
   };
 };
 
-export const AuthLoginSuccess = (result) => {
+const AuthLoginSuccess = (result) => {
   return {
     type: LOGIN_SUCCESS,
     payload: result,
   };
 };
 
-export const AuthLoginFailed = (result) => {
+const AuthLoginFailed = (result) => {
   return {
     type: LOGIN_FAILED,
     payload: result,

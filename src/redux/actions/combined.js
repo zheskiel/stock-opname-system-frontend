@@ -31,20 +31,20 @@ export const fetchCombinedFormsData = (params) => (dispatch) => {
   });
 };
 
-export const fetchCombinedFormsRequest = () => {
+const fetchCombinedFormsRequest = () => {
   return {
     type: FETCH_COMBINED_REQUEST,
   };
 };
 
-export const fetchCombinedFormsSuccess = (result) => {
+const fetchCombinedFormsSuccess = (result) => {
   return {
     type: FETCH_COMBINED_SUCCESS,
     payload: result,
   };
 };
 
-export const fetchCombinedFormsFailed = (result) => {
+const fetchCombinedFormsFailed = (result) => {
   return {
     type: FETCH_COMBINED_FAILED,
     payload: result,

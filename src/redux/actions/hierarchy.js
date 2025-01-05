@@ -32,20 +32,20 @@ export const fetchHierarchyData = (params) => (dispatch) => {
   });
 };
 
-export const fetchHierarchyDataRequest = () => {
+const fetchHierarchyDataRequest = () => {
   return {
     type: FETCH_HIERARCHY_REQUEST,
   };
 };
 
-export const fetchHierarchyDataSuccess = (result) => {
+const fetchHierarchyDataSuccess = (result) => {
   return {
     type: FETCH_HIERARCHY_SUCCESS,
     payload: result,
   };
 };
 
-export const fetchHierarchyDataFailed = (result) => {
+const fetchHierarchyDataFailed = (result) => {
   return {
     type: FETCH_HIERARCHY_FAILED,
     payload: result,

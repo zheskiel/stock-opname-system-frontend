@@ -35,20 +35,20 @@ export const CreateFinalFormsData = () => (dispatch) => {
   });
 };
 
-export const CreateFinalFormsDataRequest = () => {
+const CreateFinalFormsDataRequest = () => {
   return {
     type: CREATE_FINAL_FORM_REQUEST,
   };
 };
 
-export const CreateFinalFormsDataSuccess = (result) => {
+const CreateFinalFormsDataSuccess = (result) => {
   return {
     type: CREATE_FINAL_FORM_SUCCESS,
     payload: result,
   };
 };
 
-export const CreateFinalFormsDataFailed = (result) => {
+const CreateFinalFormsDataFailed = (result) => {
   return {
     type: CREATE_FINAL_FORM_FAILED,
     payload: result,
@@ -79,20 +79,20 @@ export const fetchFinalFormsData = (params) => (dispatch) => {
   });
 };
 
-export const fetchFinalFormsDataRequest = () => {
+const fetchFinalFormsDataRequest = () => {
   return {
     type: FETCH_FINAL_FORM_REQUEST,
   };
 };
 
-export const fetchFinalFormsDataSuccess = (result) => {
+const fetchFinalFormsDataSuccess = (result) => {
   return {
     type: FETCH_FINAL_FORM_SUCCESS,
     payload: result,
   };
 };
 
-export const fetchFinalFormsDataFailed = (result) => {
+const fetchFinalFormsDataFailed = (result) => {
   return {
     type: FETCH_FINAL_FORM_FAILED,
     payload: result,

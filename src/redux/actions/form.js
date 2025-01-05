@@ -52,20 +52,20 @@ export const createNewFormDetails =
     });
   };
 
-export const createNewFormDetailsRequest = () => {
+const createNewFormDetailsRequest = () => {
   return {
     type: CREATE_NEW_FORM_DETAILS_REQUEST,
   };
 };
 
-export const createNewFormDetailsSuccess = (result) => {
+const createNewFormDetailsSuccess = (result) => {
   return {
     type: CREATE_NEW_FORM_DETAILS_SUCCESS,
     payload: result,
   };
 };
 
-export const createNewFormDetailsFailed = (result) => {
+const createNewFormDetailsFailed = (result) => {
   return {
     type: CREATE_NEW_FORM_DETAILS_FAILED,
     payload: result,
@@ -99,20 +99,20 @@ export const updateFormDetails =
     });
   };
 
-export const updateFormDetailsRequest = () => {
+const updateFormDetailsRequest = () => {
   return {
     type: UPDATE_FORM_DETAILS_REQUEST,
   };
 };
 
-export const updateFormDetailsSuccess = (result) => {
+const updateFormDetailsSuccess = (result) => {
   return {
     type: UPDATE_FORM_DETAILS_SUCCESS,
     payload: result,
   };
 };
 
-export const updateFormDetailsFailed = (result) => {
+const updateFormDetailsFailed = (result) => {
   return {
     type: UPDATE_FORM_DETAILS_FAILED,
     payload: result,
@@ -146,20 +146,20 @@ export const createFormDetails =
     });
   };
 
-export const createFormDetailsRequest = () => {
+const createFormDetailsRequest = () => {
   return {
     type: CREATE_FORM_DETAIL_REQUEST,
   };
 };
 
-export const createFormDetailsSuccess = (result) => {
+const createFormDetailsSuccess = (result) => {
   return {
     type: CREATE_FORM_DETAIL_SUCCESS,
     payload: result,
   };
 };
 
-export const createFormDetailsFailed = (result) => {
+const createFormDetailsFailed = (result) => {
   return {
     type: CREATE_FORM_DETAIL_FAILED,
     payload: result,
@@ -190,20 +190,20 @@ export const fetchFormDetailsData = (params) => (dispatch) => {
   });
 };
 
-export const fetchFormDetailsDataRequest = () => {
+const fetchFormDetailsDataRequest = () => {
   return {
     type: FETCH_FORM_DETAILS_REQUEST,
   };
 };
 
-export const fetchFormDetailsDataSucess = (result) => {
+const fetchFormDetailsDataSucess = (result) => {
   return {
     type: FETCH_FORM_DETAILS_SUCCESS,
     payload: result,
   };
 };
 
-export const fetchFormDetailsDataFailed = (result) => {
+const fetchFormDetailsDataFailed = (result) => {
   return {
     type: FETCH_FORM_DETAILS_FAILED,
     payload: result,
@@ -237,20 +237,20 @@ export const fetchFormDetailsSelectedData =
     });
   };
 
-export const fetchFormDetailsSelectedDataRequest = () => {
+const fetchFormDetailsSelectedDataRequest = () => {
   return {
     type: FETCH_FORM_DETAILS_SELECTED_REQUEST,
   };
 };
 
-export const fetchFormDetailsSelectedDataSuccess = (result) => {
+const fetchFormDetailsSelectedDataSuccess = (result) => {
   return {
     type: FETCH_FORM_DETAILS_SELECTED_SUCCESS,
     payload: result,
   };
 };
 
-export const fetchFormDetailsSelectedDataFailed = (result) => {
+const fetchFormDetailsSelectedDataFailed = (result) => {
   return {
     type: FETCH_FORM_DETAILS_SELECTED_FAILED,
     payload: result,

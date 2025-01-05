@@ -34,20 +34,20 @@ export const fetchStaffFormData =
     });
   };
 
-export const fetchStaffFormDataRequest = () => {
+const fetchStaffFormDataRequest = () => {
   return {
     type: FETCH_TESTING_STAFF_FORMS_REQUEST,
   };
 };
 
-export const fetchStaffFormDataSuccess = (result) => {
+const fetchStaffFormDataSuccess = (result) => {
   return {
     type: FETCH_TESTING_STAFF_FORMS_SUCCESS,
     payload: result,
   };
 };
 
-export const fetchStaffFormDataFailed = (result) => {
+const fetchStaffFormDataFailed = (result) => {
   return {
     type: FETCH_TESTING_STAFF_FORMS_FAILED,
     payload: result,

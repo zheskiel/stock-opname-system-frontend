@@ -32,20 +32,20 @@ export const fetchCompareWaste = (param) => (dispatch) => {
   });
 };
 
-export const fetchCompareWasteRequest = () => {
+const fetchCompareWasteRequest = () => {
   return {
     type: FETCH_COMPARE_WASTE_REQUEST,
   };
 };
 
-export const fetchCompareWasteSuccess = (result) => {
+const fetchCompareWasteSuccess = (result) => {
   return {
     type: FETCH_COMPARE_WASTE_SUCCESS,
     payload: result,
   };
 };
 
-export const fetchCompareWasteFailed = (result) => {
+const fetchCompareWasteFailed = (result) => {
   return {
     type: FETCH_COMPARE_WASTE_FAILED,
     payload: result,

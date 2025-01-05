@@ -35,20 +35,20 @@ export const fetchTemplatesData =
     });
   };
 
-export const fetchTemplatesDataRequest = () => {
+const fetchTemplatesDataRequest = () => {
   return {
     type: FETCH_TEMPLATES_REQUEST,
   };
 };
 
-export const fetchTemplatesDataSuccess = (result) => {
+const fetchTemplatesDataSuccess = (result) => {
   return {
     type: FETCH_TEMPLATES_SUCCESS,
     payload: result,
   };
 };
 
-export const fetchTemplatesDataFailed = (result) => {
+const fetchTemplatesDataFailed = (result) => {
   return {
     type: FETCH_TEMPLATES_FAILED,
     payload: result,

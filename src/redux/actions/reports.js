@@ -77,20 +77,20 @@ export const fetchReportsData = () => (dispatch) => {
   });
 };
 
-export const fetchReportsDataRequest = () => {
+const fetchReportsDataRequest = () => {
   return {
     type: FETCH_REPORTS_REQUEST,
   };
 };
 
-export const fetchReportsDataSuccess = (result) => {
+const fetchReportsDataSuccess = (result) => {
   return {
     type: FETCH_REPORTS_SUCCESS,
     payload: result,
   };
 };
 
-export const fetchReportsDataFailed = (result) => {
+const fetchReportsDataFailed = (result) => {
   return {
     type: FETCH_REPORTS_FAILED,
     payload: result,

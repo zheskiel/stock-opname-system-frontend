@@ -34,20 +34,20 @@ export const fetchOutletData =
     });
   };
 
-export const fetchOutletDataRequest = () => {
+const fetchOutletDataRequest = () => {
   return {
     type: FETCH_TESTING_OUTLET_REQUEST,
   };
 };
 
-export const fetchOutletDataSuccess = (result) => {
+const fetchOutletDataSuccess = (result) => {
   return {
     type: FETCH_TESTING_OUTLET_SUCCESS,
     payload: result,
   };
 };
 
-export const fetchOutletDataFailed = (result) => {
+const fetchOutletDataFailed = (result) => {
   return {
     type: FETCH_TESTING_OUTLET_FAILED,
     payload: result,

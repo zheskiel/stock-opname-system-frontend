@@ -33,20 +33,20 @@ export const fetchMasterData = (params) => (dispatch) => {
   });
 };
 
-export const fetchMasterDataRequest = () => {
+const fetchMasterDataRequest = () => {
   return {
     type: FETCH_MASTER_REQUEST,
   };
 };
 
-export const fetchMasterDataSuccess = (result) => {
+const fetchMasterDataSuccess = (result) => {
   return {
     type: FETCH_MASTER_SUCCESS,
     payload: result,
   };
 };
 
-export const fetchMasterDataFailed = (result) => {
+const fetchMasterDataFailed = (result) => {
   return {
     type: FETCH_MASTER_FAILED,
     payload: result,

@@ -26,13 +26,13 @@ export const createDailyFormReport = (params) => (dispatch) => {
       .catch((error) => {
         console.log("error : ", error);
 
-        // errorHandler(error);
-        // reject(error);
+        errorHandler(error);
+        reject(error);
       });
   });
 };
 
-export const createDailyFormReportRequest = () => {
+const createDailyFormReportRequest = () => {
   return {
     type: CREATE_DAILY_FORM_REPORT,
   };
@@ -64,20 +64,20 @@ export const fetchFormByStaffData =
     });
   };
 
-export const fetchFormByStaffDataRequest = () => {
+const fetchFormByStaffDataRequest = () => {
   return {
     type: FETCH_TESTING_FORM_BY_STAFF_REQUEST,
   };
 };
 
-export const fetchFormByStaffDataSuccess = (result) => {
+const fetchFormByStaffDataSuccess = (result) => {
   return {
     type: FETCH_TESTING_FORM_BY_STAFF_SUCCESS,
     payload: result,
   };
 };
 
-export const fetchFormByStaffDataFailed = (result) => {
+const fetchFormByStaffDataFailed = (result) => {
   return {
     type: FETCH_TESTING_FORM_BY_STAFF_FAILED,
     payload: result,

@@ -49,10 +49,10 @@ class TemplateTable extends Component {
 
     const { total, current_page, per_page, last_page } = templatesDetails;
     const newProps = {
-      totalCount: total,
+      handlePagination,
       pageNumber: current_page,
+      totalCount: total,
       pageSize: per_page,
-      handlePagination: handlePagination,
     };
 
     const { data } = templatesDetails;
