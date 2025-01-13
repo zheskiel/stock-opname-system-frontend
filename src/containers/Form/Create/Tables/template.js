@@ -36,7 +36,7 @@ class TemplateTable extends Component {
   }
 
   componentDidMount() {
-    setTimeout(() => this.setState({ isMounted: true }), 1000);
+    setTimeout(() => this.setState({ isMounted: true }), 1500);
   }
 
   render() {
@@ -195,6 +195,7 @@ class TemplateTable extends Component {
           </tr>
         );
       };
+
       return (
         <div className="table-responsive small">
           <div className="table-container">
